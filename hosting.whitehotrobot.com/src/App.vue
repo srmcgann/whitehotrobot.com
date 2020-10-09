@@ -92,6 +92,7 @@ export default {
       .then(data => {
         data.show = true
 				this.state.createButtonEnabled = true
+        document.getElementsByTagName('HTML')[0].style.overflowY = 'visible'
         if(userpage) {
           this.state.user.pages = [data, ...this.state.user.pages]
           this.state.user.pages.map((v, i)=>{
@@ -107,7 +108,7 @@ export default {
           this.state.pages = [data, ...this.state.pages]
           this.state.inView=Array(this.state.pages.length).fill().map(v=>false)
         }
-        this.$nextTick(()=>this.state.startStopPages = true)
+        setTimeout(()=>this.state.startStopPages = Math.random(), 100)
       })
     },
     deletePage(id){
@@ -131,7 +132,8 @@ export default {
     },
     createPage(){
       let sendData = {userName: this.state.loggedinUserName, passhash: this.state.passhash}
-			this.state.createButton = false
+			this.state.createButtonEnabled = false
+      document.getElementsByTagName('HTML')[0].style.overflowY = 'hidden'
       this.$nextTick(()=>{
 				fetch(this.state.baseURL + '/createPage.php',{
           method: 'POST',

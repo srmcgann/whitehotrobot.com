@@ -1,6 +1,16 @@
 <template>
   <div class="main">
     <Header :state="state"/>
+		<div v-if="!state.createButtonEnabled"
+		  style="position: fixed; top:0; left: 0; width: 100%; height: 100%; z-index: 1000;background: #123d;">
+			<div style="position: relative;top: 50%;font-size: 42px;transform: translate(0,-50%);">
+			  Please wait<br>this takes just a moment...
+				<br>
+				<img src="https://lookie.jsbot.net/uploads/14F97E.png" style="width: 80px;">
+				<br>
+				<div v-if="!state.user.pages.length" style="font-size: .6em;">if this is your first page, there is a<br>lot of stuff going on behind the scenes!</div>
+			</div>
+		</div>
     <div class="mainBody" v-if="state.loaded">
       <div v-if="state.showUserPages && this.state.user !== null">
         <div v-if="personal">
