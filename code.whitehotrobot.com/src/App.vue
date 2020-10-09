@@ -368,7 +368,7 @@ export default {
       let cookies = document.cookie
       cookies.split(';').map(v=>{
         if(v.indexOf('autoplay')==-1){
-          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/'
+          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
         }
       })
       document.cookie = 'loggedinuser=' + this.state.loggedinUserName + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
@@ -478,7 +478,7 @@ export default {
       let cookies = document.cookie
       cookies.split(';').map(v=>{
         if(v.indexOf('autoplay')==-1){
-          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/'
+          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
         }
       })
       this.state.loggedin = false

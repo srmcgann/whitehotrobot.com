@@ -5,12 +5,11 @@
         <br><span style="color: #aff;font-size: 36px;font-weight: 400">settings</span>
       </span>
       <div class="spacerDiv"></div>
-      
       your avatar<br>
       <div class="editAvatarImgContainer">
         <img :src="state.getAvatar(state.loggedinUserID)" class="editAvatarImg">
       </div>
-      <input style="opacity: 0; position: absolute;z-index:-1" ref="tabAnchor"
+      <input style="opacity: 0; position: absolute;z-index: -1;" ref="tabAnchor"
         v-on:keydown.shift.tab="$refs.cancelButton.focus()"
       >
       <input
@@ -28,8 +27,7 @@
       <div v-if="avatarUpdateSuccessful==-1" style="color: #f44; font-size: 18px; background:#500; padding: 4px;margin-top:10px;padding-bottom: 8px;">
         &nbsp;&nbsp;&nbsp; avatar update NOT successful
       </div>
-      <br>
-      <br>
+      <div class="spacerDiv" style="margin-top: 20px"></div>
       change your password<br>
       <input
         type="password"
@@ -81,14 +79,14 @@
         :disabled="!validate"
         :class="{'disabledButton': !validate}"
       >save</button>      
-      <div class="spacerDiv" style="margin-top: 30px;"></div>
+      <div class="spacerDiv"></div>
       <button @click="closePrompt()"
         v-on:keydown.tab="$refs.tabAnchor.focus()"
         v-on:keydown.shift.tab="$refs.cancelButton.focus()"
         ref="cancelButton"
         style="background: #faa"
       >close / cancel</button>
-      <input style="opacity: 0; position: absolute;z-index:-1" ref="endTabAnchor"
+      <input style="opacity: 0; position: absolute;z-index: -1" ref="endTabAnchor"
         v-on:keydown.shift.tab="$refs.confirmnewassword.focus()"
       >
     </div>
@@ -162,6 +160,7 @@ export default{
       .then(data => {
         if(data[0]){
           this.avatarUpdateSuccessful = 1
+          this.state.user.avatar = this.state.userInfo[this.state.loggedinUserID].avatar
           setTimeout(()=>this.avatarUpdateSuccessful = 0, 2000)
         } else {
           this.avatarUpdateSuccssful = -1
