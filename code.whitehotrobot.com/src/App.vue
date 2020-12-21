@@ -437,6 +437,7 @@ export default {
             this.state.userInfo[this.state.loggedinUserID].name = this.state.regusername
             this.state.userInfo[this.state.loggedinUserID].avatar = data[2]
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
+            this.state.fetchUserData(this.state.loggedinUserID)
             if(+data[3]) this.state.isAdmin = true
           }else{
             this.state.loggedin = false
@@ -495,6 +496,7 @@ export default {
           this.state.loggedin = true
           this.state.loggedinUserName = this.state.username
           this.state.loggedinUserID = data[2]
+          this.state.fetchUserData(this.state.loggedinUserID)
           this.state.isAdmin = +data[4]
           this.state.passhash = data[1]
           this.setCookie()
