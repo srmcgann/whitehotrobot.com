@@ -21,7 +21,6 @@
 
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
-  $userName = str_replace(' ', '_', str_replace("\t", '_', $userName));
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
   $sql = 'SELECT * FROM users WHERE name LIKE "' . $userName . '" AND passhash = "'.$passhash.'";';

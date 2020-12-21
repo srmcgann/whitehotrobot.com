@@ -2,7 +2,6 @@
   require('db.php');
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
-  $userName = str_replace(' ', '_', str_replace("\t", '_', $userName));
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $newURL = mysqli_real_escape_string($link, $data->{'newURL'});
   $demoID = mysqli_real_escape_string($link, $data->{'demoID'});

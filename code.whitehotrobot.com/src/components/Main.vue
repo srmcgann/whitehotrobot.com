@@ -194,7 +194,65 @@
                 ></textarea>
               </div>
             </div>
-          </div>
+            <div class="commentContainer">
+			  		  <div class="commentsHeader">
+		  				  comments
+	  					</div>
+							<div v-if="item.comments.length">
+    						<div v-for="comment in item.comments">
+	  					    <div class="commentMain">
+		  				  		<span  v-if="typeof state.userData[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
+			  		  			  <img :src="state.userData[comment.userID].avatar || 'https://lookie.jsbot.net/uploads/1pnBdc.png'" class="commentAvatar">
+				    				  <a :href="state.baseURL + '/u/' + state.userData[comment.userID].name" target="_blank" style="color:#4dc!important;font-style: oblique;">{{state.userData[comment.userID].name}}</a>
+			  	  			  </span>
+						  			<div v-if="comment.editing && this.state.loggedin" style="display:inline-block;width:calc(100% - 350px);">
+    	  			  		  <input
+		  					  			:ref="'comment' + comment.id"
+			  					  		class="commentInput"
+										  	style="width: calc(100% - 100px);"
+				  						  @input="editComment(comment)"
+  					  					v-model="comment.text"
+                        :class="{'success':comment.updated==1,'failure':comment.updated==-1}"
+		  					  		>
+                      <button
+				  						  v-if="comment.userID == state.loggedinUserID || state.isAdmin"
+                        @click='comment.editing = !comment.editing'
+                        class="commentEditButton"
+                        style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
+                      ></button>
+								    	<button
+										    @click='deleteComment(comment, item)'
+										    class="commentDeleteButton"
+  											style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
+	  									></button>
+  	  							</div>
+                    <div v-else style="display: inline-block;width: calc(100% - 400px);padding-right: 0;">
+                      <span class="commentText" v-html="comment.text" v-linkified style="width: calc(100% - 68px)"></span>
+                      <button
+                        v-if="comment.userID == state.loggedinUserID || state.isAdmin"
+                        @click='toggleEditMode(comment)'
+                        class="commentEditButton"
+                        style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://lookie.jsbot.net/uploads/2cyWBg.png);"
+                      ></button>
+  								  </div>
+	  							  <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
+		  							<div style="clear:both;"></div>
+			  				  </div>
+				  		  </div>
+					  		<div v-if="state.loggedin">
+  		  		  		<input v-on:keyup.enter="postComment(item.id)" :ref="'newComment' + item.id" placeholder="say something..." class="commentInput newComment" style="margin-left: 0;margin-top: 16px;">
+	  					  	<button
+		  					    @click="postComment(item.id)"
+			  				    style="padding: 2px;padding-bottom: 4px;margin: 0;margin-left: 25px;display: block; margin-top: 12px; min-width: initial; padding-left: 10px; padding-right: 10px;float:left;"
+  				  			>post</button>
+	  				  		<div style="clear:both"></div>
+		  			  	</div>
+			  	    </div>
+            <div v-else>
+            -- no comments (log in to comment on this demo) --
+            </div>
+  					</div>
+					</div>
         </div>
       </div>
     </div>
@@ -233,6 +291,130 @@ export default {
     }
   },
   methods:{
+		toggleEditMode(comment){
+			comment.editing = !comment.editing
+			if(comment.editing){
+				this.$nextTick(()=>{
+			    this.$refs['comment' + comment.id].focus()
+          this.$refs['comment' + comment.id].select()
+				})
+			}
+		},
+    deleteComment(comment, item){
+			if(confirm('are you SURE you want to delete this comment?!?!?\n\n\nTHIS ACTION IS IRREVERSIBLE!')){
+        let id = comment.id
+        let sendData = {
+          userName: this.state.loggedinUserName,
+          passhash: this.state.passhash,
+          commentID: id
+        }
+        fetch(this.state.baseURL + '/deleteComment.php',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+        })
+        .then(res => res.json())
+        .then(data => {
+          if(data[0]){
+            item.comments = item.comments.filter(v=>v.id != id)
+            console.log('comment deleted...')
+          }
+        })
+		  }
+    },
+		editComment(comment){
+			let id = comment.id
+			let text = this.$refs['comment' + id].value
+			let sendData = {
+        userName: this.state.loggedinUserName,
+        comment: text,
+        passhash: this.state.passhash,
+        commentID: id
+      }
+      fetch(this.state.baseURL + '/updateComment.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data[0]){
+          comment.updated = 1
+          setTimeout(()=>comment.updated = 0, 1000)
+        } else {
+          comment.updated = -1
+          setTimeout(()=>comment.updated = 0, 1000)
+        }
+      })
+		},
+    postComment(id){
+      let text = this.$refs['newComment' + id].value
+			if(text.length){
+        let sendData = {
+          userName: this.state.loggedinUserName,
+          comment: text,
+          passhash: this.state.passhash,
+          itemID: id
+        }
+        fetch(this.state.baseURL + '/postComment.php',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+        })
+        .then(res => res.json())
+        .then(data => {
+          if(data[0]){
+		  			let comment = {
+			  			userID: this.state.loggedinUserID,
+				  		text,
+					  	demoID: id,
+              id: data[1],
+  						date: data[2]
+	  				}
+  		  	  this.state.demos.filter(v=>v.id==id)[0].comments.push(comment)
+			  	}
+        })
+			}
+    },
+		processedTimestamp(val){
+			let months=[
+			  'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec'
+			]
+			/*
+			let days=[
+			  'Sun,',
+        'Mon,',
+        'Tue,',
+        'Wed,',
+        'Thur,',
+        'Fri,',
+        'Sat,'
+			]
+			*/
+			let days = Array(7).fill('')
+			let hours = [
+			  12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+			]
+			let d = new Date(Date.parse(val.replace(/-/g, '/')))
+			return hours[d.getHours()] + ':' + d.getMinutes() + (d.getHours<12?'AM':'PM') + ' - ' + days[d.getDay()] + months[d.getMonth()] + ' ' + d.getDate() + ' ' + d.getFullYear()
+		},
     toggleShowForkHistory(item){
       if(item.showForkHistory){
         item.showForkHistory = false
@@ -1013,5 +1195,94 @@ td{
   height: 53px;
 }
 .slideRight{
+}
+.commentContainer{
+	background: #2020;
+	padding: 10px;
+	margin-top: 6px;
+}
+.commentsHeader{
+	font-size: 28px;
+	text-align: left;
+	color: #0ff;
+	background: #0000;
+	vertical-align: top;
+}
+.commentText{
+  color: #ccc;
+  text-align: left;
+	min-width: 200px;
+  display: inline-block;
+  font-size: 18px;
+	padding-left: 10px;
+	padding-right: 10px;
+  background: #024;
+  width: calc(100% - 470px);
+  margin-left: 10px;
+}
+.commentInput:focus{
+	outline: none;
+}
+.commentInput{
+	border: none;
+	color: #ef8;
+	text-align: left;
+	vertical-align: top;
+	display: inline-block;
+	font-size: 18px;
+	background: #001c;
+	margin-left: 10px;
+}
+.commentAvatar{
+  position: absolute;
+	margin-left: -51px;
+	width: 500px;
+	height: 500px;
+	max-height:30px;
+	max-width:40px;
+	margin-top: -2px;
+}
+.commentMain{
+  width: 100%;
+	margin-top: 4px;
+	padding-bottom: 6px;
+	border-bottom: 2px solid #48f3;
+  text-align: left;
+}
+.commentUserName{
+	color: #6dc;
+	padding: 0;
+	padding-left: 50px;
+	padding-right: 5px;
+	padding-top: 2px;
+	vertical-align: top;
+}
+.commentDeleteButton{
+	background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+	background-repeat: no-repeat;
+	background-size: 25px 25px;
+	background-position: center center;
+	width: 34px;
+	height: 34px;
+	vertical-align: top;
+	margin-top: -5px;
+	border-radius: 5px;
+	background-color: #f880;
+}
+.commentEditButton{
+  background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
+}
+.newComment{
+	width: calc(100% - 100px)!important;
+	float:left;
 }
 </style>

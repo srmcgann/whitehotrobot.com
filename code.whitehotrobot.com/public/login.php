@@ -2,9 +2,7 @@
   require('db.php');
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
-  $userName = str_replace(' ', '_', str_replace("\t", '_', $userName));
   $password = mysqli_real_escape_string($link, $data->{'password'});
-  $userName = str_replace(' ', '_', str_replace("\t", '_', $userName));
   $sql = 'SELECT * FROM users WHERE name LIKE "' . $userName . '";';
   $res = mysqli_query($link, $sql);
   if(mysqli_num_rows($res)){

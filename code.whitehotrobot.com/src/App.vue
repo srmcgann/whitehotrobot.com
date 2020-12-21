@@ -34,6 +34,7 @@ export default {
         password: '',
         passhash: '',
         userInfo: [],
+				userData: [],
         createDemo: null,
         regusername: '',
         regpassword: '',
@@ -63,6 +64,7 @@ export default {
         goHome: null,
         viewDemo: '',
         rawDemoID: '',
+				fetchUserData: null,
         error404: false,
         extractEmbedURL: null,
         openFullscreen: null,
@@ -73,6 +75,24 @@ export default {
     }
   },
   methods:{
+		fetchUserData(id){
+			if(typeof this.state.userData[id] == 'undefined'){
+        let sendData = {userID: id}
+        fetch(this.state.baseURL + '/fetchUserData.php',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+        })
+        .then(res => res.json())
+        .then(data => {
+          if(data) {
+            this.state.userData[id] = data
+          }
+        })
+			}
+		},
     extractEmbedURL(item){
       if(item.videoLink.indexOf('youtu')!==-1){
         fetch(this.state.baseURL + '/vidThumb.php?id=' + item.id)
@@ -149,7 +169,7 @@ export default {
       if(vars.length>1){
         switch(vars[0]){
           case 'd': this.state.mode = 'single'; this.state.viewDemo = this.alphaToDec(vars[1]); this.state.rawDemoID = vars[1]; break
-          case 'u': this.state.mode = 'user'; this.state.viewAuthor = decodeURIComponent(vars[1]).replaceAll(' ', '_'); break
+          case 'u': this.state.mode = 'user'; this.state.viewAuthor = decodeURIComponent(vars[1]); break
         }
       }else{
         if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
@@ -212,6 +232,12 @@ export default {
             if(data){
               this.state.inView = Array(this.state.demos.length).fill().map(v=>false)
               data.map(v=>{
+								v.comments = v.comments.map(q=>{
+									q.updated = false
+									q.editing = false
+									this.fetchUserData(q.userID)
+									return q
+								})
                 if(typeof this.state.userInfo[v.userID] == 'undefined'){
                   let sendData = {userID: v.userID}
                   fetch(this.state.baseURL + '/fetchUserData.php',{
@@ -248,6 +274,12 @@ export default {
             if(data.length){
               this.state.demos=data
               this.state.demos.map(v=>{
+                v.comments = v.comments.map(q=>{
+                  q.updated = false
+                  q.editing = false
+                  this.fetchUserData(q.userID)
+                  return q
+                })
                 this.extractEmbedURL(v)
                 v.videoPlaying = false
 								v.play = this.state.autoplay
@@ -291,6 +323,12 @@ export default {
             this.state.demos=data
             this.state.demoDataReceived = true
             this.state.demos.map((v,i)=>{
+              v.comments = v.comments.map(q=>{
+                q.updated = false
+                q.editing = false
+                this.fetchUserData(q.userID)
+                return q
+              })
               this.extractEmbedURL(v)
               v.videoPlaying = false
 							v.play = this.state.autoplay
@@ -514,6 +552,7 @@ export default {
     this.state.toggleAutoplay = this.toggleAutoplay
     this.state.incrementViews = this.incrementViews
     this.state.openFullscreen = this.openFullscreen
+    this.state.fetchUserData = this.fetchUserData
     this.state.closePrompts = this.closePrompts
     this.state.createDemo = this.createDemo
     this.state.decToAlpha = this.decToAlpha
