@@ -239,18 +239,19 @@
 		  							<div style="clear:both;"></div>
 			  				  </div>
 				  		  </div>
-					  		<div v-if="state.loggedin">
-  		  		  		<input v-on:keyup.enter="postComment(item.id)" :ref="'newComment' + item.id" placeholder="say something..." class="commentInput newComment" style="margin-left: 0;margin-top: 16px;">
-	  					  	<button
-		  					    @click="postComment(item.id)"
-			  				    style="padding: 2px;padding-bottom: 4px;margin: 0;margin-left: 25px;display: block; margin-top: 12px; min-width: initial; padding-left: 10px; padding-right: 10px;float:left;"
-  				  			>post</button>
-	  				  		<div style="clear:both"></div>
-		  			  	</div>
 			  	    </div>
-            <div v-else>
-            -- no comments (log in to comment on this demo) --
-            </div>
+              <div v-else>
+                -- no comments --
+	    					<div v-if="!state.loggedin">(log in to comment on this demo)</div>
+              </div>
+              <div v-if="state.loggedin">
+                <input v-on:keyup.enter="postComment(item.id)" :ref="'newComment' + item.id" placeholder="say something..." class="commentInput newComment" style="margin-left: 0;margin-top: 16px;">
+                <button
+                  @click="postComment(item.id)"
+                  style="padding: 2px;padding-bottom: 4px;margin: 0;margin-left: 25px;display: block; margin-top: 12px; min-width: initial; padding-left: 10px; padding-right: 10px;float:left;"
+                >post</button>
+                <div style="clear:both"></div>
+              </div>
   					</div>
 					</div>
         </div>
@@ -378,6 +379,7 @@ export default {
   						date: data[2]
 	  				}
   		  	  this.state.demos.filter(v=>v.id==id)[0].comments.push(comment)
+						this.$refs['newComment' + id].value = ''
 			  	}
         })
 			}
