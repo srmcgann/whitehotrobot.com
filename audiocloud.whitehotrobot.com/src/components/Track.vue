@@ -2,7 +2,7 @@
   <div class="trackContainer">
     <button v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin" class="deleteTrackButton" @click="deleteTrack(track)">
     </button>
-    <img :src="state.getAvatar(track.userID)" class="avatar" style="float: left;">
+    <div class="avatar" :style="'float: left;max-width: 100px;background-image:url('+state.getAvatar(track.userID)+');width:100px;height:100px;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
     <a :href="state.baseURL + '/u/' + track.author" target="_blank" class="link" v-html="track.author" style="float: left;"></a>
     <div v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin" class="trackElem" style="display: inline-block;width:400px;float:left;">
       <input
@@ -15,7 +15,7 @@
       <span style="word-break: keep-all;display: inline-block;">{{track.plays + ' view' + (track.plays > 1 ? 's' : '')}}</span>
     </div>
     <div v-else class="trackElem" style="width: 400px;text-align: center;">
-      <span class="trackTitle" v-html="'&quot;'+track.trackName+'&quot;'" style="font-size: 28px;font-style:oblique;color: #0f8;word-break: break-all"></span>
+      <span class="trackTitle" v-html="'&quot;'+track.trackName+'&quot;'" style="font-size: 18px;font-style:oblique;color: #0f8;word-break: break-all"></span>
       <span style="margin-left: 20px;word-break: keep-all;display: inline-block;">{{track.plays + ' view' + (track.plays > 1 ? 's' : '')}}</span>
     </div>
     <div style="clear:both;"></div>
@@ -135,8 +135,8 @@
           <div class="commentMain">
             <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
             <span  v-if="typeof state.userInfo[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
-              <img :src="state.userInfo[comment.userID].avatar || 'https://lookie.jsbot.net/uploads/1pnBdc.png'" class="commentAvatar">
-              <a :href="state.baseURL + '/u/' + state.userInfo[comment.userID].name" target="_blank" style="color:#4dc!important;font-style: oblique;">{{state.userInfo[comment.userID].name}}</a>
+              <div class="commentAvatar" :style="'background-image:url('+state.getAvatar(track.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
+              <a :href="state.baseURL + '/u/' + state.userInfo[comment.userID].name" target="_blank" style="color:#4dc!important;font-style: oblique;margin-left: 5px;">{{state.userInfo[comment.userID].name}}</a>
             </span><br>
             <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
               <input
@@ -747,7 +747,7 @@ input[type=text]{
 }
 .commentAvatar{
   position: absolute;
-	margin-left: -51px;
+	margin-left: -1px;
   max-height: 50px;
   max-width: 50px;
   width: auto;

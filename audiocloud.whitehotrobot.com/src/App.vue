@@ -20,7 +20,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'http://local.audiocloud.whitehotrobot.com',
+        baseURL: 'https://audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -29,7 +29,7 @@ export default {
         userData: [],
         incrementViews: null,
         loggedinUserName: '',
-        baseProtocol: 'http',
+        baseProtocol: 'https',
         loggedin: false,
         showUploadModal: false,
         toggleLogin: null,
@@ -143,6 +143,7 @@ export default {
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           this.incrementViews(v.id)
+					this.loadUserData(v.author)
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
@@ -225,6 +226,7 @@ export default {
       window.location.href = window.location.origin
     },
     getAvatar(id){
+			console.log(id)
       if(typeof this.state.userInfo[id] == 'undefined' || !this.state.userInfo[id].avatar){
         return this.state.defaultAvatar
       } else {

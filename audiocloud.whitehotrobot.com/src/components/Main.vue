@@ -6,7 +6,7 @@
           <Track :track="track" :state="state"/>
         </div>
       </div>
-      <div v-else style="font-size: 1.5em;">
+      <div v-else-if="state.loaded" style="font-size: 1.5em;">
         <br><br><br><br><br>OOPS!
         <br><br><br>this track could not be found!
       </div>
@@ -31,7 +31,7 @@
             <Track :track="track" :state="state"/>
           </div>
         </div>
-        <div v-else style="font-size: 1.5em;">
+        <div v-else-if="state.loaded" style="font-size: 1.5em;">
           <br><br><br><br>OOPS!
           <br><br>{{state.user.name}} has not<br>uploaded any tracks yet!
           <br><br><br>

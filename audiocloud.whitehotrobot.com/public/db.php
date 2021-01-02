@@ -5,7 +5,7 @@
   $db="videodemos";
   $demoSandbox='demo.whitehotrobot.com';
   
-	$local = true;
+	$local = false;
 	if($local){
 		$baseURL='local.audiocloud.whitehotrobot.com';
     $baseAssetsURL = 'http://local.assets.whitehotrobot.com';
