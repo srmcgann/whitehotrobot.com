@@ -26,17 +26,21 @@ export default {
         baseDomain: 'audiocloud.whitehotrobot.com',
         baseUserDomain: 'whitehotrobot.com',
         rootDomain: 'whitehotrobot.com',
+        maxCommentsBeforeExpansion: 3,
+        curPage: 0,
         userData: [],
+        curUserPage: null,
         incrementViews: null,
         loggedinUserName: '',
         baseProtocol: 'https',
         loggedin: false,
+        totalUserPages: 0,
+        totalPages: 0,
         showUploadModal: false,
         toggleLogin: null,
         showLoginPrompt: null,
         closePrompts: null,
         loginPromptVisible: false,
-        viewAuthor: null,
         isAdmin: false,
         checkEnabled: null,
         loggedinuser: '',
@@ -52,6 +56,10 @@ export default {
         tracks: [],
         regusername: '',
         showControls: false,
+        advancePage: null,
+        regressPage: null,
+        firstPage: null,
+        lastPage: null,
         regpassword: '',
         preload: 2,
         decToAlpha: null,
@@ -112,7 +120,10 @@ export default {
     },
 		fetchUserData(id){
 			if(typeof this.state.userData[id] == 'undefined'){
-        let sendData = {userID: id}
+        let sendData = {
+          userID: id,
+          page: this.state.curUserPage
+        }
         fetch(this.state.baseURL + '/fetchUserData.php',{
           method: 'POST',
           headers: {
@@ -123,23 +134,28 @@ export default {
         .then(res => res.json())
         .then(data => {
           if(data) {
-            this.state.userData[id] = data
+            this.state.userData[id] = data[0]
             this.state.userInfo[id] = {}
-            this.state.userInfo[id].name = data.name
-            this.state.userInfo[id].avatar = data.avatar
-            this.state.userInfo[id].isAdmin = data.isAdmin
+            this.state.userInfo[id].name = data[0].name
+            this.state.userInfo[id].avatar = data[0].avatar
+            this.state.userInfo[id].isAdmin = data[0].isAdmin
+            this.state.totalUserPages = data[1]
           }
         })
 			}
 		},
     loadLandingPage(){
+      let sendData = {
+        page: this.state.curPage
+      }
       fetch(this.state.baseURL + '/getRecentTracks.php',{
-        method: 'GET',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data.map(v=>{
+        data[0].map(v=>{
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           this.incrementViews(v.id)
@@ -151,7 +167,8 @@ export default {
             return q
           })
         })
-        this.state.landingPage.audiocloudTracks = data
+        this.state.landingPage.audiocloudTracks = data[0]
+        this.state.totalPages = data[1]
         this.state.loaded = true
       })
     },
@@ -159,7 +176,8 @@ export default {
       let sendData = {
         name: name,
         loggedinUserName: this.state.loggedinUserName,
-        passhash: this.state.passhash
+        passhash: this.state.passhash,
+        page: this.state.curUserPage
       }
       fetch(this.state.baseURL + '/fetchUserDataByName.php',{
         method: 'POST',
@@ -168,8 +186,8 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data.audiocloudTracks.map(v=>{
-          this.incrementViews(v.id)
+        data[0].audiocloudTracks.map(v=>{
+          if(this.state.mode != 'default') this.incrementViews(v.id)
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           v.comments = v.comments.map(q=>{
@@ -179,7 +197,8 @@ export default {
             return q
           })
         })
-        this.state.user = data
+        this.state.totalUserPages = data[1]
+        this.state.user = data[0]
         this.state.userInfo[this.state.user.id] = {}
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
@@ -268,7 +287,9 @@ export default {
     },
     checkEnabled(){
       if(this.state.loggedinUserName) {
-        let sendData = {userName: this.state.loggedinUserName, passhash: this.state.passhash}
+        let sendData = {
+          userName: this.state.loggedinUserName, passhash: this.state.passhash,
+        }
         fetch(this.state.baseURL + '/checkEnabled.php',{
           method: 'POST',
           headers: {
@@ -291,7 +312,10 @@ export default {
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
             if(+data[3]) this.state.isAdmin = true
             if(this.state.mode !== 'u'){
-              sendData = {userID: this.state.loggedinUserID}
+              sendData = {
+                userID: this.state.loggedinUserID,
+                page: this.state.curUserPage
+              }
               fetch(this.state.baseURL + '/fetchUserData.php',{
                 method: 'POST',
                 headers: {
@@ -299,13 +323,11 @@ export default {
                 },
                 body: JSON.stringify(sendData),
               }).then(res=>res.json()).then(data=>{
-                if(!this.state.viewAuthor || this.state.viewAuthor === data.escaped_name){
-                  this.state.user = data
-                  this.state.userInfo[this.state.loggedinUserID].name = data.name
-                  this.state.userInfo[this.state.loggedinUserID].avatar = data.avatar
-                  this.state.userInfo[this.state.loggedinUserID].isAdmin = +data.isAdmin
-                }
-                //this.state.loaded = true
+                this.state.user = data[0]
+                this.state.userInfo[this.state.loggedinUserID].name = data[0].name
+                this.state.userInfo[this.state.loggedinUserID].avatar = data[0].avatar
+                this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[0].isAdmin
+                this.state.totalUserPages = data[1]
               })
             }
           }else{
@@ -335,18 +357,28 @@ export default {
           case 'playlist':
             this.state.mode = 'playlist'
             break
-          case 'upload':
-            this.state.mode = 'upload'
-            break
-          case 'browse':
-            this.state.mode = 'browse'
-            break
           case 'u':
             this.state.mode = 'u'
-            this.$nextTick(()=>this.loadUserData(decodeURIComponent(vars[1]).replaceAll(' ', ' ')))
+            if(vars[2]){
+              this.state.curUserPage = (+vars[2])-1
+            } else {
+              this.state.curUserPage = 0
+            }
+            this.$nextTick(()=>this.loadUserData(decodeURIComponent(vars[1])))
+            history.pushState(null,null,window.location.origin + '/u/' + decodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
           break
           default:
-            if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+            this.state.mode = 'default'
+            if(vars[0]){
+              this.state.curPage = (+vars[0])-1
+            }
+            if(!this.state.curPage || this.state.curPage < 0 || this.state.curPage > 1e6) this.state.curPage = 0
+            if(this.state.curPage) {
+              this.$nextTick(()=>this.loadLandingPage())
+              history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1))
+            } else {
+              window.location.href = window.location.origin
+            }
           break
         }
       }else{
@@ -379,7 +411,10 @@ export default {
           this.state.userInfo[this.state.loggedinUserID].name = this.state.regusername || this.state.loggedinUserName
           this.state.userInfo[this.state.loggedinUserID].avatar = data[3]
           this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[4]
-          sendData = {userID: this.state.loggedinUserID}
+          sendData = {
+            userID: this.state.loggedinUserID,
+            page: this.state.curUserPage
+          }
           fetch(this.state.baseURL + '/fetchUserData.php',{
             method: 'POST',
             headers: {
@@ -387,19 +422,13 @@ export default {
             },
             body: JSON.stringify(sendData),
           }).then(res=>res.json()).then(data=>{
-            if(this.state.viewAuthor === data.escaped_name){
-              this.state.user = data
-              this.state.user.pages.map((v, i)=>{
-                if(i < this.state.preload){
-                  v.show = true
-                } else {
-                  v.show = false
-                }
-                v.userID = +v.userID
-              })
+            if(this.state.viewAuthor === data[0].escaped_name){
+              this.state.user = data[0]
+              this.state.totalUserPages = data[1]
             }
             // this.state.loaded = true
           })
+          this.$nextTick(()=>this.loadUserData(this.state.user.name))
         }else{
           this.state.loggedin = false
           this.state.invalidLoginAttempt = true
@@ -417,6 +446,7 @@ export default {
       this.state.loggedin = false
       this.state.isAdmin = false
       this.state.loggedinUserID = this.state.loggedinUserName = ''
+      this.$nextTick(()=>this.loadUserData(this.state.user.name))
     },
     checkLogin(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinuser')
@@ -452,6 +482,46 @@ export default {
         }
       })
     },
+    firstPage(){
+      switch(this.state.mode){
+        case 'u':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name
+        break
+        case 'default':
+          window.location.href = window.location.origin
+        break
+      }
+    },
+    lastPage(){
+      switch(this.state.mode){
+        case 'u':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.totalUserPages
+        break
+        case 'default':
+          window.location.href = window.location.origin + '/' + this.state.totalPages
+        break
+      }
+    },
+    advancePage(){
+      switch(this.state.mode){
+        case 'u':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + (this.state.curUserPage + 2)
+        break
+        case 'default':
+          window.location.href = window.location.origin + '/' + (this.state.curPage + 2)
+        break
+      }
+    },
+    regressPage(){
+      switch(this.state.mode){
+        case 'u':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.curUserPage
+        break
+        case 'default':
+          window.location.href = window.location.origin + '/' + this.state.curPage
+        break
+      }
+    }
   },
   watch:{
     'state.showUploadModal'(val){
@@ -472,11 +542,15 @@ export default {
     this.state.closePrompts = this.closePrompts
     this.state.loadUserData = this.loadUserData
     this.state.checkEnabled = this.checkEnabled
+    this.state.advancePage = this.advancePage
+    this.state.regressPage = this.regressPage
     this.state.toggleLogin = this.toggleLogin
     this.state.decToAlpha = this.decToAlpha
     this.state.alphaToDec = this.alphaToDec
+    this.state.firstPage = this.firstPage
     this.state.setCookie = this.setCookie
     this.state.getAvatar = this.getAvatar
+    this.state.lastPage = this.lastPage
     this.state.goHome = this.goHome
     this.state.logout = this.logout
     this.state.login = this.login

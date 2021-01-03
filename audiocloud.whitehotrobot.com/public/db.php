@@ -4,6 +4,8 @@
   $db_host="localhost";
   $db="videodemos";
   $demoSandbox='demo.whitehotrobot.com';
+  $maxResultsPerPage = 6;
+  
   
 	$local = false;
 	if($local){

@@ -1,5 +1,7 @@
 <template>
-  <div class="trackContainer">
+  <div class="trackContainer"
+    :class="{'singleTrack': state.mode=='track'}"
+  >
     <button v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin" class="deleteTrackButton" @click="deleteTrack(track)">
     </button>
     <div class="avatar" :style="'float: left;max-width: 100px;background-image:url('+state.getAvatar(track.userID)+');width:100px;height:100px;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
@@ -15,7 +17,7 @@
       <span style="word-break: keep-all;display: inline-block;">{{track.plays + ' view' + (track.plays != 1 ? 's' : '')}}</span>
     </div>
     <div v-else class="trackElem" style="width: 400px;text-align: center;">
-      <span class="trackTitle" v-html="'&quot;'+track.trackName+'&quot;'" style="font-size: 18px;font-style:oblique;color: #0f8;word-break: break-all"></span>
+      <span class="trackTitle" v-html="'&quot;'+track.trackName+'&quot;'" style="font-size: 26px;font-style:oblique;color: #0f8;word-break: break-word"></span>
       <span style="margin-left: 20px;word-break: keep-all;display: inline-block;">{{track.plays + ' view' + (track.plays > 1 ? 's' : '')}}</span>
     </div>
     <div style="clear:both;"></div>
@@ -131,7 +133,7 @@
         comments
       </div>
       <div v-if="track.comments.length">
-        <div v-for="comment in track.comments">
+        <div v-for="comment in filteredComments">
           <div class="commentMain">
             <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
             <span  v-if="typeof state.userInfo[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
@@ -172,6 +174,13 @@
             <div style="clear:both;"></div>
           </div>
         </div>
+        <div v-if="moreComments" style="text-align: center;">
+          <span style="display: inline-block;font-size: 32px;">...</span>
+          <button
+            class = "loadCommentsButton"
+            @click="incrComments()"
+          >load more comments</button>
+        </div>
       </div>
       <div v-else>
         <div style="text-align: center;">-- no comments --</div>
@@ -187,7 +196,7 @@
         >
         <button
           @click="postComment(track.id)"
-          style="padding: 2px;padding-bottom: 4px;margin: 0;margin-left: 25px;display: block; margin-top: 12px; min-width: initial; padding-left: 10px; padding-right: 10px;float:left;"
+          style="background: #1ca;padding: 2px;padding-bottom: 4px;margin: 0;margin-left: 25px;display: block; margin-top: 14px; min-width: initial; padding: 0;padding-left: 10px; padding-right: 10px;float:left;"
         >post</button>
         <div style="clear:both"></div>
       </div>
@@ -204,6 +213,8 @@ export default {
       t: 0,
       canPlay: false,
       trackAmplitude:[],
+      showComments: 2,
+      moreCommentsVal: 5,
       x: null,
       audioCtx: null,
       updated:{
@@ -226,6 +237,9 @@ export default {
     }
   },
   methods:{
+    incrComments(){
+      this.showComments += this.moreCommentsVal
+    },
 		toggleEditMode(comment){
 			comment.editing = !comment.editing
 			if(comment.editing){
@@ -489,7 +503,7 @@ export default {
           }
           x.stroke()
         }
-        if(this.playing){
+        if(this.mp3.currentTime){
           x.font='16px Play'
           x.fillStyle='#4fc8'
           x.fillText(this.formattedCurrentTime() , c.width-90, 16)
@@ -521,6 +535,12 @@ export default {
     }
   },
   computed:{
+    filteredComments(){
+      return this.track.comments.filter((v,i)=>i<this.showComments)
+    },
+    moreComments(){
+      return this.track.comments.length > this.showComments
+    }
   },
   mounted(){
     this.c = this.$refs.canvas
@@ -540,6 +560,9 @@ export default {
     this.t = 0
     
     this.mp3 = new Audio()
+    this.mp3.addEventListener('ended',()=>{
+      this.playing = false
+    })
     this.mp3.addEventListener('canplay',()=>{
       this.duration = this.mp3.duration
       this.canPlay = true
@@ -571,7 +594,7 @@ export default {
 <style scoped>
 .trackElem{
   display: inline-block;
-  font-size: 18px;
+  font-size: 20px;
 }
 .trackTitle{
   color: #ff8;
@@ -580,7 +603,9 @@ export default {
 .trackContainer{
   display: inline-block;
   vertical-align: top;
-  margin-top: 30px;
+  margin-left: 6px;
+  margin-right: 6px;
+  margin-top: 12px;
   border: 1px solid #6fa3;
   background: #3456;
   padding: 10px;
@@ -697,8 +722,8 @@ input[type=text]{
 }
 .deleteTrackButton{
   position: absolute;
-  left: calc(50% + 245px);
   margin-top: -5px;
+  margin-left: 555px;
   background-color: #300a;
   width: 50px;
   min-width: initial;
@@ -804,5 +829,21 @@ input[type=text]{
 table{
   margin-left: auto;
   margin-right: auto;
+}
+.loadCommentsButton{
+  padding: 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: #3f83;
+  color: #fffc;
+  font-weight: 300;
+  font-size: 24px;
+  position: relative;
+  display: inline-block;
+}
+.singleTrack{
+  position: absolute;
+  top: 45%;
+  transform: translate(0, -50%);
 }
 </style>

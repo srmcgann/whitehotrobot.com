@@ -27,8 +27,41 @@
         <button @click="state.showUploadModal = false" style="background: #400;color: #fee;font-weight: 400;">cancel</button>
       </div>
     </div>
-    <div v-if="state.loggedin">
-      <button @click="startUpload()" class="uploadButton">upload</button>
+    <div class="navContainer">
+      <div class="curPageContainer">
+        <button
+          class="navButton"
+          :class="{'disabled': curPage < 1}"
+          @click="state.firstPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          class="navButton"
+          :class="{'disabled': curPage < 1}"
+          @click="state.regressPage()"
+        >
+          &lt;
+        </button>
+        {{pagenumber}}
+        <button
+          class="navButton"
+          :class="{'disabled': totalPages == curPage+1}"
+          @click="state.advancePage()"
+        >
+          &gt;
+        </button>
+        <button
+          class="navButton"
+          :class="{'disabled': totalPages == curPage+1}"
+          @click="state.lastPage()"
+        >
+          &gt;&gt;
+        </button>
+      </div>
+      <div v-if="state.loggedin" style="display: inline-block">
+        <button @click="startUpload()" class="uploadButton">upload</button>
+      </div>
     </div>
     <div class="workingSpace">
       <div class="loggedinDiv">
@@ -149,6 +182,30 @@ export default {
     }
   },
   computed:{
+    totalPages(){
+      switch(this.state.mode){
+        case 'u': return +this.state.totalUserPages; break
+        case 'default': return +this.state.totalPages; break
+      }
+    },
+    curPage(){
+      switch(this.state.mode){
+        case 'u': return +this.state.curUserPage; break
+        case 'default': return +this.state.curPage; break
+      }
+    },
+    pagenumber(){
+      let num
+      switch(this.state.mode){
+        case 'u':
+          num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
+        break
+        case 'default':
+          num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
+        break
+      }
+      return num
+    },
     origin(){
       return window.location.origin
     }
@@ -230,14 +287,6 @@ export default {
 a{
   color: #ff0!important;
   text-decoration: none;
-}
-.uploadButton{
-  z-index: 1000;
-  margin-bottom: -30px;
-  position: absolute;
-  margin-top: 15px;
-  background: #0f4;
-  transform: translateX(-50%);
 }
 .uploadModal{
   position: fixed;
@@ -383,5 +432,43 @@ a{
 .newComment{
 	width: calc(100% - 100px)!important;
 	float:left;
+}
+.curPageContainer{
+  display: inline-block;
+  width: 270px;
+  margin-top: 10px;
+  vertical-align: top;
+  padding-top: 10px;
+}
+.navContainer{
+  z-index: 1000;
+  margin-bottom: -30px;
+  position: absolute;
+  margin-top: 0;
+  font-size: .7em;
+  left: 50%;
+  width: 400px;
+  transform: translateX(-50%);
+}
+.uploadButton{
+  background: #0f4;
+  width: 80px;
+  display: inline-block;
+  text-align: center;
+  margin-top: 15px;
+  min-width: 0;
+}
+.navButton{
+  min-width:0;
+  height: 25px;
+  padding: 0;
+  background: #0f0;
+  margin: 0;
+  margin-left: 2px;
+  margin-right: 2px;
+  width: 25px;
+}
+.disabled{
+  background: #888;
 }
 </style>

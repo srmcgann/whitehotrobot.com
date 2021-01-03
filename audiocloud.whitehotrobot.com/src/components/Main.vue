@@ -1,10 +1,8 @@
 <template>
   <div class="main">
     <div v-if="state.mode=='track'">
-      <div v-if="state.tracks.length">
-        <div v-for="track in state.tracks" :key="track.id">
-          <Track :track="track" :state="state"/>
-        </div>
+      <div v-if="state.tracks.length" class="flex">
+        <Track v-for="track in state.tracks" :key="track.id" :track="track" :state="state"/>
       </div>
       <div v-else-if="state.loaded" style="font-size: 1.5em;">
         <br><br><br><br><br>OOPS!
@@ -12,10 +10,8 @@
       </div>
     </div>
     <div v-if="state.mode=='default'">
-      <div v-if="filteredLandingPageTracks.length">
-        <div v-for="track in filteredLandingPageTracks" :key="track.id">
-          <Track :track="track" :state="state"/>
-        </div>
+      <div v-if="filteredLandingPageTracks.length" class="flex">
+        <Track v-for="track in filteredLandingPageTracks" :key="track.id" :track="track" :state="state"/>
       </div>
       <div v-else-if="state.loaded" style="font-size: 1.5em;">
         <br><br><br><br><br>OOPS!
@@ -26,10 +22,8 @@
     </div>
     <div v-if="state.mode=='u'">
       <div v-if="state.loaded && state.user.name">
-        <div v-if="filteredUserTracks.length">
-          <div v-for="track in filteredUserTracks" :key="track.id">
-            <Track :track="track" :state="state"/>
-          </div>
+        <div v-if="filteredUserTracks.length" class="flex">
+          <Track v-for="track in filteredUserTracks" :key="track.id" :track="track" :state="state"/>
         </div>
         <div v-else-if="state.loaded" style="font-size: 1.5em;">
           <br><br><br><br>OOPS!
@@ -73,6 +67,12 @@ export default {
 .main{
   text-align: center;
   margin-top: 60px;
-  padding-bottom: 100px;
+  padding-bottom: 60px;
+}
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 0;
 }
 </style>

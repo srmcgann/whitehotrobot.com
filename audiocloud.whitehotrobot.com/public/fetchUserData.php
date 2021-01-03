@@ -2,12 +2,22 @@
   require('db.php');
   $data = json_decode(file_get_contents('php://input'));
   $userID = mysqli_real_escape_string($link, $data->{'userID'});
+
+  $page = mysqli_real_escape_string($link, $data->{'page'});
+  $start = $maxResultsPerPage * $page;
+
   $sql='SELECT * FROM users WHERE id = ' . $userID;
   $res = mysqli_query($link, $sql);
   $row=mysqli_fetch_assoc($res);
 	unset($row['passhash']);
 	$ret = $row;
-	$sql="SELECT * FROM audiocloudTracks WHERE userID = " . $userID . ' ORDER BY id DESC';
+	
+  $sql="SELECT id FROM audiocloudTracks WHERE userID = " . $userID;
+	$res = mysqli_query($link, $sql);
+  $totalRecords = mysqli_num_rows($res);
+  $totalPages = ($totalRecords / $maxResultsPerPage | 0) + 1;
+  
+	$sql="SELECT * FROM audiocloudTracks WHERE userID = " . $userID . ' ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	$res = mysqli_query($link, $sql);
 	$tracks = [];
 	for($i=0;$i<mysqli_num_rows($res);++$i){
@@ -26,5 +36,5 @@
     }
   }
 
-  echo json_encode($ret);
+  echo json_encode([$ret, $totalPages]);
 ?>
