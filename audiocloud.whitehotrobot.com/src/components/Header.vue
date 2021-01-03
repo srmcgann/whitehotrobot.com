@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="navContainer">
-      <div class="curPageContainer">
+      <div class="curPageContainer" v-if="state.mode != 'track'">
         <button
           class="navButton"
           :class="{'disabled': curPage < 1}"
@@ -105,8 +105,6 @@ export default {
   methods:{
     startUpload(){
       this.state.showUploadModal=true
-      this.state.mode = 'u'
-      window.history.pushState(null,null,window.location.origin + '/u/' + this.state.loggedinUserName)
     },
     dragLeaveHandler(){
       this.dragover = false
@@ -151,9 +149,7 @@ export default {
               if(!q.completed) finished = false
             })
             if(finished) {
-              this.state.showUploadModal = false
-              this.state.loadUserData(this.state.loggedinUserName)
-              this.showUploadProgress = false
+              window.location.href = window.location.origin + '/u/' + this.state.loggedinUserName
             }
           })
           request.send(data)
@@ -472,3 +468,4 @@ a{
   background: #888;
 }
 </style>
+
