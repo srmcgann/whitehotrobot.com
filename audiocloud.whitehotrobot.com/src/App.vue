@@ -161,7 +161,6 @@ export default {
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash
       }
-      console.log(sendData)
       fetch(this.state.baseURL + '/fetchUserDataByName.php',{
         method: 'POST',
         headers: {
@@ -169,7 +168,6 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        console.log(data)
         data.audiocloudTracks.map(v=>{
           this.incrementViews(v.id)
           v.private = !!(+v.private)
@@ -186,6 +184,7 @@ export default {
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
         this.state.userInfo[this.state.user.id].isAdmin = this.state.user.isAdmin
+				this.state.refreshAvatar = true
         this.state.loaded = true
       })
     },
@@ -201,6 +200,7 @@ export default {
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
         data.private = !!(+data.private)
+				this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
           q.updated = false
           q.editing = false
@@ -226,7 +226,6 @@ export default {
       window.location.href = window.location.origin
     },
     getAvatar(id){
-			console.log(id)
       if(typeof this.state.userInfo[id] == 'undefined' || !this.state.userInfo[id].avatar){
         return this.state.defaultAvatar
       } else {
@@ -367,7 +366,6 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         if(data[0]){
           this.state.loggedin = true
           this.state.loggedinUserName = this.state.username

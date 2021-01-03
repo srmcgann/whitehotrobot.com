@@ -12,7 +12,7 @@
         placeholder="track name"
         @input="updateTrackItem(track.id, 'trackName')" type="text" v-model="track.trackName"
       >
-      <span style="word-break: keep-all;display: inline-block;">{{track.plays + ' view' + (track.plays > 1 ? 's' : '')}}</span>
+      <span style="word-break: keep-all;display: inline-block;">{{track.plays + ' view' + (track.plays != 1 ? 's' : '')}}</span>
     </div>
     <div v-else class="trackElem" style="width: 400px;text-align: center;">
       <span class="trackTitle" v-html="'&quot;'+track.trackName+'&quot;'" style="font-size: 18px;font-style:oblique;color: #0f8;word-break: break-all"></span>
@@ -135,7 +135,7 @@
           <div class="commentMain">
             <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
             <span  v-if="typeof state.userInfo[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
-              <div class="commentAvatar" :style="'background-image:url('+state.getAvatar(track.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
+              <div class="commentAvatar" :style="'background-image:url('+state.getAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
               <a :href="state.baseURL + '/u/' + state.userInfo[comment.userID].name" target="_blank" style="color:#4dc!important;font-style: oblique;margin-left: 5px;">{{state.userInfo[comment.userID].name}}</a>
             </span><br>
             <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
@@ -543,8 +543,11 @@ export default {
     this.mp3.addEventListener('canplay',()=>{
       this.duration = this.mp3.duration
       this.canPlay = true
-      if(this.state.mode == 'track') this.mp3.play()
-    })
+      if(this.state.mode == 'track') {
+				this.mp3.play()
+				this.playing = true
+      }
+		})
     this.mp3.src = this.track.audioFile
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     this.audioCtx = new AudioContext();
