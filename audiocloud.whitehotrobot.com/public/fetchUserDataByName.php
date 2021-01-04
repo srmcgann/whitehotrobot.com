@@ -16,12 +16,13 @@
   		  $row = mysqli_fetch_assoc($res);
 	  	  $loggedinUserData = $row;
 				if($row['admin']) $admin = true;
+        $loggedinPasshash = $row['passhash'];
 	  	}
 		}
 		$sql='SELECT * FROM users WHERE name LIKE "' . $name . '"';
     $res = mysqli_query($link, $sql);
     $row=mysqli_fetch_assoc($res);
-		if(strtoupper($row['name']) === strtoupper($loggedinUserName) && $passhash == $row['passhash']  || $admin){
+		if(strtoupper($row['name']) === strtoupper($loggedinUserName) && $passhash == $loggedinPasshash  || $admin){
 		  $includePrivate = true;
 		}
 	  unset($row['passhash']);
@@ -31,7 +32,7 @@
       $sql="SELECT id FROM audiocloudTracks WHERE userID = " . $row['id'];
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
-      $totalPages = $totalRecords / $maxResultsPerPage | 0;
+      $totalPages = ($totalRecords / $maxResultsPerPage | 0) + 1;
   
 	    $sql1=$sql = "SELECT * FROM audiocloudTracks WHERE userID = " . $row['id'] . ' ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	  } else {

@@ -32,12 +32,14 @@
         <button
           class="navButton"
           :class="{'disabled': curPage < 1}"
+          :disabled="curPage < 1"
           @click="state.firstPage()"
         >
           &lt;&lt;
         </button>
         <button
           class="navButton"
+          :disabled="curPage < 1"
           :class="{'disabled': curPage < 1}"
           @click="state.regressPage()"
         >
@@ -47,6 +49,7 @@
         <button
           class="navButton"
           :class="{'disabled': totalPages == curPage+1}"
+          :disabled="totalPages == curPage+1"
           @click="state.advancePage()"
         >
           &gt;
@@ -54,6 +57,7 @@
         <button
           class="navButton"
           :class="{'disabled': totalPages == curPage+1}"
+          :disabled="totalPages == curPage+1"
           @click="state.lastPage()"
         >
           &gt;&gt;
@@ -468,4 +472,3 @@ a{
   background: #888;
 }
 </style>
-
