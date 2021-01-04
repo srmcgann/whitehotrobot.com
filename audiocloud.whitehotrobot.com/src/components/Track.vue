@@ -125,6 +125,15 @@
         @click="playPauseTrack()"
         :class="{'disabledPauseButton': !canPlay}"
       ></button>
+      <button
+        @click="loop=!loop"
+        class="smallControlButton loopButton"
+        :class="{'highlighted':loop}"
+      ></button>
+      <button
+        class="smallControlButton resetButton"
+        @click="mp3.currentTime = 0"
+      ></button>
       <canvas ref="canvas" class="canvas"></canvas>
     </div>
 
@@ -211,6 +220,7 @@ export default {
   data(){
     return {
       t: 0,
+      loop: false,
       canPlay: false,
       trackAmplitude:[],
       showComments: 2,
@@ -561,7 +571,12 @@ export default {
     
     this.mp3 = new Audio()
     this.mp3.addEventListener('ended',()=>{
-      this.playing = false
+      if(this.loop){
+        this.mp3.currentTime = 0
+        this.mp3.play()
+      }else{
+        this.playing = false
+      }
     })
     this.mp3.addEventListener('canplay',()=>{
       this.duration = this.mp3.duration
@@ -840,6 +855,32 @@ table{
   font-size: 24px;
   position: relative;
   display: inline-block;
+}
+.smallControlButton{
+  width: 32px;
+  height: 32px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  border-radius: 50%;
+  position: absolute!important;
+  min-width: 0;
+}
+.loopButton{
+  background-color: #028;
+  margin-left: -27px;
+  margin-top: 0px;
+  background-image: url(https://lookie.jsbot.net/uploads/2kPCX5.png);
+}
+.highlighted{
+  background-color: #0fa;
+  background-image: url(https://lookie.jsbot.net/uploads/14MAyj.png);
+}
+.resetButton{
+  background-color: #0000;
+  margin-left: -27px;
+  margin-top: 70px;
+  background-image: url(https://lookie.jsbot.net/uploads/1ucSmp.png);
 }
 .singleTrack{
   position: absolute;

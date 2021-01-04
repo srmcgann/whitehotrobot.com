@@ -20,7 +20,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'httpS://audiocloud.whitehotrobot.com',
+        baseURL: 'https://audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -139,8 +139,6 @@ export default {
             this.state.userInfo[id].name = data[0].name
             this.state.userInfo[id].avatar = data[0].avatar
             this.state.userInfo[id].isAdmin = data[0].isAdmin
-            //this.state.totalUserPages = data[1]
-            //console.log('total user pages (fetchUserData/fetchUserData.php): ', this.state.totalUserPages)
           }
         })
 			}
@@ -199,7 +197,6 @@ export default {
           })
         })
         this.state.totalUserPages = data[1]
-        console.log('total user pages (loadUserData/fetchUserDataByName.php): ', this.state.totalUserPages)
         this.state.user = data[0]
         this.state.userInfo[this.state.user.id] = {}
         this.state.userInfo[this.state.user.id].name = this.state.user.name
@@ -449,7 +446,7 @@ export default {
       this.state.loggedin = false
       this.state.isAdmin = false
       if(this.state.mode = 'u'){
-        window.location.href = window.location.origin + '/u/' + this.state.loggedinUserName
+				window.location.href = window.location.origin
       }
       this.state.loggedinUserID = this.state.loggedinUserName = ''
       this.$nextTick(()=>this.loadUserData(this.state.user.name))

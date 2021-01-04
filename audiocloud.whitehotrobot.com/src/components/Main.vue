@@ -72,7 +72,7 @@ export default {
 .flex{
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: space-evenly;
   margin: 0;
 }
 </style>
