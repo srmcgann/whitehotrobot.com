@@ -7,7 +7,7 @@
   $sql="SELECT id FROM audiocloudTracks WHERE private = 0";
 	$res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
-  $totalPages = ($totalRecords / $maxResultsPerPage | 0) + 1;
+  $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
 	$sql = 'SELECT * FROM audiocloudTracks WHERE private = 0 ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	$res = mysqli_query($link, $sql);
