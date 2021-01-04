@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="header" id="header">
     <div v-if="showUploadProgress" class="uploadProgressContainer">
       <br>uploading {{filesUploading.length}} file{{filesUploading.length > 1 ? 's':''}}...
       <div class="progressBar" v-for="file in filesUploading">
@@ -170,7 +170,7 @@ export default {
     },
     truncate(str){
       if(typeof str === 'undefined') return
-      return str.length > 9 ? str.substring(0,5) + '...' + str.substring(str.length-3) : str
+      return str.length > 16 ? str.substring(0,2) + '...' + str.substring(str.length-3) : str
     },
     uploadManual(){
       let file = document.createElement('input')

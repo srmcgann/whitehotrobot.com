@@ -138,7 +138,7 @@
     </div>
 
     <div class="commentContainer">
-      <div class="commentsHeader" style="background: linear-gradient(90deg, #102f, #1023, #0000);display: inline-block;padding-right: 200px;padding-left: 10px;color:#2f4;margin-bottom: 2px;height: 25px;line-height: 20px;">
+      <div class="commentsHeader" style="background: linear-gradient(90deg, #102f, #1023, #0000);display: inline-block;padding-right: 200px;padding-left: 10px;color:#2f4;margin-bottom: 10px;height: 25px;line-height: 20px;margin-left: -10px;">
         comments
       </div>
       <div v-if="track.comments.length">
@@ -236,6 +236,7 @@ export default {
       S: Math.sin,
       leftChannelData: null,
       rightChannelData: null,
+			preloadImages: [],
       C: Math.cos,
       mp3: null,
       duration: 0,
@@ -559,6 +560,10 @@ export default {
     }
   },
   mounted(){
+		this.preloadImages = Array(1).fill().map(v=>{
+		  v = new Image()
+			v.src = 'https://lookie.jsbot.net/uploads/14MAyj.png'
+		})
     this.c = this.$refs.canvas
     this.c.addEventListener('click', e=>{
       if(this.trackAnalyzed){
@@ -630,7 +635,7 @@ export default {
   margin-right: 6px;
   margin-top: 12px;
   border: 1px solid #6fa3;
-  background: #3456;
+  background: #4446;
   padding: 10px;
   border-radius: 3px;
   width: 600px;
@@ -766,8 +771,11 @@ input[type=text]{
 	font-size: 28px;
 	text-align: left;
 	color: #0ff;
+	width: calc(100% - 200px);
 	background: #0000;
 	vertical-align: top;
+  float: left;
+	margin-bottom: 10px;
 }
 .commentText{
   color: #ff8;
@@ -893,7 +901,7 @@ table{
 }
 .singleTrack{
   position: absolute;
-  top: 45%;
+  top: 47%;
   transform: translate(0, -50%);
 }
 </style>

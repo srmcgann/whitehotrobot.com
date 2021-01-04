@@ -153,8 +153,6 @@ export default {
             this.state.userInfo[id].name = data[0].name
             this.state.userInfo[id].avatar = data[0].avatar
             this.state.userInfo[id].isAdmin = data[0].isAdmin
-            //this.state.totalUserPages = data[1]
-            //console.log('total user pages (fetchUserData/fetchUserData.php): ', this.state.totalUserPages)
           }
         })
 			}
@@ -215,7 +213,6 @@ export default {
           })
         })
         this.state.totalUserPages = data[1]
-        console.log('total user pages (loadUserData/fetchUserDataByName.php): ', this.state.totalUserPages)
         this.state.user = data[0]
         this.state.userInfo[this.state.user.id] = {}
         this.state.userInfo[this.state.user.id].name = this.state.user.name
@@ -579,7 +576,14 @@ export default {
     this.state.logout = this.logout
     this.state.login = this.login
     this.checkLogin()
-  }
+		let startTime = (new Date()).getTime()
+    setInterval(()=>{
+			let t = ((new Date()).getTime() - startTime)/100
+			document.getElementsByTagName('body')[0].style.backgroundColor = `hsla(${t}, 99%, 3%, 1)`
+      document.getElementById('header').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, .9), hsla(${t}, 60%, 15%, .8)`
+      document.getElementById('footerBar').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, 1), hsla(${t}, 60%, 5%, .7)`
+		}, 100)
+	}
 }
 </script>
 
@@ -588,7 +592,15 @@ export default {
 #app{
   min-width: 475px;
 }
-body,html{
+html{
+  margin: 0;
+  overflow-X: hidden;
+  font-family: Play;
+  color: #8fc;
+  min-height: 100%;
+  min-width: 475px;
+}
+body{
   margin: 0;
   overflow-X: hidden;
   background: #011;

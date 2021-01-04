@@ -2,7 +2,7 @@
 
   require('syncHistories.php');
 
-  $sql = 'SELECT * FROM items ORDER BY created DESC LIMIT 50';
+  $sql = 'SELECT * FROM items ORDER BY created DESC LIMIT 150';
   $res = mysqli_query($link, $sql);
   if($res){
     $out = [];

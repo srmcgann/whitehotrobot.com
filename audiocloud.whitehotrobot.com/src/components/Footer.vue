@@ -1,5 +1,5 @@
 <template>
-  <div ref="footerBar" class="footerBar">
+  <div ref="footerBar" class="footerBar" id="footerBar">
     <div class="footerMenu">
       <button @click="launchWeb()" class="socialButton" title="Code & Demos https://code.whitehotrobot.com">
         <img src="../assets/web.png" class="socialIcon">
@@ -56,7 +56,7 @@ export default {
   height: 45px;
   font-size: 32px;
   color: #603;
-  background: linear-gradient(90deg, #000, #023a);
+  background: linear-gradient(90deg, #000, #222a);
   transition: opacity 2s;
 }
 .footerMenu{

@@ -27,7 +27,7 @@ export default {
   methods:{
     truncate(str){
       if(typeof str === 'undefined') return
-      return str.length > 9 ? str.substring(0,5) + '...' + str.substring(str.length-3) : str
+      return str.length > 16 ? str.substring(0,12) + '...' + str.substring(str.length-3) : str
     }
   }
 }

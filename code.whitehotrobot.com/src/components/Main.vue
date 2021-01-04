@@ -93,7 +93,7 @@
                     class="vidThumbImg"
                     :src="item.videoIframeURL"
                     frameborder="0"
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; autoplay '*'"
                     allowfullscreen="true"
                   ></iframe>
 									<div v-else-if="!item.videoPlaying" class="sizedThumb">
@@ -137,6 +137,7 @@
                 <iframe
                   :src="state.inView[idx] && item.play ? state.baseDemoURL + '/?demoID=' + item.id + '&v=' + iteration : ''"
                   sandbox="allow-same-origin allow-scripts"
+									allow="autoplay *"
                   class="demoIframe"
                   allowfullscreen
                   :ref="'iframe' + item.id"
