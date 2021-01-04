@@ -114,7 +114,7 @@
     </table>
     <div class="audioContainer">
       <button
-        v-if="!playing"
+        v-if="!track.playing"
         class="playbutton"
         @click="playPauseTrack()"
         :class="{'disabledPlayButton': !canPlay}"
@@ -232,7 +232,6 @@ export default {
         favicon: 0
       },
       trackdata: [],
-      playing: false,
       c: null,
       S: Math.sin,
       leftChannelData: null,
@@ -463,10 +462,12 @@ export default {
       return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear() + ' • ' + (l.getHours()%12) + ':' + l.getMinutes() + ' ' + (l.getHours()<12?'AM':'PM')
     },
     playPauseTrack(){
-      this.playing = !this.playing
-      if(this.playing){
+      if(!this.track.playing){
+        this.state.pauseVisible()
+        this.track.playing = true
         this.mp3.play()
       } else {
+        this.track.playing = false
         this.mp3.pause()
       }
     },
@@ -552,14 +553,20 @@ export default {
       return this.track.comments.length > this.showComments
     }
   },
+  watch:{
+    'track.playing'(val){
+      if(!val) this.mp3.pause()
+    }
+  },
   mounted(){
     this.c = this.$refs.canvas
     this.c.addEventListener('click', e=>{
       if(this.trackAnalyzed){
         let perc = e.offsetX / this.c.clientWidth
         this.mp3.currentTime = this.mp3.duration * perc
-        if(!this.playing){
-          this.playing = true
+        this.state.pauseVisible()
+        if(!this.track.playing){
+          this.track.playing = true
           this.mp3.play()
         }
       }
@@ -573,9 +580,10 @@ export default {
     this.mp3.addEventListener('ended',()=>{
       if(this.loop){
         this.mp3.currentTime = 0
+        this.track.playing = true
         this.mp3.play()
       }else{
-        this.playing = false
+        this.track.playing = false
       }
     })
     this.mp3.addEventListener('canplay',()=>{
@@ -583,7 +591,7 @@ export default {
       this.canPlay = true
       if(this.state.mode == 'track') {
 				this.mp3.play()
-				this.playing = true
+				this.track.playing = true
       }
 		})
     this.mp3.src = this.track.audioFile

@@ -49,6 +49,7 @@ export default {
         user: null,
         fetchUserData: null,
         startStopPages: false,
+        pauseVisible: null,
         username: '',
         password: '',
         passhash: '',
@@ -85,6 +86,19 @@ export default {
     LoginPrompt
   },
   methods:{
+    pauseVisible(){
+      switch(this.state.mode){
+        case 'u':
+          this.state.user.audiocloudTracks.map(v=>v.playing=false)
+        break
+        case 'track':
+        this.state.tracks.map(v=>v.playing=false)
+        break
+        case 'default':
+        this.state.landingPage.audiocloudTracks.map(v=>v.playing=false)
+        break
+      }
+    },
     openFullscreen(elem) {
       if (elem.requestFullscreen) {
         elem.requestFullscreen()
@@ -139,6 +153,8 @@ export default {
             this.state.userInfo[id].name = data[0].name
             this.state.userInfo[id].avatar = data[0].avatar
             this.state.userInfo[id].isAdmin = data[0].isAdmin
+            //this.state.totalUserPages = data[1]
+            //console.log('total user pages (fetchUserData/fetchUserData.php): ', this.state.totalUserPages)
           }
         })
 			}
@@ -155,6 +171,7 @@ export default {
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
         data[0].map(v=>{
+          v.playing = false
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           this.incrementViews(v.id)
@@ -187,6 +204,7 @@ export default {
       }).then(res=>res.json()).then(data=>{
         data[0].audiocloudTracks.map(v=>{
           if(this.state.mode != 'default') this.incrementViews(v.id)
+          v.playing = false
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           v.comments = v.comments.map(q=>{
@@ -197,6 +215,7 @@ export default {
           })
         })
         this.state.totalUserPages = data[1]
+        console.log('total user pages (loadUserData/fetchUserDataByName.php): ', this.state.totalUserPages)
         this.state.user = data[0]
         this.state.userInfo[this.state.user.id] = {}
         this.state.userInfo[this.state.user.id].name = this.state.user.name
@@ -217,6 +236,7 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
+        data.playing = false
         data.private = !!(+data.private)
 				this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
@@ -446,7 +466,7 @@ export default {
       this.state.loggedin = false
       this.state.isAdmin = false
       if(this.state.mode = 'u'){
-				window.location.href = window.location.origin
+        this.state.curUserPage = 0
       }
       this.state.loggedinUserID = this.state.loggedinUserName = ''
       this.$nextTick(()=>this.loadUserData(this.state.user.name))
@@ -543,6 +563,7 @@ export default {
     this.state.openFullscreen = this.openFullscreen
     this.state.fetchUserData = this.fetchUserData
     this.state.closePrompts = this.closePrompts
+    this.state.pauseVisible = this.pauseVisible
     this.state.loadUserData = this.loadUserData
     this.state.checkEnabled = this.checkEnabled
     this.state.advancePage = this.advancePage
