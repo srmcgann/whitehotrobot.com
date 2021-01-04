@@ -449,7 +449,7 @@ export default {
       this.state.loggedin = false
       this.state.isAdmin = false
       if(this.state.mode = 'u'){
-        this.state.curUserPage = 0
+        window.location.href = window.location.origin + '/u/' + this.state.loggedinUserName
       }
       this.state.loggedinUserID = this.state.loggedinUserName = ''
       this.$nextTick(()=>this.loadUserData(this.state.user.name))
