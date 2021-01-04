@@ -634,7 +634,7 @@ export default {
   padding: 10px;
   border-radius: 3px;
   width: 600px;
-  text-align: left;
+  text-align: center;
 }
 .playbutton{
   background-image: url(https://lookie.jsbot.net/uploads/2ftyk1.png);
@@ -744,9 +744,10 @@ input[type=text]{
   font-size: 16px;
 }
 .deleteTrackButton{
-  position: absolute;
+  position: relative;
   margin-top: -5px;
-  margin-left: 555px;
+  margin-right: -5px;
+  float: right;
   background-color: #300a;
   width: 50px;
   min-width: initial;
@@ -896,3 +897,4 @@ table{
   transform: translate(0, -50%);
 }
 </style>
+
