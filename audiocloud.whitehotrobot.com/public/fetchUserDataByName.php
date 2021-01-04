@@ -32,7 +32,7 @@
       $sql="SELECT id FROM audiocloudTracks WHERE userID = " . $row['id'];
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
-      $totalPages = ($totalRecords / $maxResultsPerPage | 0) + 1;
+      $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
 	    $sql1=$sql = "SELECT * FROM audiocloudTracks WHERE userID = " . $row['id'] . ' ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	  } else {
@@ -41,7 +41,7 @@
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
       $morePages = false;
-      $totalPages = ($totalRecords / $maxResultsPerPage | 0) + 1;
+      $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
       if($start + $maxResultsPerPage < $totalRecords + 1) $morePages = true;
 
 		  $sql = "SELECT * FROM audiocloudTracks WHERE userID = " . $row['id'] . ' AND private = 0 ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
