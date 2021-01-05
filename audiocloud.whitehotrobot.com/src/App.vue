@@ -30,6 +30,7 @@ export default {
         curPage: 0,
 				jumpToPage: null,
 				playall: false,
+				userAgent: null,
 				shuffle: false,
 				disco: false,
         userData: [],
@@ -735,6 +736,7 @@ export default {
     }
   },
   mounted(){
+		this.state.userAgent = navigator.userAgent
     this.getMode()
     this.state.filteredUserTracks = this.filteredUserTracks
     this.state.showUserSettings = this.showUserSettings

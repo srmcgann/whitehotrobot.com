@@ -150,7 +150,9 @@
           <div class="commentMain">
             <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
             <span  v-if="typeof state.userInfo[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
-              <div class="commentAvatar" :style="'background-image:url('+state.getAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
+              <div 
+							  :class="{'bumpUp': state.userAgent.toUpperCase().indexOf('FIREFOX')!==-1}"
+							  class="commentAvatar" :style="'background-image:url('+state.getAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
               <a :href="state.baseURL + '/u/' + state.userInfo[comment.userID].name" target="_blank" style="color:#4dc!important;font-style: oblique;margin-left: 5px;">{{state.userInfo[comment.userID].name}}</a>
             </span><br>
             <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
@@ -852,6 +854,7 @@ input[type=text]{
   width: auto;
   border-radius: 50%;
 	height:50px;
+	top: initial;
 	margin-top: -2px;
 }
 .commentMain{
@@ -952,6 +955,9 @@ table{
 	margin-top: 200px;
 	margin-bottom: 200px;
   transform: translate(0, -50%);
+}
+.bumpUp{
+  margin-top: -25px;
 }
 </style>
 
