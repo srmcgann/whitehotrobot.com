@@ -203,7 +203,7 @@ export default {
     },
     loadUserData(name){
       let sendData = {
-        name: name,
+        name: decodeURIComponent(name),
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash,
 				maxResultsPerPage: this.state.maxResultsPerPage,
@@ -254,7 +254,6 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-				//data.playing = false
         data.private = !!(+data.private)
 				this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
@@ -348,51 +347,11 @@ export default {
             this.state.userInfo[this.state.loggedinUserID].avatar = data[2]
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
             if(+data[3]) this.state.isAdmin = true
-            if(this.state.mode !== 'u'){
-              sendData = {
-                userID: this.state.loggedinUserID,
-                page: this.state.curUserPage,
-                maxResultsPerPage: this.state.maxResultsPerPage
-              }
-              fetch(this.state.baseURL + '/fetchUserData.php',{
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(sendData),
-              }).then(res=>res.json()).then(data=>{
-                this.state.user = data[0]
-								this.state.maxResultsPerPage = this.state.user.audiocloudNumTracksPerPage
-								this.state.playall = !!(+this.state.user.audiocloudPlayAll)
-								this.state.shuffle = !!(+this.state.user.audiocloudShuffle)
-								this.state.disco = !!(+this.state.user.audiocloudDisco)
-							  this.$nextTick(()=>this.loadLandingPage())
-                this.state.userInfo[this.state.loggedinUserID].name = data[0].name
-                this.state.userInfo[this.state.loggedinUserID].avatar = data[0].avatar
-                this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[0].isAdmin
-                this.state.totalUserPages = data[1]
-                if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
-							})
-            }else{
-              sendData = {
-                userID: this.state.loggedinUserID,
-                page: this.state.curUserPage,
-                maxResultsPerPage: this.state.maxResultsPerPage
-              }
-              fetch(this.state.baseURL + '/fetchUserData.php',{
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(sendData),
-              }).then(res=>res.json()).then(data=>{
-                this.state.maxResultsPerPage = data[0].audiocloudNumTracksPerPage
-                this.state.playall = !!(+data[0].audiocloudPlayAll)
-                this.state.shuffle = !!(+data[0].audiocloudShuffle)
-                this.state.disco = !!(+data[0].audiocloudDisco)
-								this.getPages()
-              })
-						}
+						this.state.maxResultsPerPage = +data[4]
+            this.state.playall = !!(+data[5])
+            this.state.shuffle = !!(+data[6])
+						this.state.disco = !!(+data[7])
+						this.getMode()
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -400,9 +359,7 @@ export default {
             this.state.passhash = ''
             this.state.isAdmin = false
             this.state.invalidLoginAttempt = true
-						this.getPages()
-            //if(this.state.mode=='default') this.$nextTick(()=>this.loadLandingPage())
-						//if(this.state.mode=='u') this.$nextTick(()=>this.loadUserData(decodeURIComponent(vars[1])))
+						this.getMode()
           }
         })
       }
@@ -431,8 +388,8 @@ export default {
               this.state.curUserPage = 0
             }
 					  this.state.user={name: vars[1]}
-            this.$nextTick(()=>{if(!this.state.loggedin)this.loadUserData(decodeURIComponent(vars[1]))})
-            history.pushState(null,null,window.location.origin + '/u/' + decodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+            this.getPages()
+						history.pushState(null,null,window.location.origin + '/u/' + decodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
           break
           default:
             this.state.mode = 'default'
@@ -442,6 +399,7 @@ export default {
             if(!this.state.curPage || this.state.curPage < 0 || this.state.curPage > 1e6) this.state.curPage = 0
             if(this.state.curPage) {
               history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1))
+							this.getPages()
             } else {
               window.location.href = window.location.origin
             }
@@ -449,8 +407,8 @@ export default {
         }
       }else{
         this.state.mode = 'default'
-				if(!this.state.loggedin) this.$nextTick(()=>this.loadLandingPage())
-        if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+        this.getPages()
+				if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
       }
     },
 		getPages(){
@@ -506,25 +464,11 @@ export default {
             body: JSON.stringify(sendData),
           }).then(res=>res.json()).then(data=>{
             window.location.reload()
-						/*
-						if(this.state.viewAuthor === data[0].escaped_name){
-              this.state.user = data[0]
-              this.state.maxResultsPerPage = this.state.user.audiocloudNumTracksPerPage
-              this.state.playall = !!(+this.state.user.audiocloudPlayAll)
-              this.state.shuffle = !!(+this.state.user.audiocloudShuffle)
-              this.state.disco = !!(+this.state.user.audiocloudDisco)
-							this.getPages()
-              this.state.totalUserPages = data[1]
-              if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
-						}
-						*/
-            // this.state.loaded = true
           })
           this.$nextTick(()=>this.loadUserData(this.state.user.name))
         }else{
           this.state.loggedin = false
           this.state.invalidLoginAttempt = true
-          //this.state.loaded = true
         }
       })
     },
@@ -538,7 +482,7 @@ export default {
       this.state.loggedin = false
       this.state.isAdmin = false
       if(this.state.mode = 'u'){
-        window.location.reload()//href = window.location.origin + '/u/' + this.state.loggedinUserName
+        window.location.reload()
       }
       this.state.loggedinUserID = this.state.loggedinUserName = ''
       this.$nextTick(()=>this.loadUserData(this.state.user.name))
@@ -557,7 +501,7 @@ export default {
           }
         }
       } else {
-        //this.state.loaded = true
+        this.getMode() 
       }
     },
     incrementViews(id){
@@ -737,7 +681,6 @@ export default {
   },
   mounted(){
 		this.state.userAgent = navigator.userAgent
-    this.getMode()
     this.state.filteredUserTracks = this.filteredUserTracks
     this.state.showUserSettings = this.showUserSettings
     this.state.showLoginPrompt = this.showLoginPrompt
@@ -846,7 +789,7 @@ button{
   cursor: pointer;
 }
 button:focus{
-  //outline: none;
+  outline: none;
 }
 hr{
   border: 2px solid #0aaa;
