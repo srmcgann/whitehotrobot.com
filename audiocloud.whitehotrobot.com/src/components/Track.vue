@@ -528,7 +528,7 @@ export default {
         if(this.mp3.currentTime){
           x.font='16px Play'
           x.fillStyle='#4fc8'
-          x.fillText(this.formattedCurrentTime() , c.width-90, 16)
+          x.fillText(this.formattedCurrentTime() , c.width-120, 16)
         }
       } else {
         x.font='26px Play'
@@ -553,8 +553,22 @@ export default {
       if(mn.length ==1) mn = '0' + mn
       if(sec.length == 0) sec = '00'
       if(sec.length == 1) sec = '0' + sec
-      return hr + ':' +  mn + ':' + sec
-    }
+      let cur = (+hr ? hr + ':' : '') +  mn + ':' + sec
+			let l
+      hr = (l = this.mp3.duration - this.mp3.currentTime) / 60 / 60 |0
+      mn = (l / 60 / 60 - hr)*60 | 0
+      sec = ((l / 60 / 60 - hr)*60 - mn)*60 | 0
+      hr = ''+hr
+      mn = ''+mn
+      sec = ''+sec
+      if(hr.length == 0) hr = '00'
+      if(hr.length == 1) hr = '0' + hr
+      if(mn.length == 0) mn = '00'
+      if(mn.length == 1) mn = '0' + mn
+      if(sec.length == 0) sec = '00'
+      if(sec.length == 1) sec = '0' + sec
+			return cur + '  ( -' + (+hr ? hr + ':' : '') +  mn + ':' + sec + ')'
+		}
   },
   computed:{
     filteredComments(){
