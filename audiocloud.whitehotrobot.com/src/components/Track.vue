@@ -525,7 +525,7 @@ export default {
           }
           x.stroke()
         }
-        if(this.mp3.currentTime){
+        if(typeof this.mp3.currentTime != 'undefined'){
           x.font='16px Play'
           x.fillStyle='#4fc8'
           x.fillText(this.formattedCurrentTime() , c.width-120, 16)
