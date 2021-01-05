@@ -6,11 +6,11 @@
     </button>
     <div class="avatar" :style="'float: left;max-width: 100px;background-image:url('+state.getAvatar(track.userID)+');width:100px;height:100px;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
     <a :href="state.baseURL + '/u/' + track.author" target="_blank" class="link" v-html="track.author" style="float: left;"></a>
-    <div v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin" class="trackElem" style="display: inline-block;width:400px;float:left;">
+    <div v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin" class="trackElem" style="display: inline-block;width:490px;float:left;">
       <input
         maxlength="128"
         :class="{'success':updated['trackName']==1,'failure':updated['trackName']==-1}"
-        style="width: 485px;"
+        style="width: 350px;float:left;"
         placeholder="track name"
         @input="updateTrackItem(track.id, 'trackName')" type="text" v-model="track.trackName"
       >
@@ -26,7 +26,7 @@
       <tr>
         <td class="tdLeft">views </td>
         <td class="tdRight date">
-          {{(Math.max(1, track.plays))}}
+          {{(Math.max(1, track.plays)).toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')}}
         </td>
       </tr>
       <tr>
@@ -134,6 +134,10 @@
         class="smallControlButton resetButton"
         @click="mp3.currentTime = 0"
       ></button>
+      <button
+        class="smallControlButton jumpToNextButton"
+        @click="mp3.currentTime = mp3.duration/.999"
+      ></button>
       <canvas ref="canvas" class="canvas"></canvas>
     </div>
 
@@ -236,7 +240,6 @@ export default {
       S: Math.sin,
       leftChannelData: null,
       rightChannelData: null,
-			preloadImages: [],
       C: Math.cos,
       mp3: null,
       duration: 0,
@@ -278,7 +281,6 @@ export default {
         .then(data => {
           if(data[0]){
             item.comments = item.comments.filter(v=>v.id != id)
-            console.log('comment deleted...')
           }
         })
 		  }
@@ -466,17 +468,23 @@ export default {
       if(!this.track.playing){
         this.state.pauseVisible()
         this.track.playing = true
-        this.mp3.play()
+        //this.mp3.play()
       } else {
         this.track.playing = false
-        this.mp3.pause()
+        //this.mp3.pause()
       }
     },
     Draw(){
       let t = this.t
       let x = this.x
       let c = this.c
-      
+    
+      if(this.track.playing && !((t*60|0)%7)){
+				let s = this.track.author + ' - ' + this.track.trackName
+				let p = (t*8.5|0) % s.length
+				document.title = s.substring(p) + '  -  ' + s.substring(0, p)
+			}
+
       c.width|=0
       if(this.trackAnalyzed){
         x.fillStyle='#000'
@@ -556,14 +564,14 @@ export default {
   },
   watch:{
     'track.playing'(val){
-      if(!val) this.mp3.pause()
+      if(!val){
+		    this.mp3.pause()
+			} else {
+				this.$nextTick(()=>this.mp3.play())
+			}
     }
   },
   mounted(){
-		this.preloadImages = Array(1).fill().map(v=>{
-		  v = new Image()
-			v.src = 'https://lookie.jsbot.net/uploads/14MAyj.png'
-		})
     this.c = this.$refs.canvas
     this.c.addEventListener('click', e=>{
       if(this.trackAnalyzed){
@@ -572,7 +580,7 @@ export default {
         this.state.pauseVisible()
         if(!this.track.playing){
           this.track.playing = true
-          this.mp3.play()
+          //this.mp3.play()
         }
       }
     })
@@ -583,19 +591,23 @@ export default {
     
     this.mp3 = new Audio()
     this.mp3.addEventListener('ended',()=>{
-      if(this.loop){
-        this.mp3.currentTime = 0
-        this.track.playing = true
-        this.mp3.play()
-      }else{
-        this.track.playing = false
-      }
+			if(this.state.playall){
+        this.state.playNextTrack()
+			} else {
+        if(this.loop){
+				  this.mp3.currentTime = 0
+          this.track.playing = true
+          this.mp3.play()
+        }else{
+          this.track.playing = false
+        }
+			}
     })
     this.mp3.addEventListener('canplay',()=>{
       this.duration = this.mp3.duration
       this.canPlay = true
       if(this.state.mode == 'track') {
-				this.mp3.play()
+				//this.mp3.play()
 				this.track.playing = true
       }
 		})
@@ -612,6 +624,9 @@ export default {
         this.leftChannelData = buffer.getChannelData(0)
         this.rightChannelData = buffer.getChannelData(1)
       })
+    }
+		if(this.state.mode == 'track'){
+      document.getElementsByTagName('html')[0].scroll(0, document.getElementsByTagName('html')[0].clientHeight/3.5)
     }
     req.send()
     this.Draw()
@@ -644,8 +659,8 @@ export default {
 .playbutton{
   background-image: url(https://lookie.jsbot.net/uploads/2ftyk1.png);
   background-repeat: no-repeat;
-  background-size: 90% 90%;
-  background-position: 16px;
+  background-size: 80% 80%;
+  background-position: 22px;
   border-radius: 50%;
   background-color: #201;
   padding: 0;
@@ -657,8 +672,8 @@ export default {
 .pausebutton{
   background-image: url(https://lookie.jsbot.net/uploads/BGNlv.png);
   background-repeat: no-repeat;
-  background-size: 90% 90%;
-  background-position: 5px;
+  background-size: 80% 80%;
+  background-position: 10px;
   border-radius: 50%;
   background-color: #201;
   padding: 0;
@@ -895,13 +910,23 @@ table{
 }
 .resetButton{
   background-color: #0000;
-  margin-left: -27px;
-  margin-top: 70px;
-  background-image: url(https://lookie.jsbot.net/uploads/1ucSmp.png);
+  margin-left: -106px;
+  margin-top: 72px;
+	border-radius: 0;
+  background-image: url(https://lookie.jsbot.net/uploads/6aevA.png);
+}
+.jumpToNextButton{
+  background-color: #0000;
+  margin-left: -22px;
+  margin-top: 72px;
+	border-radius: 0;
+  background-image: url(https://lookie.jsbot.net/uploads/20SIWe.png);
 }
 .singleTrack{
   position: absolute;
   top: 47%;
+	margin-top: 200px;
+	margin-bottom: 200px;
   transform: translate(0, -50%);
 }
 </style>

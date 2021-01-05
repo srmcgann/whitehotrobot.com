@@ -1,6 +1,6 @@
 <template>
   <div class="header" id="header">
-    <div v-if="showUploadProgress" class="uploadProgressContainer">
+		<div v-if="showUploadProgress" class="uploadProgressContainer">
       <br>uploading {{filesUploading.length}} file{{filesUploading.length > 1 ? 's':''}}...
       <div class="progressBar" v-for="file in filesUploading">
         <div class="progressBarInnerOutline">
@@ -66,6 +66,29 @@
       <div v-if="state.loggedin" style="display: inline-block">
         <button @click="startUpload()" class="uploadButton">upload</button>
       </div>
+			<div class="advancedControls" style="margin-left: -20px;">
+        <label for="playall" style="margin-left: 0px;margin-bottom:14px;">
+          <input id="playall" @input="updateUserPrefs('audiocloudPlayAll')" type="checkbox" v-model="state.playall">play all
+        </label>
+        <label for="shuffle" style="margin-left: 20px;">
+          <input id="shuffle" @input="updateUserPrefs('audiocloudShuffle')" type="checkbox" v-model="state.shuffle">shuffle
+        </label>
+        <label for="disco" style="margin-left: 20px;">
+          <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
+        </label>
+				<span v-if="state.loggedin" style="width: 80px;position: absolute; font-size: 10px;margin-left:z-index: 0; 0px;margin-top:-1px;">max results</span>
+		  </div>
+			<select v-if="state.loggedin" style="position: relative; z-index: 200; right: 0;margin-left: 300px;font-size: 12px;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="4">4</option>
+        <option value="6">6</option>
+			  <option value="10">10</option>
+        <option value="20">20</option>
+        <option style="background: #ff0;color: #000;" value="30">30</option>
+        <option style="background: #f80;color: #000;" value="40">40</option>
+        <option style="background: #800;color: #fff;" value="50">50</option>
+			</select>
     </div>
     <div class="workingSpace">
       <div class="loggedinDiv">
@@ -107,6 +130,34 @@ export default {
   name: 'Header',
   props: [ 'state' ],
   methods:{
+		updateUserPrefs(pref){
+			this.$nextTick(()=>{
+        let newval
+        switch(pref){
+          case 'audiocloudPlayAll': newval = this.state.playall ? 0 : 1; break
+          case 'audiocloudShuffle': newval = this.state.shuffle ? 0 : 1; break
+          case 'audiocloudDisco': newval = this.state.disco ? 0 : 1; break
+          case 'audiocloudNumTracksPerPage': newval = this.state.maxResultsPerPage; break
+        }
+        let sendData = {
+	  			userName: this.state.loggedinUserName,
+				  passhash: this.state.passhash,
+					pref,
+			  	newval
+ 	  	 }
+       fetch(this.state.baseURL + '/updatePrefs.php',{
+         method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+		  	})
+        .then(res => res.json())
+        .then(data => {
+					if(pref == 'audiocloudNumTracksPerPage') window.location.reload()
+        })
+		  })
+	  },
     startUpload(){
       this.state.showUploadModal=true
     },
@@ -158,7 +209,7 @@ export default {
           })
           request.send(data)
         } else {
-          alert('a file was rejected due to incorrect type or filesize')
+          alert('a file was rejected due to incorrect type or filesize (max filesize = 100MB)')
           this.state.showUploadModal = false
           this.showUploadProgress = false
         }
@@ -181,6 +232,9 @@ export default {
       file.click()
     }
   },
+	mounted(){
+		if(this.curPage > this.totalPages) this.state.jumpToPage(this.totalPages)
+	},
   computed:{
     totalPages(){
       switch(this.state.mode){
@@ -251,7 +305,7 @@ export default {
   z-index: 1000;
   height: 60px;
   width: 100%;
-  background: linear-gradient(90deg, #0008, #0348);
+  background: linear-gradient(90deg, #0008, #034c, #0008);
   border-bottom: 1px solid #2ef6;
   font-size: 24px;
   text-align: center;
@@ -436,9 +490,20 @@ a{
 .curPageContainer{
   display: inline-block;
   width: 270px;
-  margin-top: 10px;
+	line-height: .8em;
+	min-height: 25px;
+  margin-top: 3px;
   vertical-align: top;
-  padding-top: 10px;
+  padding-top: 0px;
+}
+.advancedControls{
+  margin-top: -10px;
+	top: 0;
+	position: absolute;
+	margin-top: 30px;
+	left: 50%;
+	transform: translate(-50%);
+	width: 400px;
 }
 .navContainer{
   z-index: 1000;
@@ -448,6 +513,7 @@ a{
   font-size: .7em;
   left: 50%;
   width: 400px;
+	height: 60px;
   transform: translateX(-50%);
 }
 .uploadButton{
@@ -455,7 +521,8 @@ a{
   width: 80px;
   display: inline-block;
   text-align: center;
-  margin-top: 15px;
+	line-height: .8em;
+  margin-top: 4px;
   min-width: 0;
 }
 .navButton{

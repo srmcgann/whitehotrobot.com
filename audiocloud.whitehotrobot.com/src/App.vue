@@ -28,7 +28,12 @@ export default {
         rootDomain: 'whitehotrobot.com',
         maxCommentsBeforeExpansion: 3,
         curPage: 0,
+				jumpToPage: null,
+				playall: false,
+				shuffle: false,
+				disco: false,
         userData: [],
+				preloadImages: [],
         curUserPage: null,
         incrementViews: null,
         loggedinUserName: '',
@@ -36,8 +41,10 @@ export default {
         loggedin: false,
         totalUserPages: 0,
         totalPages: 0,
+				playNextTrack: null,
         showUploadModal: false,
         toggleLogin: null,
+				maxResultsPerPage: 0,
         showLoginPrompt: null,
         closePrompts: null,
         loginPromptVisible: false,
@@ -59,6 +66,7 @@ export default {
         showControls: false,
         advancePage: null,
         regressPage: null,
+				filteredUserTracks: null,
         firstPage: null,
         lastPage: null,
         regpassword: '',
@@ -136,7 +144,8 @@ export default {
 			if(typeof this.state.userData[id] == 'undefined'){
         let sendData = {
           userID: id,
-          page: this.state.curUserPage
+          page: this.state.curUserPage,
+          maxResultsPerPage: this.state.maxResultsPerPage
         }
         fetch(this.state.baseURL + '/fetchUserData.php',{
           method: 'POST',
@@ -159,7 +168,8 @@ export default {
 		},
     loadLandingPage(){
       let sendData = {
-        page: this.state.curPage
+        page: this.state.curPage,
+        maxResultsPerPage: this.state.maxResultsPerPage
       }
       fetch(this.state.baseURL + '/getRecentTracks.php',{
         method: 'POST',
@@ -168,7 +178,7 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data[0].map(v=>{
+				data[0].map(v=>{
           v.playing = false
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
@@ -183,7 +193,8 @@ export default {
         })
         this.state.landingPage.audiocloudTracks = data[0]
         this.state.totalPages = data[1]
-        this.state.loaded = true
+        if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
+				this.state.loaded = true
       })
     },
     loadUserData(name){
@@ -191,6 +202,7 @@ export default {
         name: name,
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash,
+				maxResultsPerPage: this.state.maxResultsPerPage,
         page: this.state.curUserPage
       }
       fetch(this.state.baseURL + '/fetchUserDataByName.php',{
@@ -202,7 +214,7 @@ export default {
       }).then(res=>res.json()).then(data=>{
         data[0].audiocloudTracks.map(v=>{
           if(this.state.mode != 'default') this.incrementViews(v.id)
-          v.playing = false
+					v.playing = false
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           v.comments = v.comments.map(q=>{
@@ -213,7 +225,8 @@ export default {
           })
         })
         this.state.totalUserPages = data[1]
-        this.state.user = data[0]
+        if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+				this.state.user = data[0]
         this.state.userInfo[this.state.user.id] = {}
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
@@ -233,7 +246,7 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data.playing = false
+				//data.playing = false
         data.private = !!(+data.private)
 				this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
@@ -330,7 +343,8 @@ export default {
             if(this.state.mode !== 'u'){
               sendData = {
                 userID: this.state.loggedinUserID,
-                page: this.state.curUserPage
+                page: this.state.curUserPage,
+                maxResultsPerPage: this.state.maxResultsPerPage
               }
               fetch(this.state.baseURL + '/fetchUserData.php',{
                 method: 'POST',
@@ -340,12 +354,37 @@ export default {
                 body: JSON.stringify(sendData),
               }).then(res=>res.json()).then(data=>{
                 this.state.user = data[0]
+								this.state.maxResultsPerPage = this.state.user.audiocloudNumTracksPerPage
+								this.state.playall = !!(+this.state.user.audiocloudPlayAll)
+								this.state.shuffle = !!(+this.state.user.audiocloudShuffle)
+								this.state.disco = !!(+this.state.user.audiocloudDisco)
+							  this.$nextTick(()=>this.loadLandingPage())
                 this.state.userInfo[this.state.loggedinUserID].name = data[0].name
                 this.state.userInfo[this.state.loggedinUserID].avatar = data[0].avatar
                 this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[0].isAdmin
                 this.state.totalUserPages = data[1]
+                if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+							})
+            }else{
+              sendData = {
+                userID: this.state.loggedinUserID,
+                page: this.state.curUserPage,
+                maxResultsPerPage: this.state.maxResultsPerPage
+              }
+              fetch(this.state.baseURL + '/fetchUserData.php',{
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(sendData),
+              }).then(res=>res.json()).then(data=>{
+                this.state.maxResultsPerPage = data[0].audiocloudNumTracksPerPage
+                this.state.playall = !!(+data[0].audiocloudPlayAll)
+                this.state.shuffle = !!(+data[0].audiocloudShuffle)
+                this.state.disco = !!(+data[0].audiocloudDisco)
+								this.getPages()
               })
-            }
+						}
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -353,7 +392,9 @@ export default {
             this.state.passhash = ''
             this.state.isAdmin = false
             this.state.invalidLoginAttempt = true
-            //this.state.loaded = true
+						this.getPages()
+            //if(this.state.mode=='default') this.$nextTick(()=>this.loadLandingPage())
+						//if(this.state.mode=='u') this.$nextTick(()=>this.loadUserData(decodeURIComponent(vars[1])))
           }
         })
       }
@@ -381,7 +422,8 @@ export default {
             } else {
               this.state.curUserPage = 0
             }
-            this.$nextTick(()=>this.loadUserData(decodeURIComponent(vars[1])))
+					  this.state.user={name: vars[1]}
+            this.$nextTick(()=>{if(!this.state.loggedin)this.loadUserData(decodeURIComponent(vars[1]))})
             history.pushState(null,null,window.location.origin + '/u/' + decodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
           break
           default:
@@ -391,7 +433,6 @@ export default {
             }
             if(!this.state.curPage || this.state.curPage < 0 || this.state.curPage > 1e6) this.state.curPage = 0
             if(this.state.curPage) {
-              this.$nextTick(()=>this.loadLandingPage())
               history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1))
             } else {
               window.location.href = window.location.origin
@@ -400,10 +441,23 @@ export default {
         }
       }else{
         this.state.mode = 'default'
-        this.loadLandingPage()
+				if(!this.state.loggedin) this.$nextTick(()=>this.loadLandingPage())
         if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
       }
     },
+		getPages(){
+			switch(this.state.mode){
+				case 'u':
+				this.loadUserData(this.state.user.name)
+				break
+				case 'track':
+				this.loadTrack()
+				break
+				case 'default':
+				this.getLandingPage()
+				break
+			}
+		},
     login(){
       let sendData = {userName: this.state.username, password: this.state.password}
       fetch(this.state.baseURL + '/login.php',{
@@ -420,6 +474,9 @@ export default {
           this.state.loggedinUserName = this.state.username
           this.state.loggedinUserID = +data[2]
           this.state.isAdmin = +data[4]
+          this.state.playall = !!(+data[5])
+          this.state.shuffle = !!(+data[6])
+					this.state.disco = !!(+data[7])
           this.state.passhash = data[1]
           this.setCookie()
           this.closePrompts()
@@ -430,7 +487,8 @@ export default {
           this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[4]
           sendData = {
             userID: this.state.loggedinUserID,
-            page: this.state.curUserPage
+            page: this.state.curUserPage,
+		        maxResultsPerPage: this.state.maxResultsPerPage
           }
           fetch(this.state.baseURL + '/fetchUserData.php',{
             method: 'POST',
@@ -439,10 +497,19 @@ export default {
             },
             body: JSON.stringify(sendData),
           }).then(res=>res.json()).then(data=>{
-            if(this.state.viewAuthor === data[0].escaped_name){
+            window.location.reload()
+						/*
+						if(this.state.viewAuthor === data[0].escaped_name){
               this.state.user = data[0]
+              this.state.maxResultsPerPage = this.state.user.audiocloudNumTracksPerPage
+              this.state.playall = !!(+this.state.user.audiocloudPlayAll)
+              this.state.shuffle = !!(+this.state.user.audiocloudShuffle)
+              this.state.disco = !!(+this.state.user.audiocloudDisco)
+							this.getPages()
               this.state.totalUserPages = data[1]
-            }
+              if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+						}
+						*/
             // this.state.loaded = true
           })
           this.$nextTick(()=>this.loadUserData(this.state.user.name))
@@ -512,6 +579,18 @@ export default {
         break
       }
     },
+		jumpToPage(pageNo){
+			switch(this.state.mode){
+			  case 'u':
+				window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo
+				break
+				case 'track':
+				break
+				case 'default':
+        window.location.href = window.location.origin + '/' + pageNo
+				break
+			}
+		},
     lastPage(){
       switch(this.state.mode){
         case 'u':
@@ -541,9 +620,101 @@ export default {
           window.location.href = window.location.origin + '/' + this.state.curPage
         break
       }
-    }
+    },
+		playNextTrack(){
+			let curplayId
+			if(this.currentPlayingTracks.length){
+				curplayId = this.currentPlayingTracks[0].id
+				this.currentPlayingTracks[0].playing = false
+      } else {
+				curplayId = -1
+			}
+			
+      switch(this.state.mode){
+        case 'u':
+          if(curplayId == -1){
+            if(this.state.shuffle){
+              this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
+            }else{
+              this.filteredUserTracks[0].playing = true
+						}
+          } else {
+            this.filteredUserTracks.map((v, i)=>{
+              if(v.id == curplayId){
+                if(this.state.shuffle){
+                  this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
+                }else{
+                  if(i < this.filteredUserTracks.length-1){
+                    this.filteredUserTracks[i+1].playing = true
+                  } else {
+                    this.filteredUserTracks[0].playing = true
+                  }
+                }
+              }
+            })
+          }
+        break
+        case 'track':
+          this.state.tracks[0].playing=true
+        break
+        case 'default':
+          if(curplayId == -1){
+            if(this.state.shuffle){
+              this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+            }else{
+              this.state.landingPage.audiocloudTracks[0].playing = true
+            }
+          } else {
+            this.state.landingPage.audiocloudTracks.map((v, i)=>{
+							if(v.id == curplayId){
+								if(this.state.shuffle){
+                  this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+								}else{
+  								if(i < this.state.landingPage.audiocloudTracks.length-1){
+	  								this.state.landingPage.audiocloudTracks[i+1].playing = true
+		  						} else {
+			  						this.state.landingPage.audiocloudTracks[0].playing = true
+				  				}
+							  }
+							}
+						})
+          }
+        break
+      }
+		}
   },
+	computed:{
+		currentPlayingTracks(){
+			switch(this.state.mode){
+				case 'u':
+				  return this.filteredUserTracks.filter(v=>v.playing)
+				break
+				case 'track':
+				  return this.state.tracks.filter(v=>v.playing)
+				break
+				case 'default':
+				  return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
+				break
+			}
+		},
+    filteredUserTracks(){
+      if(this.state.user != null && typeof this.state.user.audiocloudTracks !== 'undefined'){
+        return this.state.user.audiocloudTracks.filter(v=>!v.private || this.state.loggedinUserName.toUpperCase() == this.state.user.name.toUpperCase() || this.state.isAdmin)
+      } else {
+        return []
+      }
+    },
+	},
   watch:{
+    'state.shuffle'(val){
+    },
+    'state.playall'(val){
+      if(val){
+        this.playNextTrack()
+			} else {
+				this.state.pauseVisible()
+			}
+    },
     'state.showUploadModal'(val){
       if(val){
         document.getElementsByTagName('html')[0].style.overflow = 'hidden'
@@ -554,11 +725,13 @@ export default {
   },
   mounted(){
     this.getMode()
-    this.state.showLoginPrompt = this.showLoginPrompt
+    this.state.filteredUserTracks = this.filteredUserTracks
     this.state.showUserSettings = this.showUserSettings
+    this.state.showLoginPrompt = this.showLoginPrompt
     this.state.incrementViews = this.incrementViews
     this.state.openFullscreen = this.openFullscreen
     this.state.fetchUserData = this.fetchUserData
+		this.state.playNextTrack = this.playNextTrack
     this.state.closePrompts = this.closePrompts
     this.state.pauseVisible = this.pauseVisible
     this.state.loadUserData = this.loadUserData
@@ -566,6 +739,7 @@ export default {
     this.state.advancePage = this.advancePage
     this.state.regressPage = this.regressPage
     this.state.toggleLogin = this.toggleLogin
+		this.state.jumpToPage = this.jumpToPage
     this.state.decToAlpha = this.decToAlpha
     this.state.alphaToDec = this.alphaToDec
     this.state.firstPage = this.firstPage
@@ -577,12 +751,34 @@ export default {
     this.state.login = this.login
     this.checkLogin()
 		let startTime = (new Date()).getTime()
-    setInterval(()=>{
-			let t = ((new Date()).getTime() - startTime)/100
-			document.getElementsByTagName('body')[0].style.backgroundColor = `hsla(${t}, 99%, 3%, 1)`
-      document.getElementById('header').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, .9), hsla(${t}, 60%, 15%, .8)`
-      document.getElementById('footerBar').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, 1), hsla(${t}, 60%, 5%, .7)`
+		setInterval(()=>{
+			if(this.state.disco){
+				let t = ((new Date()).getTime() - startTime)/10+200
+  			document.getElementsByTagName('body')[0].style.backgroundColor = `hsla(${t}, 99%, 3%, 1)`
+        document.getElementById('header').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, .9), hsla(${t}, 60%, 15%, .8)`
+        document.getElementById('footerBar').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, 1), hsla(${t}, 60%, 5%, .7)`
+			}
 		}, 100)
+
+    this.preloadImages = [
+      'https://lookie.jsbot.net/uploads/2ftyk1.png',
+      'https://lookie.jsbot.net/uploads/BGNlv.png',
+      'https://lookie.jsbot.net/uploads/FU3vq.png',
+      'https://lookie.jsbot.net/uploads/zAYeB.png',
+      'https://lookie.jsbot.net/uploads/XeGsK.png',
+      'https://lookie.jsbot.net/uploads/XeGsK.png',
+      'https://lookie.jsbot.net/uploads/ct1hv.png',
+      'https://lookie.jsbot.net/uploads/2kPCX5.png',
+      'https://lookie.jsbot.net/uploads/14MAyj.png',
+      'https://lookie.jsbot.net/uploads/20SIWe.png',
+      'https://lookie.jsbot.net/uploads/6aevA.png'
+	  ]
+		this.preloadImages.map(v=>{
+			let img = new Image()
+      img.src = v
+			return v
+    })
+		if(this.state.playall)this.playNextTrack()
 	}
 }
 </script>
@@ -676,6 +872,16 @@ input[type=checkbox]{
   margin-left: 5px;
 }
 input:focus{
+  outline: none;
+}
+option{
+  text-align: center;
+}
+select{
+  background: #012;
+	color: #ff0;
+}
+select:focus{
   outline: none;
 }
 button:focus{

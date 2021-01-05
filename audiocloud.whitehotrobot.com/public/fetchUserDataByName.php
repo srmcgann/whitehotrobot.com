@@ -5,7 +5,10 @@
   $page = mysqli_real_escape_string($link, $data->{'page'});
   $loggedinUserName = mysqli_real_escape_string($link, $data->{'loggedinUserName'});
 	$passhash = mysqli_real_escape_string($link, $data->{'passhash'});
-  $admin = false;
+  $overrideMaxResults = mysqli_real_escape_string($link, $data->{'maxResultsPerPage'});
+  if($overrideMaxResults) $maxResultsPerPage = $overrideMaxResults;
+
+$admin = false;
 
   $start = $maxResultsPerPage * $page;
 

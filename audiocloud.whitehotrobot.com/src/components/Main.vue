@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" :class="{'footerPadding': state.mode=='track'}">
     <div v-if="state.mode=='track'">
       <div v-if="state.tracks.length" class="flex">
         <Track v-for="track in state.tracks" :key="track.id" :track="track" :state="state"/>
@@ -47,15 +47,15 @@ export default {
   methods:{
   },
   computed:{
+    filteredLandingPageTracks(){
+      return this.state.landingPage.audiocloudTracks
+    },
     filteredUserTracks(){
-      if(typeof this.state.user.audiocloudTracks !== 'undefined'){
+      if(this.state.user != null && typeof this.state.user.audiocloudTracks !== 'undefined'){
         return this.state.user.audiocloudTracks.filter(v=>!v.private || this.state.loggedinUserName.toUpperCase() == this.state.user.name.toUpperCase() || this.state.isAdmin)
       } else {
         return []
       }
-    },
-    filteredLandingPageTracks(){
-      return this.state.landingPage.audiocloudTracks
     }
   },
   mounted(){
@@ -74,5 +74,10 @@ export default {
   flex-wrap: wrap;
   justify-content: space-evenly;
   margin: 0;
+}
+</style>
+<style>
+.footerPadding{
+  min-height: calc(100vh + 200px);
 }
 </style>
