@@ -227,6 +227,7 @@ export default {
       loop: false,
       canPlay: false,
       trackAmplitude:[],
+			marquisTimer: null,
       showComments: 2,
       moreCommentsVal: 5,
       x: null,
@@ -250,6 +251,13 @@ export default {
     }
   },
   methods:{
+		doMarquis(){
+      if(this.track.playing){
+        let s = this.track.author + ' - ' + this.track.trackName
+        let p = (this.marquisTimer++) % s.length
+        document.title = s.substring(p) + '  -  ' + s.substring(0, p)
+      }
+		},
     incrComments(){
       this.showComments += this.moreCommentsVal
     },
@@ -479,12 +487,6 @@ export default {
       let x = this.x
       let c = this.c
     
-      if(this.track.playing && !((t*60|0)%7)){
-				let s = this.track.author + ' - ' + this.track.trackName
-				let p = (t*8.5|0) % s.length
-				document.title = s.substring(p) + '  -  ' + s.substring(0, p)
-			}
-
       c.width|=0
       if(this.trackAnalyzed){
         x.fillStyle='#000'
@@ -572,6 +574,9 @@ export default {
     }
   },
   mounted(){
+		setInterval(()=>{
+		  this.doMarquis()
+		}, 300)
     this.c = this.$refs.canvas
     this.c.addEventListener('click', e=>{
       if(this.trackAnalyzed){
@@ -603,6 +608,11 @@ export default {
         }
 			}
     })
+		if(this.track.playing){
+		  this.$nextTick(()=>{
+			  this.mp3.play()
+			})
+		}
     this.mp3.addEventListener('canplay',()=>{
       this.duration = this.mp3.duration
       this.canPlay = true
@@ -930,4 +940,5 @@ table{
   transform: translate(0, -50%);
 }
 </style>
+
 

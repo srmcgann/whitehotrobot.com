@@ -195,6 +195,9 @@ export default {
         this.state.totalPages = data[1]
         if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
 				this.state.loaded = true
+				if(this.state.playall) {
+				  this.playNextTrack()
+				}
       })
     },
     loadUserData(name){
@@ -212,18 +215,22 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data[0].audiocloudTracks.map(v=>{
-          if(this.state.mode != 'default') this.incrementViews(v.id)
-					v.playing = false
-          v.private = !!(+v.private)
-          v.allowDownload = !!(+v.allowDownload)
-          v.comments = v.comments.map(q=>{
-            q.updated = false
-            q.editing = false
-            this.fetchUserData(q.userID)
-            return q
+        if(this.state.user != null && typeof this.state.user.audiocloudTracks != 'undefined' && this.state.user.audiocloudTracks.length){
+				  data[0].audiocloudTracks = this.state.user.audiocloudTracks
+				}else{
+				  data[0].audiocloudTracks.map(v=>{
+            if(this.state.mode != 'default') this.incrementViews(v.id)
+					  v.playing = false
+            v.private = !!(+v.private)
+            v.allowDownload = !!(+v.allowDownload)
+            v.comments = v.comments.map(q=>{
+              q.updated = false
+              q.editing = false
+              this.fetchUserData(q.userID)
+              return q
+            })
           })
-        })
+				}
         this.state.totalUserPages = data[1]
         if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
 				this.state.user = data[0]
@@ -454,7 +461,7 @@ export default {
 				this.loadTrack()
 				break
 				case 'default':
-				this.getLandingPage()
+				this.loadLandingPage()
 				break
 			}
 		},
@@ -632,52 +639,56 @@ export default {
 			
       switch(this.state.mode){
         case 'u':
-          if(curplayId == -1){
-            if(this.state.shuffle){
-              this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
-            }else{
-              this.filteredUserTracks[0].playing = true
-						}
-          } else {
-            this.filteredUserTracks.map((v, i)=>{
-              if(v.id == curplayId){
-                if(this.state.shuffle){
-                  this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
-                }else{
-                  if(i < this.filteredUserTracks.length-1){
-                    this.filteredUserTracks[i+1].playing = true
-                  } else {
-                    this.filteredUserTracks[0].playing = true
+          if(this.filteredUserTracks.length) {				
+            if(curplayId == -1){
+              if(this.state.shuffle){
+                this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
+              }else{
+                this.filteredUserTracks[0].playing = true
+					  	}
+            } else {
+              this.filteredUserTracks.map((v, i)=>{
+                if(v.id == curplayId){
+                  if(this.state.shuffle){
+                    this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
+                  }else{
+                    if(i < this.filteredUserTracks.length-1){
+                      this.filteredUserTracks[i+1].playing = true
+                    } else {
+                      this.filteredUserTracks[0].playing = true
+                    }
                   }
                 }
-              }
-            })
+              })
+						}
           }
         break
         case 'track':
           this.state.tracks[0].playing=true
         break
         case 'default':
-          if(curplayId == -1){
-            if(this.state.shuffle){
-              this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
-            }else{
-              this.state.landingPage.audiocloudTracks[0].playing = true
-            }
-          } else {
-            this.state.landingPage.audiocloudTracks.map((v, i)=>{
-							if(v.id == curplayId){
-								if(this.state.shuffle){
-                  this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
-								}else{
-  								if(i < this.state.landingPage.audiocloudTracks.length-1){
-	  								this.state.landingPage.audiocloudTracks[i+1].playing = true
-		  						} else {
-			  						this.state.landingPage.audiocloudTracks[0].playing = true
-				  				}
-							  }
-							}
-						})
+				  if(this.state.landingPage.audiocloudTracks.length) {
+            if(curplayId == -1){
+              if(this.state.shuffle){
+                this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+              }else{
+                this.state.landingPage.audiocloudTracks[0].playing = true
+              }
+            } else {
+              this.state.landingPage.audiocloudTracks.map((v, i)=>{
+		  					if(v.id == curplayId){
+			  					if(this.state.shuffle){
+                    this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+					  			}else{
+  					  			if(i < this.state.landingPage.audiocloudTracks.length-1){
+	  					  			this.state.landingPage.audiocloudTracks[i+1].playing = true
+		  					  	} else {
+			  					  	this.state.landingPage.audiocloudTracks[0].playing = true
+				  			    }
+							    }
+						  	}
+						  })
+						}
           }
         break
       }
