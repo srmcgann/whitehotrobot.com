@@ -721,7 +721,7 @@ export default {
     },
     'state.playall'(val){
       if(val){
-        this.playNextTrack()
+        if(this.state.loaded) this.playNextTrack()
 			} else {
 				this.state.pauseVisible()
 			}
