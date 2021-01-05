@@ -673,8 +673,8 @@ export default {
   margin-left: 6px;
   margin-right: 6px;
   margin-top: 12px;
-  border: 1px solid #6fa3;
-  background: #4446;
+  /*border: 1px solid #6fa3;*/
+  background: #4443;
   padding: 10px;
   border-radius: 3px;
   width: 600px;
