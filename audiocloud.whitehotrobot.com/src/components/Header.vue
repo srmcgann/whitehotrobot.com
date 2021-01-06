@@ -63,13 +63,13 @@
           &gt;&gt;
         </button>
       </div>
-			<div  style="display: inline-block;position:absolute;margin-top: 3px;margin-left:-10px;">
+			<div  v-if="state.mode !== 'track'" style="display: inline-block;position:absolute;margin-top: 3px;margin-left:-10px;">
 			  <button :class="{'disabled': !trackPlaying}" class="navButton" @click="jumpToPlayingTrack()" title="jump to playing track" style="width: 25px; height: 25px; background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);background-size: cover;"></button>
 			</div>
       <div v-if="state.loggedin" style="display: inline-block">
-        <button @click="startUpload()" class="uploadButton">upload</button>
+        <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
       </div>
-			<div class="advancedControls" style="margin-left: -20px;">
+			<div v-if="state.mode !== 'track'" class="advancedControls" style="margin-left: -20px;">
         <label for="playall" style="margin-left: 0px;margin-bottom:14px;">
           <input id="playall" @input="updateUserPrefs('audiocloudPlayAll')" type="checkbox" v-model="state.playall">play all
         </label>
@@ -81,7 +81,7 @@
         </label>
 				<span v-if="state.loggedin" style="width: 80px;position: absolute; font-size: 10px;margin-left:z-index: 0; 0px;margin-top:-1px;">max results</span>
 		  </div>
-			<select v-if="state.loggedin" style="position: relative; z-index: 200; right: 0;margin-left: 300px;font-size: 12px;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
+			<select v-if="state.loggedin && state.mode != 'track'" style="position: relative; z-index: 200; right: 0;margin-left: 300px;font-size: 12px;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
         <option value="1">1</option>
         <option value="2">2</option>
         <option value="4">4</option>
@@ -557,5 +557,8 @@ a{
 }
 .disabled{
   background: #888;
+}
+.bumpDown{
+  margin-top: 17px;
 }
 </style>
