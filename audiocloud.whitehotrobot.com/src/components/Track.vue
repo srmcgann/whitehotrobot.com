@@ -633,7 +633,7 @@ export default {
     
     this.mp3 = new Audio()
     this.mp3.addEventListener('ended',()=>{
-			if(this.state.playall){
+			if(this.state.playall && !this.loop){
         this.state.playNextTrack()
 			} else {
         if(this.loop){
