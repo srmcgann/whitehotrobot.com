@@ -1,7 +1,12 @@
 <template>
   <div class="trackContainer"
+	  :ref="'trackContainer' + track.id"
     :class="{'singleTrack': state.mode=='track'}"
   >
+  <transition name="fadePulse">
+	  <div v-if="showPulse" style="position:absolute; width: 100%; background: #0f0;z-index: -1;margin-left: -10px; margin-top:-10px;border-radius: 10px;" :ref="'pulse' + track.id"></div>
+  </transition>
+
     <button v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin" class="deleteTrackButton" @click="deleteTrack(track)">
     </button>
     <div class="avatar" :style="'float: left;max-width: 100px;background-image:url('+state.getAvatar(track.userID)+');width:100px;height:100px;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
@@ -136,7 +141,7 @@
       ></button>
       <button
         class="smallControlButton jumpToNextButton"
-        @click="mp3.currentTime = mp3.duration/.999"
+        @click="mp3.currentTime = Math.max(6e6, mp3.duration-.1)"
       ></button>
       <canvas ref="canvas" class="canvas"></canvas>
     </div>
@@ -242,6 +247,7 @@ export default {
       c: null,
       S: Math.sin,
       leftChannelData: null,
+			showPulse: true,
       rightChannelData: null,
       C: Math.cos,
       mp3: null,
@@ -581,6 +587,20 @@ export default {
     }
   },
   watch:{
+		'track.jump'(val){
+			if(val){
+				let el = this.$refs['trackContainer' + this.track.id]
+        window.scroll(0, el.offsetTop-80)
+        this.showPulse = true
+        this.$nextTick(()=>{
+          this.$refs['pulse' + this.track.id].style.width = this.$refs['trackContainer' + this.track.id].clientWidth + 'px'
+          this.$refs['pulse' + this.track.id].style.height = this.$refs['trackContainer' + this.track.id].clientHeight + 'px'
+        })
+				this.$nextTick(()=>{
+	  			this.showPulse = false
+				})
+			}
+		},
     'track.playing'(val){
       if(!val){
 		    this.mp3.pause()
@@ -590,6 +610,7 @@ export default {
     }
   },
   mounted(){
+		this.track.jump = 0
 		setInterval(()=>{
 		  this.doMarquis()
 		}, 300)
@@ -959,6 +980,14 @@ table{
 .bumpUp{
   margin-top: -25px;
 }
+
+.fadePulse-enter-active{
+  transition: opacity 0s;
+}
+.fadePulse-leave-active {
+  transition: opacity 1s;
+}
+.fadePulse-enter, .fadePulse-leave-to{
+  opacity: 0;
+}
 </style>
-
-

@@ -44,6 +44,7 @@ export default {
         totalPages: 0,
 				playNextTrack: null,
         showUploadModal: false,
+				currentTrack: null,
         toggleLogin: null,
 				maxResultsPerPage: 0,
         showLoginPrompt: null,
@@ -637,7 +638,20 @@ export default {
           }
         break
       }
-		}
+		},
+		currentTrack(){
+      switch(this.state.mode){
+        case 'u':
+          return this.filteredUserTracks.filter(v=>v.playing)
+        break
+        case 'track':
+          return this.state.tracks.filter(v=>v.playing)
+        break
+        case 'default':
+          return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
+        break
+      }
+		},
   },
 	computed:{
 		currentPlayingTracks(){
@@ -692,8 +706,9 @@ export default {
     this.state.pauseVisible = this.pauseVisible
     this.state.loadUserData = this.loadUserData
     this.state.checkEnabled = this.checkEnabled
+    this.state.currentTrack = this.currentTrack
     this.state.advancePage = this.advancePage
-    this.state.regressPage = this.regressPage
+		this.state.regressPage = this.regressPage
     this.state.toggleLogin = this.toggleLogin
 		this.state.jumpToPage = this.jumpToPage
     this.state.decToAlpha = this.decToAlpha
@@ -727,7 +742,8 @@ export default {
       'https://lookie.jsbot.net/uploads/2kPCX5.png',
       'https://lookie.jsbot.net/uploads/14MAyj.png',
       'https://lookie.jsbot.net/uploads/20SIWe.png',
-      'https://lookie.jsbot.net/uploads/6aevA.png'
+      'https://lookie.jsbot.net/uploads/6aevA.png',
+			'https://lookie.jsbot.net/uploads/1RptlQ.png'
 	  ]
 		this.preloadImages.map(v=>{
 			let img = new Image()

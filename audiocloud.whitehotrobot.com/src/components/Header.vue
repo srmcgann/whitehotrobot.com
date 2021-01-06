@@ -63,6 +63,9 @@
           &gt;&gt;
         </button>
       </div>
+			<div  style="display: inline-block;position:absolute;margin-top: 3px;margin-left:-10px;">
+			  <button :class="{'disabled': !trackPlaying}" class="navButton" @click="jumpToPlayingTrack()" title="jump to playing track" style="width: 25px; height: 25px; background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);background-size: cover;"></button>
+			</div>
       <div v-if="state.loggedin" style="display: inline-block">
         <button @click="startUpload()" class="uploadButton">upload</button>
       </div>
@@ -130,6 +133,12 @@ export default {
   name: 'Header',
   props: [ 'state' ],
   methods:{
+		jumpToPlayingTrack(){
+			let l
+      if((l=this.state.currentTrack()).length){
+				l[0].jump++
+			}
+		},
 		updateUserPrefs(pref){
 			this.$nextTick(()=>{
         let newval
@@ -236,6 +245,15 @@ export default {
 		if(this.curPage > this.totalPages) this.state.jumpToPage(this.totalPages)
 	},
   computed:{
+		trackPlaying(){
+			let ret = false
+			if(typeof this.state.currentTrack != 'undefined' && typeof this.state.currentTrack == 'function'){
+			  if(this.state.currentTrack()){
+				  ret = !!this.state.currentTrack().length
+				}
+			}
+			return ret
+		},
     totalPages(){
       switch(this.state.mode){
         case 'u': return +this.state.totalUserPages; break
@@ -493,6 +511,7 @@ a{
 	line-height: .8em;
 	min-height: 25px;
   margin-top: 3px;
+	margin-left: -15px;
   vertical-align: top;
   padding-top: 0px;
 }
@@ -523,6 +542,7 @@ a{
   text-align: center;
 	line-height: .8em;
   margin-top: 4px;
+	margin-left: 20px;
   min-width: 0;
 }
 .navButton{

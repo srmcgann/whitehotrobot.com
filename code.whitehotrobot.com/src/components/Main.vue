@@ -416,7 +416,9 @@ export default {
 			  12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
 			]
 			let d = new Date(Date.parse(val.replace(/-/g, '/')))
-			return hours[d.getHours()] + ':' + d.getMinutes() + (d.getHours<12?'AM':'PM') + ' - ' + days[d.getDay()] + months[d.getMonth()] + ' ' + d.getDate() + ' ' + d.getFullYear()
+			let mn = ''+d.getMinutes()
+      if(mn.length < 2) mn = '0' + mn
+			return hours[d.getHours()] + ':' + mn + (d.getHours<12?'AM':'PM') + ' - ' + days[d.getDay()] + months[d.getMonth()] + ' ' + d.getDate() + ' ' + d.getFullYear()
 		},
     toggleShowForkHistory(item){
       if(item.showForkHistory){
