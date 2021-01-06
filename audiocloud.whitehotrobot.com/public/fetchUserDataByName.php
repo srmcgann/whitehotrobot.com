@@ -37,7 +37,7 @@ $admin = false;
       $totalRecords = mysqli_num_rows($res);
       $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
-	    $sql1=$sql = "SELECT * FROM audiocloudTracks WHERE userID = " . $row['id'] . ' ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+	    $sql1=$sql = "SELECT * FROM audiocloudTracks WHERE userID = " . $row['id'] . ' ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	  } else {
 
       $sql="SELECT id FROM audiocloudTracks WHERE private = 0 AND userID = " . $row['id'];
