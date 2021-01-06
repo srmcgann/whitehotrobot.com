@@ -242,6 +242,9 @@ export default {
         this.state.userInfo[this.state.user.id].isAdmin = this.state.user.isAdmin
 				this.state.refreshAvatar = true
         this.state.loaded = true
+        if(this.state.playall) {
+          if(this.state.mode == 'u') this.playNextTrack()
+        }
       })
     },
     loadTrack(trackID){
@@ -575,9 +578,12 @@ export default {
       }
     },
 		playNextTrack(){
+			console.log('playNext entered')
 			let curplayId
+			let curplayIdx
 			if(this.currentPlayingTracks.length){
 				curplayId = this.currentPlayingTracks[0].id
+				curplayIdx = this.currentPlayingTracks[0].idx
 				this.currentPlayingTracks[0].playing = false
       } else {
 				curplayId = -1
@@ -588,20 +594,30 @@ export default {
           if(this.filteredUserTracks.length) {				
             if(curplayId == -1){
               if(this.state.shuffle){
-                this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
+								let idx
+                this.filteredUserTracks[idx = Math.random()*this.filteredUserTracks.length|0].playing = true
+                this.filteredUserTracks[idx].jump++
+								console.log('...' + idx)
               }else{
                 this.filteredUserTracks[0].playing = true
+                this.filteredUserTracks[0].jump++
 					  	}
             } else {
               this.filteredUserTracks.map((v, i)=>{
                 if(v.id == curplayId){
                   if(this.state.shuffle){
-                    this.filteredUserTracks[Math.random()*this.filteredUserTracks.length|0].playing = true
+										let idx
+										while((idx = Math.random()*this.filteredUserTracks.length|0) == curplayIdx && this.filteredUserTracks.length > 1);
+										console.log(idx)
+                    this.filteredUserTracks[idx].playing = true
+                    this.filteredUserTracks[idx].jump++
                   }else{
                     if(i < this.filteredUserTracks.length-1){
                       this.filteredUserTracks[i+1].playing = true
+											this.filteredUserTracks[i+1].jump++
                     } else {
                       this.filteredUserTracks[0].playing = true
+                      this.filteredUserTracks[0].jump++
                     }
                   }
                 }
@@ -616,20 +632,28 @@ export default {
 				  if(this.state.landingPage.audiocloudTracks.length) {
             if(curplayId == -1){
               if(this.state.shuffle){
-                this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+								let idx
+                this.state.landingPage.audiocloudTracks[idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+                this.state.landingPage.audiocloudTracks[idx].jump++
               }else{
                 this.state.landingPage.audiocloudTracks[0].playing = true
+                this.state.landingPage.audiocloudTracks[0].jump++
               }
             } else {
               this.state.landingPage.audiocloudTracks.map((v, i)=>{
 		  					if(v.id == curplayId){
 			  					if(this.state.shuffle){
-                    this.state.landingPage.audiocloudTracks[Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+										let idx
+										while((idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0) == curplayIdx && this.state.landingPage.audiocloudTracks.length > 1);
+                    this.state.landingPage.audiocloudTracks[idx].playing = true
+                    this.state.landingPage.audiocloudTracks[idx].jump++
 					  			}else{
   					  			if(i < this.state.landingPage.audiocloudTracks.length-1){
 	  					  			this.state.landingPage.audiocloudTracks[i+1].playing = true
+                      this.state.landingPage.audiocloudTracks[i+1].jump++
 		  					  	} else {
 			  					  	this.state.landingPage.audiocloudTracks[0].playing = true
+                      this.state.landingPage.audiocloudTracks[0].jump++
 				  			    }
 							    }
 						  	}
@@ -657,12 +681,15 @@ export default {
 		currentPlayingTracks(){
 			switch(this.state.mode){
 				case 'u':
+				  this.state.user.audiocloudTracks = this.state.user.audiocloudTracks.map((v, i)=>{v.idx = i; return v})
 				  return this.filteredUserTracks.filter(v=>v.playing)
 				break
 				case 'track':
+          //this.state.tracks.map((v, i)=>{v.idx = i})
 				  return this.state.tracks.filter(v=>v.playing)
 				break
 				case 'default':
+				  this.state.landingPage.audiocloudTracks = this.state.landingPage.audiocloudTracks.map((v, i)=> {v.idx = i; return v})
 				  return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
 				break
 			}
@@ -750,7 +777,6 @@ export default {
       img.src = v
 			return v
     })
-		if(this.state.playall)this.playNextTrack()
 	}
 }
 </script>
