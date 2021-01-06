@@ -27,71 +27,9 @@
         <button @click="state.showUploadModal = false" style="background: #400;color: #fee;font-weight: 400;">cancel</button>
       </div>
     </div>
-    <div class="navContainer">
-      <div class="curPageContainer" v-if="state.mode != 'track'" :class="{'bumpLeft': !this.state.loggedin}">
-        <button
-          class="navButton"
-          :class="{'disabled': curPage < 1}"
-          :disabled="curPage < 1"
-          @click="state.firstPage()"
-        >
-          &lt;&lt;
-        </button>
-        <button
-          class="navButton"
-          :disabled="curPage < 1"
-          :class="{'disabled': curPage < 1}"
-          @click="state.regressPage()"
-        >
-          &lt;
-        </button>
-        {{pagenumber}}
-        <button
-          class="navButton"
-          :class="{'disabled': totalPages == curPage+1}"
-          :disabled="totalPages == curPage+1"
-          @click="state.advancePage()"
-        >
-          &gt;
-        </button>
-        <button
-          class="navButton"
-          :class="{'disabled': totalPages == curPage+1}"
-          :disabled="totalPages == curPage+1"
-          @click="state.lastPage()"
-        >
-          &gt;&gt;
-        </button>
-      </div>
-			<div  v-if="state.mode !== 'track'" style="display: inline-block;position:absolute;margin-top: 3px;margin-left:-10px;">
-			  <button :class="{'disabled': !trackPlaying}" class="navButton" @click="jumpToPlayingTrack()" title="jump to playing track" style="width: 25px; height: 25px; background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);background-size: cover;"></button>
-			</div>
-      <div v-if="state.loggedin" style="display: inline-block">
-        <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
-      </div>
-			<div v-if="state.mode !== 'track'" class="advancedControls" style="margin-left: -20px;">
-        <label for="playall" style="margin-left: 0px;margin-bottom:14px;">
-          <input id="playall" @input="updateUserPrefs('audiocloudPlayAll')" type="checkbox" v-model="state.playall">play all
-        </label>
-        <label for="shuffle" style="margin-left: 20px;">
-          <input id="shuffle" @input="updateUserPrefs('audiocloudShuffle')" type="checkbox" v-model="state.shuffle">shuffle
-        </label>
-        <label for="disco" style="margin-left: 20px;">
-          <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
-        </label>
-				<span v-if="state.loggedin" style="width: 80px;position: absolute; font-size: 10px;margin-left:z-index: 0; 0px;margin-top:-1px;">max results</span>
-		  </div>
-			<select v-if="state.loggedin && state.mode != 'track'" style="position: relative; z-index: 200; right: 0;margin-left: 300px;font-size: 12px;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="4">4</option>
-        <option value="6">6</option>
-			  <option value="10">10</option>
-        <option value="20">20</option>
-        <option style="background: #ff0;color: #000;" value="30">30</option>
-        <option style="background: #f80;color: #000;" value="40">40</option>
-        <option style="background: #800;color: #fff;" value="50">50</option>
-			</select>
+    <div v-if="state.loggedin" style="display: inline-block; position: absolute;">
+			<button class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
+      <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
     </div>
     <div class="workingSpace">
       <div class="loggedinDiv">
@@ -254,30 +192,6 @@ export default {
 			}
 			return ret
 		},
-    totalPages(){
-      switch(this.state.mode){
-        case 'u': return +this.state.totalUserPages; break
-        case 'default': return +this.state.totalPages; break
-      }
-    },
-    curPage(){
-      switch(this.state.mode){
-        case 'u': return +this.state.curUserPage; break
-        case 'default': return +this.state.curPage; break
-      }
-    },
-    pagenumber(){
-      let num
-      switch(this.state.mode){
-        case 'u':
-          num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
-        break
-        case 'default':
-          num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
-        break
-      }
-      return num
-    },
     origin(){
       return window.location.origin
     }
@@ -285,7 +199,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .appName{
   float: right;
   position: relative;
@@ -367,7 +281,7 @@ a{
   width: 100vw;
   height: 100vh;
   background: #001d;
-  z-index: 2000;
+  z-index: 3000;
   line-height: 1.05em;
 }
 .uploadProgressContainer{
@@ -515,35 +429,18 @@ a{
   vertical-align: top;
   padding-top: 0px;
 }
-.advancedControls{
-  margin-top: -10px;
-	top: 0;
-	position: absolute;
-	margin-top: 30px;
-	left: 50%;
-	transform: translate(-50%);
-	width: 400px;
-}
-.navContainer{
-  z-index: 1000;
-  margin-bottom: -30px;
-  position: absolute;
-  margin-top: 0;
-  font-size: .7em;
-  left: 50%;
-  width: 400px;
-	height: 60px;
-  transform: translateX(-50%);
-}
 .uploadButton{
+  margin: 0;
   background: #0f4;
   width: 80px;
   display: inline-block;
   text-align: center;
 	line-height: .8em;
-  margin-top: 4px;
-	margin-left: 20px;
   min-width: 0;
+  margin-top: 17px;
+  margin-left: 65px;
+  position: absolute;
+  z-index: 1000;
 }
 .navButton{
   min-width:0;
@@ -563,5 +460,13 @@ a{
 }
 .bumpDown{
   margin-top: 17px;
+}
+.jumpButton{
+  background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);
+  background-size: cover;
+  position: absolute;
+  margin-top: 17px;
+  margin-left: 15px;
+  z-index: 1000;
 }
 </style>

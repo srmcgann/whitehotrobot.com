@@ -238,6 +238,8 @@ export default {
       showComments: 2,
       moreCommentsVal: 5,
       x: null,
+      B: [],
+      P: [],
       audioCtx: null,
       updated:{
         title: 0,
@@ -245,11 +247,10 @@ export default {
       },
       trackdata: [],
       c: null,
-      S: Math.sin,
+      percentLoaded: 0,
       leftChannelData: null,
 			showPulse: true,
       rightChannelData: null,
-      C: Math.cos,
       mp3: null,
       duration: 0,
       trackAnalyzed: false,
@@ -494,30 +495,49 @@ export default {
       let t = this.t
       let x = this.x
       let c = this.c
+      let S = Math.sin
+      let C = Math.cos
     
-      c.width|=0
+    
+      //c.width|=0
+      x.fillStyle='#0006', x.fillRect(0,0,c.width,c.height)
+      x.lineJoin = x.lineCap = 'round'
       if(this.trackAnalyzed){
         x.fillStyle='#000'
         x.fillRect(0,0,c.width,c.height)
-        let res = 512
-        x.strokeStyle='#aff8'
+        let res = 256
+        x.strokeStyle='#affa'
         x.beginPath()
         let perc = this.mp3.currentTime/this.mp3.duration
         x.lineTo(c.width*perc,0)
         x.lineTo(c.width*perc,c.height)
         x.lineWidth=2
         x.stroke()
-        x.lineWidth=1
+        x.lineWidth=2
         for(let i=res;i--;){
+          let col1
+          let col2
+          let col3
+          let col4
+          if(this.track.playing){
+            col1 = `hsla(${360/res*i + -t*300 + 360/4*0}, 99%,50%,.75)`
+            col3 = `hsla(${360/res*i + -t*300 + 360/4*2}, 99%,50%,.75)`
+          } else {
+            col1 = `hsla(${360/res*i/4 + t*50 + 360/4*0}, 15%, 50%, .75)`
+            col3 = `hsla(${360/res*i/4 + t*50 + 360/4*2}, 15%, 50%, .75)`
+          }
+          col2 = `hsla(${360/res*i/4 + t*50 + 360/4*1}, 15%, 50%, .75)`
+          col4 = `hsla(${360/res*i/4 + t*50 + 360/4*3}, 15%, 50%, .75)`
+          
           x.beginPath()
           x.lineTo(c.width/res*i,c.height/2)
           let l = this.leftChannelData.length / res * i | 0
           let Y = (Math.abs(this.leftChannelData[l])) * c.height/2
           x.lineTo(c.width/res*i,c.height/2+Y)
           if(i<=perc*res){
-            x.strokeStyle='#802'
+            x.strokeStyle=col1
           } else {
-            x.strokeStyle='#028'
+            x.strokeStyle=col2
           }
           x.stroke()
 
@@ -527,11 +547,22 @@ export default {
           Y = (Math.abs(this.rightChannelData[l])) * c.height/2
           x.lineTo(c.width/res*i,c.height/2-Y)
           if(i<=perc*res){
-            x.strokeStyle='#208'
+            x.strokeStyle=col3
           } else {
-            x.strokeStyle='#082'
+            x.strokeStyle=col4
           }
           x.stroke()
+        }
+        if(this.trackAnalyzed){
+          for(let m=20;m--;)this.B.push([c.width*perc, Math.random()*c.height,.01])
+          this.B = this.B.map(v=>{
+            let X = (v[0]-=v[2]/2)-2
+            let Y = v[1]
+            v[2]+=.05+v[2]/25
+            x.fillStyle=`hsla(200,99%,80%,${.05/(1+(1+v[2])**2/40)})`
+            x.fillRect(X,Y-2.5,5,5)
+            return v
+          }).filter(v=>v[0]>0)
         }
         if(typeof this.mp3.currentTime != 'undefined'){
           x.font='16px Play'
@@ -539,6 +570,8 @@ export default {
           x.fillText(this.formattedCurrentTime() , c.width-120, 16)
         }
       } else {
+        x.fillStyle='#0fa2'
+        x.fillRect(0,0,c.width*this.percentLoaded/100,c.height)
         x.font='26px Play'
         x.fillStyle='#2fa8'
         let l
@@ -576,7 +609,16 @@ export default {
       if(sec.length == 0) sec = '00'
       if(sec.length == 1) sec = '0' + sec
 			return cur + '  ( -' + (+hr ? hr + ':' : '') +  mn + ':' + sec + ')'
-		}
+		},
+    stringToUint(string) {
+        var string = btoa(unescape(encodeURIComponent(string))),
+            charList = string.split(''),
+            uintArray = [];
+        for (var i = 0; i < charList.length; i++) {
+            uintArray.push(charList[i].charCodeAt(0));
+        }
+        return new Uint16Array(uintArray);
+    }
   },
   computed:{
     filteredComments(){
@@ -590,7 +632,7 @@ export default {
 		'track.jump'(val){
 			if(val){
 				let el = this.$refs['trackContainer' + this.track.id]
-        window.scroll(0, el.offsetTop-80)
+        window.scroll(0, el.offsetTop-80 + (this.state.showControls ? -160 : 0))
         this.showPulse = true
         this.$nextTick(()=>{
           this.$refs['pulse' + this.track.id].style.width = this.$refs['trackContainer' + this.track.id].clientWidth + 'px'
@@ -654,16 +696,19 @@ export default {
       this.duration = this.mp3.duration
       this.canPlay = true
       if(this.state.mode == 'track') {
-				//this.mp3.play()
 				this.track.playing = true
       }
 		})
     this.mp3.src = this.track.audioFile
+    this.track.mp3 = this.mp3
     var AudioContext = window.AudioContext || window.webkitAudioContext;
     this.audioCtx = new AudioContext();
     let req = new XMLHttpRequest()
     req.open('GET', this.track.audioFile, true)
     req.responseType = 'arraybuffer'
+    req.onprogress=e=>{
+      this.percentLoaded = Math.round(e.loaded/e.total*100*100)/100
+    }
     req.onload = ()=> {
       let audioData = req.response
       this.audioCtx.decodeAudioData(audioData, buffer=>{
@@ -677,8 +722,8 @@ export default {
     }
     req.send()
     this.Draw()
+    }
   }
-}
 </script>
 
 <style scoped>

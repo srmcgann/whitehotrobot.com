@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <Controls :state="state" />
     <Header :state="state"/>
     <Main :state="state"/>
     <UserSettings v-if="state.userSettingsVisible" :state="state"/>
@@ -10,6 +11,7 @@
 
 <script>
 import Main from './components/Main'
+import Controls from './components/Controls'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import LoginPrompt from './components/LoginPrompt'
@@ -20,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'https://audiocloud.whitehotrobot.com',
+        baseURL: 'httpis://audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -38,7 +40,6 @@ export default {
         curUserPage: null,
         incrementViews: null,
         loggedinUserName: '',
-        baseProtocol: 'https',
         loggedin: false,
         totalUserPages: 0,
         totalPages: 0,
@@ -48,6 +49,8 @@ export default {
         toggleLogin: null,
 				maxResultsPerPage: 0,
         showLoginPrompt: null,
+        showControls: true,
+        toggleShowControls: null,
         closePrompts: null,
         loginPromptVisible: false,
         isAdmin: false,
@@ -65,7 +68,6 @@ export default {
         userInfo: [],
         tracks: [],
         regusername: '',
-        showControls: false,
         advancePage: null,
         regressPage: null,
 				filteredUserTracks: null,
@@ -90,12 +92,23 @@ export default {
   },
   components: {
     Main,
+    Controls,
     Header,
     Footer,
     UserSettings,
     LoginPrompt
   },
   methods:{
+    toggleShowControls(){
+      let cookies = document.cookie
+      cookies.split(';').map(v=>{
+        if(v.indexOf('showControls')!=-1){
+          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/'
+        }
+      })
+      this.state.showControls = !this.state.showControls
+      document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+    },
     pauseVisible(){
       switch(this.state.mode){
         case 'u':
@@ -455,6 +468,7 @@ export default {
           this.state.userInfo[this.state.loggedinUserID].name = this.state.regusername || this.state.loggedinUserName
           this.state.userInfo[this.state.loggedinUserID].avatar = data[3]
           this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[4]
+          this.checkShowControlsPref()
           sendData = {
             userID: this.state.loggedinUserID,
             page: this.state.curUserPage,
@@ -507,6 +521,12 @@ export default {
       } else {
         this.getMode() 
       }
+      this.checkAutoplayPref()
+      this.checkShowControlsPref()
+    },
+    checkShowControlsPref(){
+      let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='showControls')
+      if(l.length) this.state.showControls = l[0].split('=')[1]=='true'
     },
     incrementViews(id){
       let sendData = {trackID: id}
@@ -578,12 +598,12 @@ export default {
       }
     },
 		playNextTrack(){
-			console.log('playNext entered')
 			let curplayId
 			let curplayIdx
 			if(this.currentPlayingTracks.length){
 				curplayId = this.currentPlayingTracks[0].id
 				curplayIdx = this.currentPlayingTracks[0].idx
+				this.currentPlayingTracks[0].mp3.currentTime = 0
 				this.currentPlayingTracks[0].playing = false
       } else {
 				curplayId = -1
@@ -722,6 +742,7 @@ export default {
   },
   mounted(){
 		this.state.userAgent = navigator.userAgent
+    this.state.toggleShowControls = this.toggleShowControls
     this.state.filteredUserTracks = this.filteredUserTracks
     this.state.showUserSettings = this.showUserSettings
     this.state.showLoginPrompt = this.showLoginPrompt
@@ -793,6 +814,7 @@ html{
   color: #8fc;
   min-height: 100%;
   min-width: 475px;
+  scroll-behavior: smooth;
 }
 body{
   margin: 0;
