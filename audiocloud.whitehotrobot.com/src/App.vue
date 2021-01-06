@@ -22,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'httpis://audiocloud.whitehotrobot.com',
+        baseURL: 'https://audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -335,7 +335,7 @@ export default {
       document.cookie = 'loggedinuser=' + this.state.loggedinUserName + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'loggedinuserID=' + this.state.loggedinUserID + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'token=' + this.state.passhash + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
-      document.cookie = 'autoplay=' + this.state.autoplay + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'autoplay=' + this.state.playall + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
     },
     checkEnabled(){
@@ -383,7 +383,7 @@ export default {
     },
     checkAutoplayPref(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='autoplay')
-      if(l.length) this.state.autoplay = l[0].split('=')[1]=='true'
+      if(l.length) this.state.playall = l[0].split('=')[1]=='true'
     },
     getMode(){
       let vars = window.location.pathname.split('/').filter(v=>v)
@@ -617,7 +617,6 @@ export default {
 								let idx
                 this.filteredUserTracks[idx = Math.random()*this.filteredUserTracks.length|0].playing = true
                 this.filteredUserTracks[idx].jump++
-								console.log('...' + idx)
               }else{
                 this.filteredUserTracks[0].playing = true
                 this.filteredUserTracks[0].jump++
