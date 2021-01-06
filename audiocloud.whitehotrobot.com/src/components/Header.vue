@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="navContainer">
-      <div class="curPageContainer" v-if="state.mode != 'track'">
+      <div class="curPageContainer" v-if="state.mode != 'track'" :class="{'bumpLeft': !this.state.loggedin}">
         <button
           class="navButton"
           :class="{'disabled': curPage < 1}"
@@ -557,6 +557,9 @@ a{
 }
 .disabled{
   background: #888;
+}
+.bumpLeft{
+  margin-left: -100px;
 }
 .bumpDown{
   margin-top: 17px;
