@@ -122,13 +122,13 @@
         v-if="!track.playing"
         class="playbutton"
         @click="playPauseTrack()"
-        :class="{'disabledPlayButton': !canPlay}"
+        :class="{'disabledPlayButton': !track.canPlay}"
       ></button>
       <button
         v-else
         class="pausebutton"
         @click="playPauseTrack()"
-        :class="{'disabledPauseButton': !canPlay}"
+        :class="{'disabledPauseButton': !track.canPlay}"
       ></button>
       <button
         @click="loop=!loop"
@@ -137,11 +137,11 @@
       ></button>
       <button
         class="smallControlButton resetButton"
-        @click="mp3.currentTime = 0"
+        @click="track.mp3.currentTime = 0; if(skipRedraw)B=[],Draw(skipRedraw=false)"
       ></button>
       <button
         class="smallControlButton jumpToNextButton"
-        @click="mp3.currentTime = Math.max(6e6, mp3.duration-.1)"
+        @click="track.mp3.currentTime = Math.max(6e6, track.mp3.duration-.1);if(skipRedraw)B=[],Draw(skipRedraw=false)"
       ></button>
       <canvas ref="canvas" class="canvas"></canvas>
     </div>
@@ -232,7 +232,6 @@ export default {
     return {
       t: 0,
       loop: false,
-      canPlay: false,
       trackAmplitude:[],
 			marquisTimer: null,
       showComments: 2,
@@ -249,10 +248,7 @@ export default {
       trackdata: [],
       c: null,
       percentLoaded: 0,
-      leftChannelData: null,
 			showPulse: true,
-      rightChannelData: null,
-      mp3: null,
       duration: 0,
       trackAnalyzed: false,
       bufferLength: null,
@@ -357,17 +353,21 @@ export default {
   						date: data[2]
 	  				}
 
-            switch(this.state.mode){
-              case 'u':
-              this.state.user.audiocloudTracks.filter(v=>v.id==id)[0].comments.push(comment)
-              break
-              case 'default':
-              this.state.landingPage.audiocloudTracks.filter(v=>v.id==id)[0].comments.push(comment)
-              break
-              case 'track':
-              this.state.tracks.filter(v=>v.id==id)[0].comments.push(comment)
-              break
-            }        
+            if(this.state.search.string){
+              this.state.search.audiocloudTracks.filter(v=>v.id==id)[0].comments.push(comment)
+            }else{
+              switch(this.state.mode){
+                case 'u':
+                this.state.user.audiocloudTracks.filter(v=>v.id==id)[0].comments.push(comment)
+                break
+                case 'default':
+                this.state.landingPage.audiocloudTracks.filter(v=>v.id==id)[0].comments.push(comment)
+                break
+                case 'track':
+                this.state.tracks.filter(v=>v.id==id)[0].comments.push(comment)
+                break
+              }        
+            }
 
 						this.$refs['newComment' + id].value = ''
 			  	}
@@ -411,7 +411,7 @@ export default {
 		},
     deleteTrack(track){
       if(confirm("\n\n\nAre you SURE you want to delete this track??!?!\n\n\n     Track: \"" + track.trackName + "\"\n     created: " + this.formattedDate(track.date) + "\n\n\nThis action is IRREVERSIBLE!!!!")){
-        this.mp3.pause()
+        this.track.mp3.pause()
         let sendData = {
           userName: this.state.loggedinUserName,
           trackID: +track.id, 
@@ -426,26 +426,34 @@ export default {
         })
         .then(res => res.json())
         .then(data => {
-          switch(this.state.mode){
-            case 'u':
-            this.state.user.audiocloudTracks = this.state.user.audiocloudTracks.filter(v=>v.id!=track.id)
-            break
-            case 'default':
-            this.state.landingPage.audiocloudTracks = this.state.landingPage.audiocloudTracks.filter(v=>v.id!=track.id)
-            break
-            case 'track':
-            this.state.tracks = this.state.tracks.filter(v=>v.id!=track.id)
-            break
-          }        
+          if(this.state.search.string){
+            this.state.search.audiocloudTracks = this.state.search.audiocloudTracks.filter(v=>v.id!=track.id)
+          }else{
+            switch(this.state.mode){
+              case 'u':
+              this.state.user.audiocloudTracks = this.state.user.audiocloudTracks.filter(v=>v.id!=track.id)
+              break
+              case 'default':
+              this.state.landingPage.audiocloudTracks = this.state.landingPage.audiocloudTracks.filter(v=>v.id!=track.id)
+              break
+              case 'track':
+              this.state.tracks = this.state.tracks.filter(v=>v.id!=track.id)
+              break
+            }        
+          }
         })
       }
     },
     updateTrackItem(trackID, item){
       let newItemVal
-      switch(this.state.mode){
-        case 'default': newItemVal = this.state.landingPage.audiocloudTracks.filter(v=>v.id==trackID)[0][item] ; break
-        case 'track': newItemVal = this.state.tracks.filter(v=>v.id==trackID)[0][item] ; break
-        case 'u': newItemVal = this.state.user.audiocloudTracks.filter(v=>v.id==trackID)[0][item] ; break
+      if(this.state.search.string){
+        newItemVal = this.state.search.audiocloudTracks.filter(v=>v.id==trackID)[0][item]
+      }else{
+        switch(this.state.mode){
+          case 'default': newItemVal = this.state.landingPage.audiocloudTracks.filter(v=>v.id==trackID)[0][item] ; break
+          case 'track': newItemVal = this.state.tracks.filter(v=>v.id==trackID)[0][item] ; break
+          case 'u': newItemVal = this.state.user.audiocloudTracks.filter(v=>v.id==trackID)[0][item] ; break
+        }
       }
       if(item == 'private') newItemVal = !newItemVal ? 1 : 0
       if(item == 'allowDownload') newItemVal = !newItemVal ? 1 : 0
@@ -486,10 +494,8 @@ export default {
       if(!this.track.playing){
         this.state.pauseVisible()
         this.track.playing = true
-        //this.mp3.play()
       } else {
         this.track.playing = false
-        //this.mp3.pause()
       }
     },
     Draw(){
@@ -504,13 +510,13 @@ export default {
       //c.width|=0
       x.fillStyle='#0006', x.fillRect(0,0,c.width,c.height)
       x.lineJoin = x.lineCap = 'round'
-      if(this.trackAnalyzed){
+      if(this.trackAnalyzed && typeof this.track.mp3 !== 'undefined' && typeof this.track.leftChannelData != 'undefined'){
         x.fillStyle='#000'
         x.fillRect(0,0,c.width,c.height)
         let res = 256
         x.strokeStyle='#affa'
         x.beginPath()
-        let perc = this.mp3.currentTime/this.mp3.duration
+        let perc = this.track.mp3.currentTime/this.track.mp3.duration
         x.lineTo(c.width*perc,0)
         x.lineTo(c.width*perc,c.height)
         x.lineWidth=2
@@ -533,8 +539,8 @@ export default {
           
           x.beginPath()
           x.lineTo(c.width/res*i,c.height/2)
-          let l = this.leftChannelData.length / res * i | 0
-          let Y = (Math.abs(this.leftChannelData[l])) * c.height/2
+          let l = this.track.leftChannelData.length / res * i | 0
+          let Y = (Math.abs(this.track.leftChannelData[l])) * c.height/2
           x.lineTo(c.width/res*i,c.height/2+Y)
           if(i<=perc*res){
             x.strokeStyle=col1
@@ -545,8 +551,8 @@ export default {
 
           x.beginPath()
           x.lineTo(c.width/res*i,c.height/2)
-          l = this.rightChannelData.length / res * i | 0
-          Y = (Math.abs(this.rightChannelData[l])) * c.height/2
+          l = this.track.rightChannelData.length / res * i | 0
+          Y = (Math.abs(this.track.rightChannelData[l])) * c.height/2
           x.lineTo(c.width/res*i,c.height/2-Y)
           if(i<=perc*res){
             x.strokeStyle=col3
@@ -566,7 +572,7 @@ export default {
             return v
           }).filter(v=>v[0]>0)
         }
-        if(typeof this.mp3.currentTime != 'undefined'){
+        if(typeof this.track.mp3.currentTime != 'undefined'){
           x.font='16px Play'
           x.fillStyle='#4fc8'
           x.fillText(this.formattedCurrentTime() , c.width-120, 16)
@@ -585,9 +591,9 @@ export default {
       requestAnimationFrame(this.Draw)
     },
     formattedCurrentTime(){
-      let hr = this.mp3.currentTime / 60 / 60 |0
-      let mn = (this.mp3.currentTime / 60 / 60 - hr)*60 | 0 
-      let sec = ((this.mp3.currentTime / 60 / 60 - hr)*60 - mn)*60 | 0
+      let hr = this.track.mp3.currentTime / 60 / 60 |0
+      let mn = (this.track.mp3.currentTime / 60 / 60 - hr)*60 | 0 
+      let sec = ((this.track.mp3.currentTime / 60 / 60 - hr)*60 - mn)*60 | 0
       hr = ''+hr
       mn = ''+mn
       sec = ''+sec
@@ -599,7 +605,7 @@ export default {
       if(sec.length == 1) sec = '0' + sec
       let cur = (+hr ? hr + ':' : '') +  mn + ':' + sec
 			let l
-      hr = (l = this.mp3.duration - this.mp3.currentTime) / 60 / 60 |0
+      hr = (l = this.track.mp3.duration - this.track.mp3.currentTime) / 60 / 60 |0
       mn = (l / 60 / 60 - hr)*60 | 0
       sec = ((l / 60 / 60 - hr)*60 - mn)*60 | 0
       hr = ''+hr
@@ -648,10 +654,10 @@ export default {
 		},
     'track.playing'(val){
       if(!val){
-		    this.mp3.pause()
+		    this.track.mp3.pause()
 			} else {
 				this.$nextTick(()=>{
-					this.mp3.play()
+					this.track.mp3.play()
 					this.$nextTick(()=>{
 						if(this.skipRedraw){
 							this.skipRedraw = false
@@ -671,7 +677,7 @@ export default {
     this.c.addEventListener('click', e=>{
       if(this.trackAnalyzed){
         let perc = e.offsetX / this.c.clientWidth
-        this.mp3.currentTime = this.mp3.duration * perc
+        this.track.mp3.currentTime = this.track.mp3.duration * perc
         this.state.pauseVisible()
         if(!this.track.playing){
 					this.track.playing = false
@@ -687,59 +693,64 @@ export default {
     this.x = this.c.getContext('2d')
     this.t = 0
     
-    this.mp3 = new Audio()
-    this.mp3.addEventListener('ended',()=>{
-			if(this.state.playall && !this.loop){
-        this.state.playNextTrack()
-			} else {
-        if(this.loop){
-				  this.mp3.currentTime = 0
-					this.track.playing = false
-          this.$nextTick(()=>{
-						this.track.playing = true
-					})
-        }else{
-          this.track.playing = false
+    if(typeof this.track.mp3 == 'undefined'){
+      this.track.mp3 = new Audio()
+      this.track.mp3.addEventListener('ended',()=>{
+        if(this.state.playall && !this.loop){
+          this.state.playNextTrack()
+        } else {
+          if(this.loop){
+            this.track.mp3.currentTime = 0
+            this.track.playing = false
+            this.$nextTick(()=>{
+              this.track.playing = true
+            })
+          }else{
+            this.track.playing = false
+          }
         }
-			}
-    })
+      })
+      this.track.mp3.addEventListener('canplay',()=>{
+        if(typeof this.track.mp3 !== 'undefined'){
+          this.duration = this.track.mp3.duration
+          this.track.canPlay = true
+          if(this.state.mode == 'track') {
+            this.track.playing = false
+            this.$nextTick(()=>{
+              this.track.playing = true
+            })
+          }
+        }
+      })
+      this.track.mp3.src = this.track.audioFile
+      var AudioContext = window.AudioContext || window.webkitAudioContext;
+      this.audioCtx = new AudioContext();
+      let req = new XMLHttpRequest()
+      req.open('GET', this.track.audioFile, true)
+      req.responseType = 'arraybuffer'
+      req.onprogress=e=>{
+        this.percentLoaded = Math.round(e.loaded/e.total*100*100)/100
+      }
+      req.onload = ()=> {
+        let audioData = req.response
+        this.audioCtx.decodeAudioData(audioData, buffer=>{
+          this.trackAnalyzed = true
+          this.track.leftChannelData = buffer.getChannelData(0)
+          this.track.rightChannelData = buffer.getChannelData(1)
+        })
+      }
+      if(this.state.mode == 'track'){
+        document.getElementsByTagName('html')[0].scroll(0, document.getElementsByTagName('html')[0].clientHeight/3.5)
+      }
+      req.send()
+    } else {
+      this.trackAnalyzed = true
+    }
 		if(this.track.playing){
 		  this.$nextTick(()=>{
-		  this.mp3.play()
+		  this.track.mp3.play()
 			})
 		}
-    this.mp3.addEventListener('canplay',()=>{
-      this.duration = this.mp3.duration
-      this.canPlay = true
-      if(this.state.mode == 'track') {
-				this.track.playing = false
-				this.$nextTick(()=>{
-					this.track.playing = true
-				})
-      }
-		})
-    this.mp3.src = this.track.audioFile
-    this.track.mp3 = this.mp3
-    var AudioContext = window.AudioContext || window.webkitAudioContext;
-    this.audioCtx = new AudioContext();
-    let req = new XMLHttpRequest()
-    req.open('GET', this.track.audioFile, true)
-    req.responseType = 'arraybuffer'
-    req.onprogress=e=>{
-      this.percentLoaded = Math.round(e.loaded/e.total*100*100)/100
-    }
-    req.onload = ()=> {
-      let audioData = req.response
-      this.audioCtx.decodeAudioData(audioData, buffer=>{
-        this.trackAnalyzed = true
-        this.leftChannelData = buffer.getChannelData(0)
-        this.rightChannelData = buffer.getChannelData(1)
-      })
-    }
-		if(this.state.mode == 'track'){
-      document.getElementsByTagName('html')[0].scroll(0, document.getElementsByTagName('html')[0].clientHeight/3.5)
-    }
-    req.send()
     this.Draw()
     }
   }

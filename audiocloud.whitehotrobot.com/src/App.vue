@@ -30,6 +30,9 @@ export default {
         rootDomain: 'whitehotrobot.com',
         maxCommentsBeforeExpansion: 3,
         curPage: 0,
+        beginSearch: null,
+        curTrack: null,
+        curSearchPage: 0,
 				jumpToPage: null,
 				playall: false,
 				userAgent: null,
@@ -40,6 +43,12 @@ export default {
         curUserPage: null,
         incrementViews: null,
         loggedinUserName: '',
+        exact: false,
+        exactClicked: false,
+        search: {
+          string: '',
+          audiocloudTracks: []
+        },
         loggedin: false,
         totalUserPages: 0,
         totalPages: 0,
@@ -61,6 +70,8 @@ export default {
         user: null,
         fetchUserData: null,
         startStopPages: false,
+        searchTimer: 6e10,
+        searchTimerHandle: null,
         pauseVisible: null,
         username: '',
         password: '',
@@ -110,16 +121,20 @@ export default {
       document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
     },
     pauseVisible(){
-      switch(this.state.mode){
-        case 'u':
-          this.state.user.audiocloudTracks.map(v=>v.playing=false)
-        break
-        case 'track':
-        this.state.tracks.map(v=>v.playing=false)
-        break
-        case 'default':
-        this.state.landingPage.audiocloudTracks.map(v=>v.playing=false)
-        break
+      if(this.state.search.string){
+        //this.state.search.audiocloudTracks.map(v=>v.playing=false)
+      }else{
+        switch(this.state.mode){
+          case 'u':
+            this.state.user.audiocloudTracks.map(v=>v.playing=false)
+          break
+          case 'track':
+            this.state.tracks.map(v=>v.playing=false)
+          break
+          case 'default':
+            this.state.landingPage.audiocloudTracks.map(v=>v.playing=false)
+          break
+        }
       }
     },
     openFullscreen(elem) {
@@ -230,37 +245,38 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        if(this.state.user != null && typeof this.state.user.audiocloudTracks != 'undefined' && this.state.user.audiocloudTracks.length){
-				  data[0].audiocloudTracks = this.state.user.audiocloudTracks
-				}else{
-				  data[0].audiocloudTracks.map(v=>{
-            if(this.state.mode != 'default') this.incrementViews(v.id)
-					  v.playing = false
-            v.private = !!(+v.private)
-            v.allowDownload = !!(+v.allowDownload)
-            v.comments = v.comments.map(q=>{
-              q.updated = false
-              q.editing = false
-              this.fetchUserData(q.userID)
-              return q
+          if(this.state.user != null && typeof this.state.user.audiocloudTracks != 'undefined' && this.state.user.audiocloudTracks.length){
+            data[0].audiocloudTracks = this.state.user.audiocloudTracks
+          }else{
+            data[0].audiocloudTracks.map(v=>{
+              if(this.state.mode != 'default') this.incrementViews(v.id)
+              v.playing = false
+              v.private = !!(+v.private)
+              v.allowDownload = !!(+v.allowDownload)
+              v.comments = v.comments.map(q=>{
+                q.updated = false
+                q.editing = false
+                this.fetchUserData(q.userID)
+                return q
+              })
             })
-          })
-				}
-        this.state.totalUserPages = data[1]
-        if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
-				this.state.user = data[0]
+          }
+          this.state.totalUserPages = data[1]
+          if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+          this.state.user = data[0]
         this.state.userInfo[this.state.user.id] = {}
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
         this.state.userInfo[this.state.user.id].isAdmin = this.state.user.isAdmin
 				this.state.refreshAvatar = true
         this.state.loaded = true
-        if(this.state.playall) {
+        if(this.state.playall && this.state.search.string == '') {
           if(this.state.mode == 'u') this.playNextTrack()
         }
       })
     },
     loadTrack(trackID){
+      this.state.curTrack = trackID
       let sendData = {
         trackID
       }
@@ -368,7 +384,6 @@ export default {
             this.state.playall = !!(+data[5])
             this.state.shuffle = !!(+data[6])
 						this.state.disco = !!(+data[7])
-						this.getMode()
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -376,8 +391,8 @@ export default {
             this.state.passhash = ''
             this.state.isAdmin = false
             this.state.invalidLoginAttempt = true
-						this.getMode()
           }
+          this.getMode()
         })
       }
     },
@@ -391,33 +406,52 @@ export default {
         switch(vars[0]){
           case 'track':
             this.state.mode = 'track'
+            this.state.curPage = (+vars[1])-1
             this.$nextTick(()=>this.loadTrack(this.alphaToDec(vars[1])))
+            if(vars[2]){
+              this.state.search.string = decodeURIComponent(vars[2])
+            }
             break
           case 'playlist':
             this.state.mode = 'playlist'
             break
           case 'u':
+            console.log('u')
             if(!vars[1]) window.location.href = window.location.origin
+            this.state.user = {name: decodeURIComponent(vars[1])}
             this.state.mode = 'u'
             if(vars[2]){
               this.state.curUserPage = (+vars[2])-1
+              if(vars[3]){
+                this.state.search.string = decodeURIComponent(vars[3])
+                search = '/' + vars[3]
+                history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(this.state.user.name) + '/' + (this.state.curPage + 1)) + search
+                this.beginSearch()
+              }else{
+                if(!this.state.curUserPage || this.state.curUserPage < 0 || this.state.curUserPage > 1e6) this.state.curUserPage = 0
+              }
             } else {
               this.state.curUserPage = 0
+              history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+              this.getPages()
             }
-					  this.state.user={name: vars[1]}
-            this.getPages()
-						history.pushState(null,null,window.location.origin + '/u/' + decodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
           break
           default:
             this.state.mode = 'default'
+            let search = ''
             if(vars[0]){
               this.state.curPage = (+vars[0])-1
-            }
-            if(!this.state.curPage || this.state.curPage < 0 || this.state.curPage > 1e6) this.state.curPage = 0
-            if(this.state.curPage) {
-              history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1))
-							this.getPages()
-            } else {
+              if(vars[1]){
+                this.state.search.string = decodeURIComponent(vars[1])
+                search = '/' + vars[1]
+                history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1)) + search
+                this.beginSearch()
+              }else{
+                history.pushState(null,null,window.location.origin + '/' + this.state.curPage ? (this.state.curPage + 1) : '')
+                if(!this.state.curPage || this.state.curPage < 0 || this.state.curPage > 1e6) this.state.curPage = 0
+                this.getPages()
+              }
+            }else{
               window.location.href = window.location.origin
             }
           break
@@ -538,62 +572,84 @@ export default {
         body: JSON.stringify(sendData),
       })
       .then(res=>res.json()).then(data=>{
-        switch(this.state.mode){
-          case 'u': this.state.user.audiocloudTracks.filter(v=>v.id==id)[0].views++; break
-          case 'default': this.state.landingPage.audiocloudTracks.filter(v=>v.id==id)[0].views++; break
-          case 'track': this.state.tracks.filter(v=>v.id==id)[0].views++; break
+        if(this.state.search.string){
+          if(this.state.search.audiocloudTracks.length) this.state.search.audiocloudTracks.filter(v=>v.id==id)[0].views++
+        }else{
+          switch(this.state.mode){
+            case 'u': this.state.user.audiocloudTracks.filter(v=>v.id==id)[0].views++; break
+            case 'default': if(this.state.landingPage.audiocloudTracks.filter(v=>v.id==id).length) this.state.landingPage.audiocloudTracks.filter(v=>v.id==id)[0].views++; break
+            case 'track': this.state.tracks.filter(v=>v.id==id)[0].views++; break
+          }
         }
       })
     },
     firstPage(){
+      let search = this.state.search.string ? ('/1/' + encodeURIComponent(this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
-          window.location.href = window.location.origin + '/u/' + this.state.user.name
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + search
         break
         case 'default':
-          window.location.href = window.location.origin
+          window.location.href = window.location.origin + search
+        break
+        case 'track':
+          window.location.href = window.location.origin + '/track/' + this.state.curTrack + search
         break
       }
     },
 		jumpToPage(pageNo){
+      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
 			switch(this.state.mode){
 			  case 'u':
-				window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo
-				break
-				case 'track':
+				window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo + search
 				break
 				case 'default':
-        window.location.href = window.location.origin + '/' + pageNo
+        window.location.href = window.location.origin + '/' + pageNo + search
+				break
+				case 'track':
+        window.location.href = window.location.origin + '/track/' + this.decToAlpha(this.state.curTrack) + '/' + pageNo + search
 				break
 			}
 		},
     lastPage(){
+      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
-          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.totalUserPages
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.totalUserPages + search
         break
         case 'default':
-          window.location.href = window.location.origin + '/' + this.state.totalPages
+          window.location.href = window.location.origin + '/' + this.state.totalPages + search
+        break
+        case 'track':
+          window.location.href = window.location.origin + '/track/' + this.decToAlpha(this.state.curTrack) + '/' + this.state.totalPages + search
         break
       }
     },
     advancePage(){
+      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
-          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + (this.state.curUserPage + 2)
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + (this.state.curUserPage + 2) + search
         break
         case 'default':
-          window.location.href = window.location.origin + '/' + (this.state.curPage + 2)
+          window.location.href = window.location.origin + '/' + (this.state.curPage + 2) + search
+        break
+        case 'track':
+          window.location.href = window.location.origin + '/track/' + this.decToAlpha(this.state.curTrack) + '/' +(this.state.curPage + 2) + search
         break
       }
     },
     regressPage(){
+      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
-          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.curUserPage
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.curUserPage + search
         break
         case 'default':
-          window.location.href = window.location.origin + '/' + this.state.curPage
+          window.location.href = window.location.origin + '/' + this.state.curPage + search
+        break
+        case 'track':
+          window.location.href = window.location.origin + '/track/' + this.decToAlpha(this.state.curTrack) + '/' +(this.state.curPage + 2) + search
         break
       }
     },
@@ -609,109 +665,222 @@ export default {
 				curplayId = -1
 			}
 			
-      switch(this.state.mode){
-        case 'u':
-          if(this.filteredUserTracks.length) {				
-            if(curplayId == -1){
-              if(this.state.shuffle){
-								let idx
-                this.filteredUserTracks[idx = Math.random()*this.filteredUserTracks.length|0].playing = true
-                this.filteredUserTracks[idx].jump++
-              }else{
-                this.filteredUserTracks[0].playing = true
-                this.filteredUserTracks[0].jump++
-					  	}
-            } else {
-              this.filteredUserTracks.map((v, i)=>{
-                if(v.id == curplayId){
-                  if(this.state.shuffle){
-										let idx
-										while((idx = Math.random()*this.filteredUserTracks.length|0) == curplayIdx && this.filteredUserTracks.length > 1);
-										console.log(idx)
-                    this.filteredUserTracks[idx].playing = true
-                    this.filteredUserTracks[idx].jump++
-                  }else{
-                    if(i < this.filteredUserTracks.length-1){
-                      this.filteredUserTracks[i+1].playing = true
-											this.filteredUserTracks[i+1].jump++
-                    } else {
-                      this.filteredUserTracks[0].playing = true
-                      this.filteredUserTracks[0].jump++
-                    }
+      if(this.state.search.string){
+        if(this.state.search.audiocloudTracks.length) {				
+          if(curplayId == -1){
+            if(this.state.shuffle){
+              let idx
+              this.state.search.audiocloudTracks[idx = Math.random()*this.state.search.audiocloudTracks.length|0].playing = true
+              this.state.search.audiocloudTracks[idx].jump++
+            }else{
+              this.state.search.audiocloudTracks[0].playing = true
+              this.state.search.audiocloudTracks[0].jump++
+            }
+          } else {
+            this.state.search.audiocloudTracks.map((v, i)=>{
+              if(v.id == curplayId){
+                if(this.state.shuffle){
+                  let idx
+                  while((idx = Math.random()*this.state.search.audiocloudTracks.length|0) == curplayIdx && this.state.search.audiocloudTracks.length > 1);
+                  console.log(idx)
+                  this.state.search.audiocloudTracks[idx].playing = true
+                  this.state.search.audiocloudTracks[idx].jump++
+                }else{
+                  if(i < this.state.search.audiocloudTracks.length-1){
+                    this.state.search.audiocloudTracks[i+1].playing = true
+                    this.state.search.audiocloudTracks[i+1].jump++
+                  } else {
+                    this.state.search.audiocloudTracks[0].playing = true
+                    this.state.search.audiocloudTracks[0].jump++
                   }
                 }
-              })
-						}
-          }
-        break
-        case 'track':
-          this.state.tracks[0].playing=true
-        break
-        case 'default':
-				  if(this.state.landingPage.audiocloudTracks.length) {
-            if(curplayId == -1){
-              if(this.state.shuffle){
-								let idx
-                this.state.landingPage.audiocloudTracks[idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
-                this.state.landingPage.audiocloudTracks[idx].jump++
-              }else{
-                this.state.landingPage.audiocloudTracks[0].playing = true
-                this.state.landingPage.audiocloudTracks[0].jump++
               }
-            } else {
-              this.state.landingPage.audiocloudTracks.map((v, i)=>{
-		  					if(v.id == curplayId){
-			  					if(this.state.shuffle){
-										let idx
-										while((idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0) == curplayIdx && this.state.landingPage.audiocloudTracks.length > 1);
-                    this.state.landingPage.audiocloudTracks[idx].playing = true
-                    this.state.landingPage.audiocloudTracks[idx].jump++
-					  			}else{
-  					  			if(i < this.state.landingPage.audiocloudTracks.length-1){
-	  					  			this.state.landingPage.audiocloudTracks[i+1].playing = true
-                      this.state.landingPage.audiocloudTracks[i+1].jump++
-		  					  	} else {
-			  					  	this.state.landingPage.audiocloudTracks[0].playing = true
-                      this.state.landingPage.audiocloudTracks[0].jump++
-				  			    }
-							    }
-						  	}
-						  })
-						}
+            })
           }
-        break
+        }
+      }else{
+        switch(this.state.mode){
+          case 'u':
+            if(this.filteredUserTracks.length) {				
+              if(curplayId == -1){
+                if(this.state.shuffle){
+                  let idx
+                  this.filteredUserTracks[idx = Math.random()*this.filteredUserTracks.length|0].playing = true
+                  this.filteredUserTracks[idx].jump++
+                }else{
+                  this.filteredUserTracks[0].playing = true
+                  this.filteredUserTracks[0].jump++
+                }
+              } else {
+                this.filteredUserTracks.map((v, i)=>{
+                  if(v.id == curplayId){
+                    if(this.state.shuffle){
+                      let idx
+                      while((idx = Math.random()*this.filteredUserTracks.length|0) == curplayIdx && this.filteredUserTracks.length > 1);
+                      this.filteredUserTracks[idx].playing = true
+                      this.filteredUserTracks[idx].jump++
+                    }else{
+                      if(i < this.filteredUserTracks.length-1){
+                        this.filteredUserTracks[i+1].playing = true
+                        this.filteredUserTracks[i+1].jump++
+                      } else {
+                        this.filteredUserTracks[0].playing = true
+                        this.filteredUserTracks[0].jump++
+                      }
+                    }
+                  }
+                })
+              }
+            }
+          break
+          case 'track':
+            this.state.tracks[0].playing=true
+          break
+          case 'default':
+            if(this.state.landingPage.audiocloudTracks.length) {
+              if(curplayId == -1){
+                if(this.state.shuffle){
+                  let idx
+                  this.state.landingPage.audiocloudTracks[idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+                  this.state.landingPage.audiocloudTracks[idx].jump++
+                }else{
+                  this.state.landingPage.audiocloudTracks[0].playing = true
+                  this.state.landingPage.audiocloudTracks[0].jump++
+                }
+              } else {
+                this.state.landingPage.audiocloudTracks.map((v, i)=>{
+                  if(v.id == curplayId){
+                    if(this.state.shuffle){
+                      let idx
+                      while((idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0) == curplayIdx && this.state.landingPage.audiocloudTracks.length > 1);
+                      this.state.landingPage.audiocloudTracks[idx].playing = true
+                      this.state.landingPage.audiocloudTracks[idx].jump++
+                    }else{
+                      if(i < this.state.landingPage.audiocloudTracks.length-1){
+                        this.state.landingPage.audiocloudTracks[i+1].playing = true
+                        this.state.landingPage.audiocloudTracks[i+1].jump++
+                      } else {
+                        this.state.landingPage.audiocloudTracks[0].playing = true
+                        this.state.landingPage.audiocloudTracks[0].jump++
+                      }
+                    }
+                  }
+                })
+              }
+            }
+          break
+        }
       }
 		},
+    doSearch(searchString, page1){
+      this.state.search.audiocloudTracks = []
+      this.state.searchTimerHandle = null
+      let sendData = {
+        string: searchString,
+        loggedinUserName: this.state.loggedinUserName,
+        page: this.state.curPage,
+        exact: this.state.exact,//this.state.exactClicked ? !this.state.exact : this.state.exact,
+        passhash: this.state.passhash,
+        maxResultsPerPage: this.state.maxResultsPerPage
+      }
+      this.state.exactClicked = true
+      fetch(this.state.baseURL + '/search.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        data[0] = data[0].map(v=>{
+          v.playing = false
+          v.private = !!(+v.private)
+          v.allowDownload = !!(+v.allowDownload)
+          this.state.incrementViews(v.id)
+          this.state.loadUserData(v.author)
+          v.comments = v.comments.map(q=>{
+            q.updated = false
+            q.editing = false
+            this.state.fetchUserData(q.userID)
+            return q
+          })
+          return v
+        })
+        this.state.search.audiocloudTracks = data[0]
+        switch(this.state.mode){
+          case 'u':
+            this.state.totalUserPages = +data[1]
+            if(this.state.curUserPage && this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+          break
+          case 'default':
+            this.state.totalPages = +data[1]
+            if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          break
+          case 'track':
+            this.state.totalPages = +data[1]
+            if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          break
+        }
+      })
+      this.state.loaded = true
+      if(this.state.playall) {
+        this.playNextTrack()
+      }
+    },
+    beginSearch(page1){
+      if(page1){
+        history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
+        this.state.curPage = 0
+      } else {
+        history.pushState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + encodeURIComponent(this.state.search.string))
+      }
+      let d = (new Date()).getTime()
+      if(this.state.searchTimerHandle != null) clearTimeout(this.state.searchTimerHandle)
+      let searchString = this.state.search.string
+      this.state.searchTimerHandle = setTimeout(()=>{
+        this.doSearch(searchString, page1)
+      },Math.min(1000, d-this.state.searchTimer))
+    },
 		currentTrack(){
-      switch(this.state.mode){
-        case 'u':
-          return this.filteredUserTracks.filter(v=>v.playing)
-        break
-        case 'track':
-          return this.state.tracks.filter(v=>v.playing)
-        break
-        case 'default':
-          return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
-        break
+      if(this.state.search.string){
+        return this.state.search.audiocloudTracks.filter(v=>v.playing)
+      }else{
+        switch(this.state.mode){
+          case 'u':
+            return this.filteredUserTracks.filter(v=>v.playing)
+          break
+          case 'track':
+            return this.state.tracks.filter(v=>v.playing)
+          break
+          case 'default':
+            return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
+          break
+        }
       }
 		},
   },
 	computed:{
 		currentPlayingTracks(){
-			switch(this.state.mode){
-				case 'u':
-				  this.state.user.audiocloudTracks = this.state.user.audiocloudTracks.map((v, i)=>{v.idx = i; return v})
-				  return this.filteredUserTracks.filter(v=>v.playing)
-				break
-				case 'track':
-          //this.state.tracks.map((v, i)=>{v.idx = i})
-				  return this.state.tracks.filter(v=>v.playing)
-				break
-				case 'default':
-				  this.state.landingPage.audiocloudTracks = this.state.landingPage.audiocloudTracks.map((v, i)=> {v.idx = i; return v})
-				  return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
-				break
-			}
+      if(this.state.search.string){
+        this.state.search.audiocloudTracks = this.state.search.audiocloudTracks.map((v, i)=>{v.idx = i; return v})
+        return this.state.search.audiocloudTracks.filter(v=>v.playing)
+      } else {
+        switch(this.state.mode){
+          case 'u':
+            this.state.user.audiocloudTracks = this.state.user.audiocloudTracks.map((v, i)=>{v.idx = i; return v})
+            return this.filteredUserTracks.filter(v=>v.playing)
+          break
+          case 'track':
+            //this.state.tracks.map((v, i)=>{v.idx = i})
+            return this.state.tracks.filter(v=>v.playing)
+          break
+          case 'default':
+            this.state.landingPage.audiocloudTracks = this.state.landingPage.audiocloudTracks.map((v, i)=> {v.idx = i; return v})
+            return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
+          break
+        }
+      }
 		},
     filteredUserTracks(){
       if(this.state.user != null && typeof this.state.user.audiocloudTracks !== 'undefined'){
@@ -755,6 +924,7 @@ export default {
     this.state.checkEnabled = this.checkEnabled
     this.state.currentTrack = this.currentTrack
     this.state.advancePage = this.advancePage
+		this.state.beginSearch = this.beginSearch
 		this.state.regressPage = this.regressPage
     this.state.toggleLogin = this.toggleLogin
 		this.state.jumpToPage = this.jumpToPage
@@ -790,7 +960,9 @@ export default {
       'https://lookie.jsbot.net/uploads/14MAyj.png',
       'https://lookie.jsbot.net/uploads/20SIWe.png',
       'https://lookie.jsbot.net/uploads/6aevA.png',
-			'https://lookie.jsbot.net/uploads/1RptlQ.png'
+			'https://lookie.jsbot.net/uploads/1RptlQ.png',
+			'https://lookie.jsbot.net/uploads/v9UDT.png',
+			'https://lookie.jsbot.net/uploads/1tgOjR.png'
 	  ]
 		this.preloadImages.map(v=>{
 			let img = new Image()
@@ -824,8 +996,7 @@ body{
   min-height: 100%;
   min-width: 475px;
 }
-.input{
-  text-align: center;
+input[type=text]{
   font-size: 24px;
   background: #0004;
   border: none;
@@ -865,6 +1036,7 @@ a,button{
 }
 a{
   color: #fa0;
+  text-decoration: none;
 }
 span{
   cursor: default;
@@ -908,5 +1080,20 @@ select:focus{
 }
 button:focus{
   outline: none;
+}
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #133; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #366; 
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #588; 
 }
 </style>

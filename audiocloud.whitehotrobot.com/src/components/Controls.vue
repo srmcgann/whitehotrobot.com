@@ -1,80 +1,46 @@
 <template>
   <div class="controls" v-if="!state.showUploadModal" :class="{'shortControlsContainer':!state.showControls}">
     <div class="controlsWorkingSpace">
-      <div @click="state.toggleShowControls" title="show additional controls" :class="{'showImg':!state.showControls, 'hideImg': state.showControls}" style="margin-top:-55px;"></div>
-      <div v-if="state.showControls">
+      <div @click="state.toggleShowControls" title="show additional controls" :class="{'showImg':!state.showControls, 'hideImg': state.showControls}" style="margin-top:-70px;"></div>
+      <transition name="fade">
+        <div v-if="state.showControls">
+          <div class="navContainer">
+            <input type="text" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="searchInput" style="display: inline-block;">
+            <label for="playall" style="margin-left: 0px;margin-bottom:14px;display: inline-block;margin-left: 20px;">
+              <input id="playall" type="checkbox" v-model="state.exact" @input="state.beginSearch(1)">exact phrase
+            </label><br>
 
-        <div class="navContainer">
-
-
-          <div class="curPageContainer" v-if="state.mode != 'track'" :class="{'bumpLeft': !state.loggedin}">
-            <button
-              class="navButton"
-              :class="{'disabled': curPage < 1}"
-              :disabled="curPage < 1"
-              @click="state.firstPage()"
-            >
-              &lt;&lt;
-            </button>
-            <button
-              class="navButton"
-              :disabled="curPage < 1"
-              :class="{'disabled': curPage < 1}"
-              @click="state.regressPage()"
-            >
-              &lt;
-            </button>
-            {{pagenumber}}
-            <button
-              class="navButton"
-              :class="{'disabled': totalPages == curPage+1}"
-              :disabled="totalPages == curPage+1"
-              @click="state.advancePage()"
-            >
-              &gt;
-            </button>
-            <button
-              class="navButton"
-              :class="{'disabled': totalPages == curPage+1}"
-              :disabled="totalPages == curPage+1"
-              @click="state.lastPage()"
-            >
-              &gt;&gt;
-            </button>
+            <div v-if="state.mode !== 'track'" class="advancedControls">
+              <label for="playall" style="margin-left: 0px;margin-bottom:14px;">
+                <input id="playall" @input="updateUserPrefs('audiocloudPlayAll')" type="checkbox" v-model="state.playall">play all
+              </label>
+              <label for="shuffle" style="margin-left: 20px;">
+                <input id="shuffle" @input="updateUserPrefs('audiocloudShuffle')" type="checkbox" v-model="state.shuffle">shuffle
+              </label>
+              <label for="disco" style="margin-left: 20px;">
+                <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
+              </label>
+              <select v-if="state.loggedin && state.mode != 'track'" style="font-size: 12px;margin-left: 20px;vertical-align: top;margin-top: 7px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="4">4</option>
+                <option value="6">6</option>
+                <option value="10">10</option>
+                <option value="20">20</option>
+                <option style="background: #ff0;color: #000;" value="30">30</option>
+                <option style="background: #f80;color: #000;" value="40">40</option>
+                <option style="background: #800;color: #fff;" value="50">50</option>
+              </select>
+              <span v-if="state.loggedin" class="maxResultsLabel">max results</span>
+            </div>
+            <div v-else class="advancedControls">
+              <label for="disco" style="margin-left: 20px;">
+                <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
+              </label>
+            </div>
           </div>
-
-
-          <div v-if="state.mode !== 'track'" class="advancedControls" >
-            <label for="playall" style="margin-left: 0px;margin-bottom:14px;">
-              <input id="playall" @input="updateUserPrefs('audiocloudPlayAll')" type="checkbox" v-model="state.playall">play all
-            </label>
-            <label for="shuffle" style="margin-left: 20px;">
-              <input id="shuffle" @input="updateUserPrefs('audiocloudShuffle')" type="checkbox" v-model="state.shuffle">shuffle
-            </label>
-            <label for="disco" style="margin-left: 20px;">
-              <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
-            </label>
-          </div>
-          <div v-else class="advancedControls">
-            <label for="disco" style="margin-left: 20px;">
-              <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
-            </label>
-          </div>
-
-          <span v-if="state.loggedin" class="maxResultsLabel">max results</span>
-          <select v-if="state.loggedin && state.mode != 'track'" style="font-size: 12px;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="4">4</option>
-            <option value="6">6</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option style="background: #ff0;color: #000;" value="30">30</option>
-            <option style="background: #f80;color: #000;" value="40">40</option>
-            <option style="background: #800;color: #fff;" value="50">50</option>
-          </select>
         </div>
-      </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -266,21 +232,24 @@ export default {
 }
 .advancedControls{
 	top: 0;
+  display: inline-block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 20px;
-  margin-bottom: 15px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 	left: 50%;
 	width: 100%;
 }
 .navContainer{
-  margin-top: -50px;
+  margin-top: -30px;
   top:0;
   font-size: .7em;
   margin-left: auto;
   margin-right: auto;
   width: 600px!important;
 	height: 100%;
+  position: relative;
+  z-index: 0;
 }
 .uploadButton{
   background: #0f4;
@@ -303,7 +272,7 @@ export default {
   width: 25px;
 }
 .maxResultsLabel{
-  margin-right: 10px;
+  margin-left: 10px;
 }
 </style>
 <style>
@@ -312,5 +281,16 @@ export default {
 }
 .bumpDown{
   margin-top: 17px;
+}
+.searchInput{
+  display: inline-block;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.fade-enter-active, .fade-leave-active{
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
 </style>

@@ -27,9 +27,48 @@
         <button @click="state.showUploadModal = false" style="background: #400;color: #fee;font-weight: 400;">cancel</button>
       </div>
     </div>
+
+
     <div v-if="state.loggedin" style="display: inline-block; position: absolute;">
 			<button class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
       <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
+
+        <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'track' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
+          <button
+            class="navButton"
+            :class="{'disabled': curPage < 1}"
+            :disabled="curPage < 1"
+            @click="state.firstPage()"
+          >
+            &lt;&lt;
+          </button>
+          <button
+            class="navButton"
+            :disabled="curPage < 1"
+            :class="{'disabled': curPage < 1}"
+            @click="state.regressPage()"
+          >
+            &lt;
+          </button>
+          {{pagenumber}}
+          <button
+            class="navButton"
+            :class="{'disabled': totalPages == curPage+1}"
+            :disabled="totalPages == curPage+1"
+            @click="state.advancePage()"
+          >
+            &gt;
+          </button>
+          <button
+            class="navButton"
+            :class="{'disabled': totalPages == curPage+1}"
+            :disabled="totalPages == curPage+1"
+            @click="state.lastPage()"
+          >
+            &gt;&gt;
+          </button>
+        </div>
+
     </div>
     <div class="workingSpace">
       <div class="loggedinDiv">
@@ -192,6 +231,39 @@ export default {
 			}
 			return ret
 		},
+    totalPages(){
+      switch(this.state.mode){
+        case 'u': return +this.state.totalUserPages; break
+        case 'default': return +this.state.totalPages; break
+        case 'track': return +this.state.totalPages; break
+      }
+    },
+    curPage(){
+      switch(this.state.mode){
+        case 'u': return +this.state.curUserPage; break
+        case 'default': return +this.state.curPage; break
+        case 'track': return +this.state.curPage; break
+      }
+    },
+    pagenumber(){
+      let num
+      if(this.state.search.string){
+        num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
+      }else{
+        switch(this.state.mode){
+          case 'u':
+            num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
+          break
+          case 'default':
+            num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
+          break
+          case 'track':
+            num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
+          break
+        }
+      }
+      return num
+    },
     origin(){
       return window.location.origin
     }
@@ -420,14 +492,18 @@ a{
 	float:left;
 }
 .curPageContainer{
+  position: absolute;
   display: inline-block;
   width: 270px;
+  transform: translateX(-50%);
 	line-height: .8em;
 	min-height: 25px;
-  margin-top: 3px;
-	margin-left: -15px;
+  margin-top: 32px;
+	margin-left: 30px;
   vertical-align: top;
   padding-top: 0px;
+  font-size: .8em;
+  z-index: 1000;
 }
 .uploadButton{
   margin: 0;
@@ -437,7 +513,7 @@ a{
   text-align: center;
 	line-height: .8em;
   min-width: 0;
-  margin-top: 17px;
+  margin-top: 5px;
   margin-left: 65px;
   position: absolute;
   z-index: 1000;
@@ -465,7 +541,7 @@ a{
   background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);
   background-size: cover;
   position: absolute;
-  margin-top: 17px;
+  margin-top: 5px;
   margin-left: 15px;
   z-index: 1000;
 }

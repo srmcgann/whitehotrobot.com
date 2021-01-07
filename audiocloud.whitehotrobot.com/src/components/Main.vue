@@ -1,33 +1,51 @@
 <template>
   <div class="main" :class="{'footerPadding': state.mode=='track'}">
-    <div v-if="state.mode=='track'" class="trackDiv" :class="{'highTop':state.showControls}">
-      <div v-if="state.tracks.length" class="flex">
-        <Track v-for="track in state.tracks" :key="track.id" :track="track" :state="state"/>
-      </div>
-      <div v-else-if="state.loaded" style="font-size: 1.5em;">
-        <br><br><br><br><br>OOPS!
-        <br><br><br>this track could not be found!
-      </div>
-    </div>
-    <div v-if="state.mode=='default'" class="trackDiv" :class="{'highTop':state.showControls}">
-      <div v-if="filteredLandingPageTracks.length" class="flex">
-        <Track v-for="track in filteredLandingPageTracks" :key="track.id" :track="track" :state="state"/>
-      </div>
-      <div v-else-if="state.loaded" style="font-size: 1.5em;">
-        <br><br><br><br><br>OOPS!
-        <br><br><br>we seem to be missing some tracks!
-        <br><br><br>
-        :(
-      </div>
-    </div>
-    <div v-if="state.mode=='u'" class="trackDiv" :class="{'highTop':state.showControls}">
-      <div v-if="state.loaded && state.user.name">
-        <div v-if="filteredUserTracks.length" class="flex">
-          <Track v-for="track in filteredUserTracks" :key="track.id" :track="track" :state="state"/>
+    <div v-if="state.search.string==''">
+      <div v-if="state.mode=='track'" class="trackDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.tracks.length" class="flex">
+          <Track v-for="track in state.tracks" :key="track.id" :track="track" :state="state"/>
         </div>
         <div v-else-if="state.loaded" style="font-size: 1.5em;">
-          <br><br><br><br>OOPS!
-          <br><br>{{state.user.name}} has not<br>uploaded any tracks yet!
+          <br><br><br><br><br>OOPS!
+          <br><br><br>this track could not be found!
+        </div>
+      </div>
+      <div v-if="state.mode=='default'" class="trackDiv" :class="{'highTop':state.showControls}">
+        <div v-if="filteredLandingPageTracks.length" class="flex">
+          <Track v-for="track in filteredLandingPageTracks" :key="track.id" :track="track" :state="state"/>
+        </div>
+        <div v-else-if="state.loaded" style="font-size: 1.5em;">
+          <br><br><br>OOPS!
+          <br>we seem to be missing some tracks!
+          <br><br>
+          :(<br><br>
+          maybe try a different search?
+        </div>
+      </div>
+      <div v-if="state.mode=='u'" class="trackDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.loaded && state.user.name">
+          <div v-if="filteredUserTracks.length" class="flex">
+            <Track v-for="track in filteredUserTracks" :key="track.id" :track="track" :state="state"/>
+          </div>
+          <div v-else-if="state.loaded" style="font-size: 1.5em;">
+            <br><br><br><br>OOPS!
+            <br><br>{{state.user.name}} has not<br>uploaded any tracks yet!
+            <br><br><br>
+            :(
+          </div>
+        </div>
+      </div>
+    </div>
+    <div v-else>
+      <div class="trackDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.search.audiocloudTracks.length" class="flex">
+          <Track v-for="track in state.search.audiocloudTracks" :key="track.id" :track="track" :state="state"/>
+        </div>
+        <div v-else-if="state.loaded" style="font-size: 1.5em;">
+          <br>DRAT!
+          <br><br>your search did not return anything!
+          <br><br>
+          maybe try something more general,<br>like &quot;whitehot robot&quot;
           <br><br><br>
           :(
         </div>
