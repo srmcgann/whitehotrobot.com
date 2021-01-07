@@ -840,7 +840,7 @@ export default {
       let searchString = this.state.search.string
       this.state.searchTimerHandle = setTimeout(()=>{
         this.doSearch(searchString, page1)
-      },Math.min(1000, d-this.state.searchTimer))
+      },Math.min(1000, ((d-this.state.searchTimer) && d-this.state.searchTimer < 1000 ? d-this.state.searchTimer : 0)))
     },
 		currentTrack(){
       if(this.state.search.string){

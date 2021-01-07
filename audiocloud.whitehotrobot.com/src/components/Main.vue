@@ -41,7 +41,7 @@
         <div v-if="state.search.audiocloudTracks.length" class="flex">
           <Track v-for="track in state.search.audiocloudTracks" :key="track.id" :track="track" :state="state"/>
         </div>
-        <div v-else-if="state.loaded" style="font-size: 1.5em;">
+        <div v-else-if="state.loaded &&  ((new Date()).getTime()-state.searchTimer>1000)" style="font-size: 1.5em;">
           <br>DRAT!
           <br><br>your search did not return anything!
           <br><br>
