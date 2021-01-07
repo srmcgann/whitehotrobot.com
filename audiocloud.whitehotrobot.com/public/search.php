@@ -39,7 +39,7 @@
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' AND description LIKE "%'.$token.'%"';
+        $sql .= ' OR description LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -52,7 +52,7 @@
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' AND trackName LIKE "%'.$token.'%"';
+        $sql .= ' OR trackName LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -65,7 +65,7 @@
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' AND author LIKE "%'.$token.'%"';
+        $sql .= ' OR author LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
