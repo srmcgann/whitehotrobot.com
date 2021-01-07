@@ -353,6 +353,7 @@ export default {
       document.cookie = 'token=' + this.state.passhash + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'autoplay=' + this.state.playall + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'exactSearch=' + this.state.exact + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
     },
     checkEnabled(){
       if(this.state.loggedinUserName) {
@@ -399,6 +400,10 @@ export default {
     checkAutoplayPref(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='autoplay')
       if(l.length) this.state.playall = l[0].split('=')[1]=='true'
+    },
+    checkExactSearchPref(){
+      let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='exactSearch')
+      if(l.length) this.state.exact = l[0].split('=')[1]=='true'
     },
     getMode(){
       let vars = window.location.pathname.split('/').filter(v=>v)
@@ -503,6 +508,7 @@ export default {
           this.state.userInfo[this.state.loggedinUserID].avatar = data[3]
           this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[4]
           this.checkShowControlsPref()
+          this.checkExactSearchPref()
           sendData = {
             userID: this.state.loggedinUserID,
             page: this.state.curUserPage,
@@ -557,6 +563,7 @@ export default {
       }
       this.checkAutoplayPref()
       this.checkShowControlsPref()
+      this.checkExactSearchPref()
     },
     checkShowControlsPref(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='showControls')
@@ -891,6 +898,9 @@ export default {
     },
 	},
   watch:{
+    'state.exact'(val){
+      document.cookie = 'exactSearch=' + this.state.exact + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+    },
     'state.shuffle'(val){
     },
     'state.playall'(val){
