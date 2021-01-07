@@ -421,7 +421,6 @@ export default {
             this.state.mode = 'playlist'
             break
           case 'u':
-            console.log('u')
             if(!vars[1]) window.location.href = window.location.origin
             this.state.user = {name: decodeURIComponent(vars[1])}
             this.state.mode = 'u'
@@ -580,7 +579,7 @@ export default {
       })
       .then(res=>res.json()).then(data=>{
         if(this.state.search.string){
-          if(this.state.search.audiocloudTracks.length) this.state.search.audiocloudTracks.filter(v=>v.id==id)[0].views++
+          if(this.state.search.audiocloudTracks.filter(v=>v.id==id).length) this.state.search.audiocloudTracks.filter(v=>v.id==id)[0].views++
         }else{
           switch(this.state.mode){
             case 'u': this.state.user.audiocloudTracks.filter(v=>v.id==id)[0].views++; break
@@ -689,7 +688,6 @@ export default {
                 if(this.state.shuffle){
                   let idx
                   while((idx = Math.random()*this.state.search.audiocloudTracks.length|0) == curplayIdx && this.state.search.audiocloudTracks.length > 1);
-                  console.log(idx)
                   this.state.search.audiocloudTracks[idx].playing = true
                   this.state.search.audiocloudTracks[idx].jump++
                 }else{
@@ -847,7 +845,8 @@ export default {
       let searchString = this.state.search.string
       this.state.searchTimerHandle = setTimeout(()=>{
         this.doSearch(searchString, page1)
-      },Math.min(1000, ((d-this.state.searchTimer) && d-this.state.searchTimer < 1000 ? d-this.state.searchTimer : 0)))
+        this.state.searchTimer = d
+      }, Math.min(1000, (d-this.state.searchTimer > 1000 ? 0 : d-this.state.searchTimer)))
     },
 		currentTrack(){
       if(this.state.search.string){

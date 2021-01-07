@@ -43,7 +43,11 @@
       }
     }
     $sql .= ')';
-    $tokens = explode(' ', $string);
+    if($exact){
+      $tokens = [ $string ];
+    }else{
+      $tokens = explode(' ', $string);
+    }
     $sql .= ' OR (trackName LIKE "%' . $tokens[0] . '%"';
     if(sizeof($tokens>1)){
       array_shift($tokens);
@@ -52,7 +56,11 @@
       }
     }
     $sql .= ')';
-    $tokens = explode(' ', $string);
+    if($exact){
+      $tokens = [ $string ];
+    }else{
+      $tokens = explode(' ', $string);
+    }
     $sql .= ' OR (author LIKE "%' . $tokens[0] . '%"';
     if(sizeof($tokens>1)){
       array_shift($tokens);
@@ -85,5 +93,5 @@
       $track['comments'][] = mysqli_fetch_assoc($res);
     }
   }
-	echo json_encode([$tracks, $totalPages, $page, $sql1]);
+	echo json_encode([$tracks, $totalPages, $page]);
 ?>
