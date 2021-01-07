@@ -863,6 +863,9 @@ hr{
 a,button{
   cursor: pointer;
 }
+a{
+  color: #fa0;
+}
 span{
   cursor: default;
 }

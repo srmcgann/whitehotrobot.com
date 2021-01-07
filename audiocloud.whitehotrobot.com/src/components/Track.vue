@@ -236,6 +236,7 @@ export default {
       trackAmplitude:[],
 			marquisTimer: null,
       showComments: 2,
+			skipRedraw: false,
       moreCommentsVal: 5,
       x: null,
       B: [],
@@ -492,6 +493,7 @@ export default {
       }
     },
     Draw(){
+			if(this.skipRedraw) return
       let t = this.t
       let x = this.x
       let c = this.c
@@ -579,6 +581,7 @@ export default {
       }
       
       this.t += 1/60
+			if(!this.track.playing && this.trackAnalyzed) this.skipRedraw = true
       requestAnimationFrame(this.Draw)
     },
     formattedCurrentTime(){
@@ -647,7 +650,15 @@ export default {
       if(!val){
 		    this.mp3.pause()
 			} else {
-				this.$nextTick(()=>this.mp3.play())
+				this.$nextTick(()=>{
+					this.mp3.play()
+					this.$nextTick(()=>{
+						if(this.skipRedraw){
+							this.skipRedraw = false
+  						this.Draw()
+						}
+					})
+				})
 			}
     }
   },
@@ -663,8 +674,11 @@ export default {
         this.mp3.currentTime = this.mp3.duration * perc
         this.state.pauseVisible()
         if(!this.track.playing){
-          this.track.playing = true
-          //this.mp3.play()
+					this.track.playing = false
+					this.$nextTick(()=>{
+						this.skipRedraw
+            this.track.playing = true
+					})
         }
       }
     })
@@ -680,8 +694,10 @@ export default {
 			} else {
         if(this.loop){
 				  this.mp3.currentTime = 0
-          this.track.playing = true
-          this.mp3.play()
+					this.track.playing = false
+          this.$nextTick(()=>{
+						this.track.playing = true
+					})
         }else{
           this.track.playing = false
         }
@@ -689,14 +705,17 @@ export default {
     })
 		if(this.track.playing){
 		  this.$nextTick(()=>{
-			  this.mp3.play()
+		  this.mp3.play()
 			})
 		}
     this.mp3.addEventListener('canplay',()=>{
       this.duration = this.mp3.duration
       this.canPlay = true
       if(this.state.mode == 'track') {
-				this.track.playing = true
+				this.track.playing = false
+				this.$nextTick(()=>{
+					this.track.playing = true
+				})
       }
 		})
     this.mp3.src = this.track.audioFile
