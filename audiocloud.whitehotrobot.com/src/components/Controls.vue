@@ -1,5 +1,5 @@
 <template>
-  <div class="controls" v-if="!state.showUploadModal" :class="{'shortControlsContainer':!state.showControls}">
+  <div class="controls" v-if="state.mode != 'track' && !state.showUploadModal" :class="{'shortControlsContainer':!state.showControls}">
     <div class="controlsWorkingSpace">
       <div @click="state.toggleShowControls" title="show additional controls" :class="{'showImg':!state.showControls, 'hideImg': state.showControls}" style="margin-top:-70px;"></div>
       <transition name="fade">

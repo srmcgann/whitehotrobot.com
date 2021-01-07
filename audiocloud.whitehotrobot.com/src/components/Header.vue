@@ -30,7 +30,7 @@
 
 
     <div v-if="state.loggedin" style="display: inline-block; position: absolute;">
-			<button class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
+			<button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
       <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
 
         <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'track' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
@@ -536,6 +536,7 @@ a{
 }
 .bumpDown{
   margin-top: 17px;
+  margin-left: 0;
 }
 .jumpButton{
   background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);
