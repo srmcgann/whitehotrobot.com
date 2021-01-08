@@ -435,6 +435,8 @@ export default {
                 this.beginSearch()
               }else{
                 if(!this.state.curUserPage || this.state.curUserPage < 0 || this.state.curUserPage > 1e6) this.state.curUserPage = 0
+                history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+                this.getPages()
               }
             } else {
               this.state.curUserPage = 0
