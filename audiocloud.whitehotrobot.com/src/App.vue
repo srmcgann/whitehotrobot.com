@@ -1019,7 +1019,7 @@ export default {
     loadHotKeys(){
       window.addEventListener('keydown',(e)=>{
         if(e.keyCode == 77 && e.ctrlKey){
-          this.state.showControls = !this.state.showControls
+          this.state.toggleShowControls()
         }
         if(e.keyCode == 89 && e.ctrlKey){
           this.state.jumpToPlayingTrack()
