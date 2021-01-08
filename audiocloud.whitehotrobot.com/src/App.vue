@@ -22,13 +22,14 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'http://local.audiocloud.whitehotrobot.com',
+        baseURL: 'https://audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
         baseUserDomain: 'whitehotrobot.com',
         rootDomain: 'whitehotrobot.com',
         maxCommentsBeforeExpansion: 3,
+        searchInProgress: false,
         curPage: 0,
         beginSearch: null,
         curTrack: null,
@@ -58,6 +59,7 @@ export default {
         toggleLogin: null,
 				maxResultsPerPage: 0,
         showLoginPrompt: null,
+        globalT: 0,
         showControls: true,
         toggleShowControls: null,
         closePrompts: null,
@@ -122,7 +124,7 @@ export default {
     },
     pauseVisible(){
       if(this.state.search.string){
-        //this.state.search.audiocloudTracks.map(v=>v.playing=false)
+        this.state.search.audiocloudTracks.map(v=>v.playing=false)
       }else{
         switch(this.state.mode){
           case 'u':
@@ -535,6 +537,9 @@ export default {
         if(v.indexOf('autoplay')==-1){
           document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
         }
+        if(v.indexOf('autoplay')==-1){
+          document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+        }
       })
       this.state.loggedin = false
       this.state.isAdmin = false
@@ -827,26 +832,30 @@ export default {
             if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
           break
         }
+        this.state.loaded = true
+        if(this.state.playall) {
+          this.playNextTrack()
+        }
+        this.state.searchInProgress = false
       })
-      this.state.loaded = true
-      if(this.state.playall) {
-        this.playNextTrack()
-      }
     },
     beginSearch(page1){
-      if(page1){
-        history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
-        this.state.curPage = 0
-      } else {
-        history.pushState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + encodeURIComponent(this.state.search.string))
+      if(this.state.search.string){
+        this.state.searchInProgress = true
+        if(page1){
+          history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
+          this.state.curPage = 0
+        } else {
+          history.pushState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + encodeURIComponent(this.state.search.string))
+        }
+        let d = (new Date()).getTime()
+        if(this.state.searchTimerHandle != null) clearTimeout(this.state.searchTimerHandle)
+        let searchString = this.state.search.string
+        this.state.searchTimerHandle = setTimeout(()=>{
+          this.doSearch(searchString, page1)
+          this.state.searchTimer = d
+        }, Math.min(1000, d-this.state.searchTimer))
       }
-      let d = (new Date()).getTime()
-      if(this.state.searchTimerHandle != null) clearTimeout(this.state.searchTimerHandle)
-      let searchString = this.state.search.string
-      this.state.searchTimerHandle = setTimeout(()=>{
-        this.doSearch(searchString, page1)
-        this.state.searchTimer = d
-      }, Math.min(1000, (d-this.state.searchTimer > 1000 ? 0 : d-this.state.searchTimer)))
     },
 		currentTrack(){
       if(this.state.search.string){
@@ -918,6 +927,9 @@ export default {
     }
   },
   mounted(){
+    setInterval(()=>{
+      this.state.globalT+=1/60
+    },1/60*1000|0)
 		this.state.userAgent = navigator.userAgent
     this.state.toggleShowControls = this.toggleShowControls
     this.state.filteredUserTracks = this.filteredUserTracks

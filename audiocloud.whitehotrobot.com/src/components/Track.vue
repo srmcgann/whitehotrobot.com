@@ -668,6 +668,12 @@ export default {
 			}
     }
   },
+  beforeUnmount(){
+    if(typeof this.track.mp3 !== 'undefined'){
+      this.track.mp3.pause()
+      this.track.mp3.src = ''
+    }
+  },
   mounted(){
 		this.track.jump = 0
 		setInterval(()=>{

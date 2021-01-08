@@ -6,8 +6,8 @@
         <div v-if="state.showControls">
           <div class="navContainer">
             <input type="text" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="searchInput" style="display: inline-block;">
-            <label for="playall" style="margin-left: 0px;margin-bottom:14px;display: inline-block;margin-left: 20px;">
-              <input id="playall" type="checkbox" v-model="state.exact" @input="state.beginSearch(1)">exact phrase
+            <label for="exact" style="margin-left: 0px;margin-bottom:14px;display: inline-block;margin-left: 20px;">
+              <input type="checkbox" id="exact" v-model="state.exact" @input="state.beginSearch(1)">exact phrase
             </label><br>
 
             <div v-if="state.mode !== 'track'" class="advancedControls">

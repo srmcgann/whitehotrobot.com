@@ -41,6 +41,10 @@
         <div v-if="state.search.audiocloudTracks.length" class="flex">
           <Track v-for="track in state.search.audiocloudTracks" :key="track.id" :track="track" :state="state"/>
         </div>
+        <div v-if="state.searchInProgress" style="font-size: 2em;" >
+          <br><br><br>
+          <div style="width: 300px;padding-left: 50px;margin-left: auto; margin-right: auto; text-align: left;">{{searchingText}}</div>
+        </div>
         <div v-else-if="state.loaded" style="font-size: 1.5em;">
           <br>DRAT!
           <br><br>your search did not return anything!
@@ -74,6 +78,9 @@ export default {
       } else {
         return []
       }
+    },
+    searchingText(){
+      return 'Searching' + ('.'.repeat((this.state.globalT*20|0)%8))
     }
   },
   mounted(){
