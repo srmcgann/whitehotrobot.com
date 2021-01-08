@@ -488,7 +488,9 @@ export default {
     formattedDate(d){
       let M=['January','February','March','April','May','June','July','August','September','October','November','December']
       var l=new Date(d)
-      return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear() + ' • ' + (l.getHours()%12) + ':' + l.getMinutes() + ' ' + (l.getHours()<12?'AM':'PM')
+			let mn = '' + l.getMinutes()
+      if(mn.length == 1) mn = '0' + mn
+      return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear() + ' • ' + (l.getHours()%12) + ':' + mn + ' ' + (l.getHours()<12?'AM':'PM')
     },
     playPauseTrack(){
       if(!this.track.playing){

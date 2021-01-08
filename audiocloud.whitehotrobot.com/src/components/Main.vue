@@ -45,7 +45,7 @@
           <br><br><br>
           <div style="width: 300px;padding-left: 50px;margin-left: auto; margin-right: auto; text-align: left;">{{searchingText}}</div>
         </div>
-        <div v-else-if="state.loaded" style="font-size: 1.5em;">
+        <div v-else-if="!state.search.audiocloudTracks.length && state.loaded" style="font-size: 1.5em;">
           <br>DRAT!
           <br><br>your search did not return anything!
           <br><br>
