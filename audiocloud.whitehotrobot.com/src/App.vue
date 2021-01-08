@@ -72,7 +72,7 @@ export default {
         user: null,
         fetchUserData: null,
         startStopPages: false,
-        searchTimer: 6e10,
+        searchTimer: 0,
         searchTimerHandle: null,
         pauseVisible: null,
         username: '',
