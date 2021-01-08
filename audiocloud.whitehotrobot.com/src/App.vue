@@ -840,7 +840,7 @@ export default {
       })
     },
     beginSearch(page1){
-      if(1||this.state.search.string){
+      if(this.state.search.string != ' '){
         this.state.searchInProgress = true
         if(page1){
           history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
@@ -855,7 +855,9 @@ export default {
           this.doSearch(searchString, page1)
           this.state.searchTimer = d
         }, Math.min(1000, d-this.state.searchTimer))
-      }
+      } else {
+				this.state.search.string = ''
+			}
     },
 		currentTrack(){
       if(this.state.search.string){
