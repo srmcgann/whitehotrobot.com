@@ -1,15 +1,23 @@
 <template>
   <div class="controls" v-if="!state.showUploadModal" :class="{'shortControlsContainer':!state.showControls}">
     <div class="controlsWorkingSpace">
-      <div @click="state.toggleShowControls" title="show additional controls" :class="{'showImg':!state.showControls, 'hideImg': state.showControls, 'bump': state.mode=='track' || !state.loggedin}" style="margin-top:-70px;"></div>
+      <div @click="state.toggleShowControls" title="show additional controls [ctrl+m]" :class="{'showImg':!state.showControls, 'hideImg': state.showControls, 'bump': state.mode=='track' || !state.loggedin}" style="margin-top:-70px;"></div>
       <transition name="fade">
         <div v-if="state.showControls">
           <div class="navContainer">
             <div v-if="state.mode !== 'track'" class="advancedControls">
-              <input type="text" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="searchInput" style="display: inline-block;">
-              <label for="exact" style="margin-left: 0px;margin-bottom:14px;display: inline-block;margin-left: 20px;">
-                <input type="checkbox" id="exact" v-model="state.exact" @input="state.beginSearch(1)">exact phrase
+              <div style="position: absolute; z-index:-1!important;background: #246;width: 505px;height: 70px;opacity: .5;margin-top: -10px;margin-left: 60px;border-radius: 5px;"></div>
+              <input type="text" spellcheck="false" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="searchInput" style="display: inline-block;float: left;margin-bottom: 25px;margin-left: 75px;margin-top: 15px;position: relative!important: z-index:10000!important;">
+              <label for="allWords" style="float: left;margin-left: 0px;margin-bottom:0px;display: inline-block;margin-left: 20px;">
+                <input type="checkbox" :disabled="state.search.exact" :checked="state.search.allWords || state.search.exact" id="allWords" v-model="state.search.allWords" @input="state.beginSearch(1)">require all words
               </label><br>
+              <label for="exact" style="float:left;display: inline-block;margin: 0;margin-left: 20px;">
+                <input type="checkbox" id="exact" v-model="state.search.exact" @input="state.beginSearch(1)">exact phrase
+              </label>
+              <div style="clear: both;"></div>
+              <div v-if="state.search.hits" style="position: absolute;left: 50%;margin-left: -100px;margin-top: -80px;">
+              ({{state.search.hits}} hits)
+              </div>
               <label for="playall" style="margin-left: 0px;margin-bottom:14px;">
                 <input id="playall" @input="updateUserPrefs('audiocloudPlayAll')" type="checkbox" v-model="state.playall">play all
               </label>
@@ -19,7 +27,7 @@
               <label for="disco" style="margin-left: 20px;">
                 <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
               </label>
-              <select v-if="state.loggedin && state.mode != 'track'" style="font-size: 12px;margin-left: 20px;vertical-align: top;margin-top: 7px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
+              <select v-if="state.loggedin && state.mode != 'track'" style="font-size: 16px;margin-left: 20px;vertical-align: top;margin-top: 4px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="4">4</option>
@@ -31,6 +39,7 @@
                 <option style="background: #800;color: #fff;" value="50">50</option>
               </select>
               <span v-if="state.loggedin" class="maxResultsLabel">max results</span>
+              <button class="navButton" style="margin-left: 10px;" title="hotkeys" @click="showHotkeys()">?</button>
             </div>
             <div v-else class="advancedControls">
               <label for="disco" style="margin-left: 20px;">
@@ -53,12 +62,9 @@ export default {
     }
   },
   methods:{
-		jumpToPlayingTrack(){
-			let l
-      if((l=this.state.currentTrack()).length){
-				l[0].jump++
-			}
-		},
+    showHotkeys(){
+      alert("hotkeys cheat-sheet...\n\n    [space] : play/pause current track\n    [ctrl+right] : advance to the next song (shuffle applies)\n    [ctrl+left] : restart track if pos > 5%, else prev. track (shuffle applies)\n    [ctrl+m] : show/hide advanced controls section\n    [ctrl+j] : jump to current playing track")
+    },
 		updateUserPrefs(pref){
 			this.$nextTick(()=>{
         let newval
@@ -240,7 +246,7 @@ export default {
 	width: 100%;
 }
 .navContainer{
-  margin-top: -30px;
+  margin-top: -50px;
   top:0;
   font-size: .7em;
   margin-left: auto;
@@ -271,7 +277,7 @@ export default {
   width: 25px;
 }
 .maxResultsLabel{
-  margin-left: 10px;
+  margin-left: 5px;
 }
 </style>
 <style>

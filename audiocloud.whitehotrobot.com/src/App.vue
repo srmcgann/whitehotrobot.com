@@ -29,8 +29,10 @@ export default {
         baseUserDomain: 'whitehotrobot.com',
         rootDomain: 'whitehotrobot.com',
         maxCommentsBeforeExpansion: 3,
-        searchInProgress: false,
         curPage: 0,
+        curPlayId: 0,
+        playPauseCurrentTrack: null,
+        jumpToPlayingTrack: null,
         beginSearch: null,
         curTrack: null,
         curSearchPage: 0,
@@ -44,15 +46,21 @@ export default {
         curUserPage: null,
         incrementViews: null,
         loggedinUserName: '',
-        exact: false,
         exactClicked: false,
         search: {
           string: '',
-          audiocloudTracks: []
+          audiocloudTracks: [],
+          hits: 0,
+          inProgress: false,
+          timer: 0,
+          timerHandle: null,
+          exact: false,
+          allWords: true
         },
         loggedin: false,
         totalUserPages: 0,
         totalPages: 0,
+				playPreviousTrack: null,
 				playNextTrack: null,
         showUploadModal: false,
 				currentTrack: null,
@@ -72,8 +80,6 @@ export default {
         user: null,
         fetchUserData: null,
         startStopPages: false,
-        searchTimer: 0,
-        searchTimerHandle: null,
         pauseVisible: null,
         username: '',
         password: '',
@@ -355,7 +361,8 @@ export default {
       document.cookie = 'token=' + this.state.passhash + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'autoplay=' + this.state.playall + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
-      document.cookie = 'exactSearch=' + this.state.exact + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'exactSearch=' + this.state.search.exact + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'allWords=' + this.state.search.allWords + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
     },
     checkEnabled(){
       if(this.state.loggedinUserName) {
@@ -405,7 +412,9 @@ export default {
     },
     checkExactSearchPref(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='exactSearch')
-      if(l.length) this.state.exact = l[0].split('=')[1]=='true'
+      if(l.length) this.state.search.exact = l[0].split('=')[1]=='true'
+      l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='allWords')
+      if(l.length) this.state.search.allWords = l[0].split('=')[1]=='true'
     },
     getMode(){
       let vars = window.location.pathname.split('/').filter(v=>v)
@@ -784,17 +793,160 @@ export default {
         }
       }
 		},
+		playPauseCurrentTrack(){
+      if(!this.state.curPlayId) this.playNextTrack()
+      let el
+      if(this.state.search.string){
+        el = this.state.search.audiocloudTracks.filter(v=>v.id==this.state.curPlayId)[0]
+        if(typeof el != 'undefined') el.playing = !el.playing
+      } else {
+        switch(this.state.mode){
+          case 'u':
+            el = this.state.user.audiocloudTracks.filter(v=>v.id==this.state.curPlayId)[0]
+            if(typeof el != 'undefined') el.playing = !el.playing
+          break
+          case 'track':
+            el = this.state.tracks.audiocloudTracks.filter(v=>v.id==this.state.curPlayId)[0]
+            if(typeof el != 'undefined') el.playing = !el.playing
+          break
+          case 'default':
+            el = this.state.landingPage.audiocloudTracks.filter(v=>v.id==this.state.curPlayId)[0]
+            if(typeof el != 'undefined') el.playing = !el.playing
+          break
+        }
+      }
+		},
+		playPreviousTrack(){
+			let curplayId
+			let curplayIdx
+			if(this.currentPlayingTracks.length){
+				curplayId = this.currentPlayingTracks[0].id
+				curplayIdx = this.currentPlayingTracks[0].idx
+				this.currentPlayingTracks[0].mp3.currentTime = 0
+				this.currentPlayingTracks[0].playing = false
+      } else {
+				curplayId = -1
+			}
+			
+      if(this.state.search.string){
+        if(this.state.search.audiocloudTracks.length) {				
+          if(curplayId == -1){
+            if(this.state.shuffle){
+              let idx
+              this.state.search.audiocloudTracks[idx = Math.random()*this.state.search.audiocloudTracks.length|0].playing = true
+              this.state.search.audiocloudTracks[idx].jump++
+            }else{
+              this.state.search.audiocloudTracks[0].playing = true
+              this.state.search.audiocloudTracks[0].jump++
+            }
+          } else {
+            this.state.search.audiocloudTracks.map((v, i)=>{
+              if(v.id == curplayId){
+                if(this.state.shuffle){
+                  let idx
+                  while((idx = Math.random()*this.state.search.audiocloudTracks.length|0) == curplayIdx && this.state.search.audiocloudTracks.length > 1);
+                  this.state.search.audiocloudTracks[idx].playing = true
+                  this.state.search.audiocloudTracks[idx].jump++
+                }else{
+                  if(i){
+                    this.state.search.audiocloudTracks[i-1].playing = true
+                    this.state.search.audiocloudTracks[i-1].jump++
+                  } else {
+                    this.state.search.audiocloudTracks[this.state.search.audiocloudTracks.length-1].playing = true
+                    this.state.search.audiocloudTracks[this.state.search.audiocloudTracks.length-1].jump++
+                  }
+                }
+              }
+            })
+          }
+        }
+      }else{
+        switch(this.state.mode){
+          case 'u':
+            if(this.filteredUserTracks.length) {				
+              if(curplayId == -1){
+                if(this.state.shuffle){
+                  let idx
+                  this.filteredUserTracks[idx = Math.random()*this.filteredUserTracks.length|0].playing = true
+                  this.filteredUserTracks[idx].jump++
+                }else{
+                  this.filteredUserTracks[0].playing = true
+                  this.filteredUserTracks[0].jump++
+                }
+              } else {
+                this.filteredUserTracks.map((v, i)=>{
+                  if(v.id == curplayId){
+                    if(this.state.shuffle){
+                      let idx
+                      while((idx = Math.random()*this.filteredUserTracks.length|0) == curplayIdx && this.filteredUserTracks.length > 1);
+                      this.filteredUserTracks[idx].playing = true
+                      this.filteredUserTracks[idx].jump++
+                    }else{
+                      if(i){
+                        this.filteredUserTracks[i-1].playing = true
+                        this.filteredUserTracks[i-1].jump++
+                      } else {
+                        this.filteredUserTracks[this.filteredUserTracks.length-1].playing = true
+                        this.filteredUserTracks[this.filteredUserTracks.length-1].jump++
+                      }
+                    }
+                  }
+                })
+              }
+            }
+          break
+          case 'track':
+            this.state.tracks[0].playing=true
+          break
+          case 'default':
+            if(this.state.landingPage.audiocloudTracks.length) {
+              if(curplayId == -1){
+                if(this.state.shuffle){
+                  let idx
+                  this.state.landingPage.audiocloudTracks[idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
+                  this.state.landingPage.audiocloudTracks[idx].jump++
+                }else{
+                  this.state.landingPage.audiocloudTracks[0].playing = true
+                  this.state.landingPage.audiocloudTracks[0].jump++
+                }
+              } else {
+                this.state.landingPage.audiocloudTracks.map((v, i)=>{
+                  if(v.id == curplayId){
+                    if(this.state.shuffle){
+                      let idx
+                      while((idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0) == curplayIdx && this.state.landingPage.audiocloudTracks.length > 1);
+                      this.state.landingPage.audiocloudTracks[idx].playing = true
+                      this.state.landingPage.audiocloudTracks[idx].jump++
+                    }else{
+                      if(i){
+                        this.state.landingPage.audiocloudTracks[i-1].playing = true
+                        this.state.landingPage.audiocloudTracks[i-1].jump++
+                      } else {
+                        this.state.landingPage.audiocloudTracks[this.state.landingPage.audiocloudTracks.length-1].playing = true
+                        this.state.landingPage.audiocloudTracks[this.state.landingPage.audiocloudTracks.length-1].jump++
+                      }
+                    }
+                  }
+                })
+              }
+            }
+          break
+        }
+      }
+		},
     doSearch(searchString, page1){
       this.state.search.audiocloudTracks = []
-      this.state.searchTimerHandle = null
+      this.state.search.timerHandle = null
       let sendData = {
         string: searchString.trim(),
         loggedinUserName: this.state.loggedinUserName,
         page: this.state.curPage,
-        exact: this.state.exact,//this.state.exactClicked ? !this.state.exact : this.state.exact,
+        allWords: this.state.search.allWords,
+        exact: this.state.search.exact,
         passhash: this.state.passhash,
         maxResultsPerPage: this.state.maxResultsPerPage
       }
+      console.log(sendData)
       this.state.exactClicked = true
       fetch(this.state.baseURL + '/search.php',{
         method: 'POST',
@@ -805,6 +957,7 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         data[0] = data[0].map(v=>{
           v.playing = false
           v.private = !!(+v.private)
@@ -819,6 +972,7 @@ export default {
           })
           return v
         })
+        if(this.state.search.string) this.state.search.hits = +data[3]
         this.state.search.audiocloudTracks = data[0]
         switch(this.state.mode){
           case 'u':
@@ -838,13 +992,13 @@ export default {
         if(this.state.playall) {
           this.playNextTrack()
         }
-        this.state.searchInProgress = false
+        this.state.search.inProgress = false
       })
     },
     beginSearch(page1){
       if(this.state.search.string.charAt(0) != ' '){
 				//this.state.search.string = this.state.search.string.trim()
-        this.state.searchInProgress = true
+        this.state.search.inProgress = true
         if(page1){
           history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
           this.state.curPage = 0
@@ -852,16 +1006,48 @@ export default {
           history.pushState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + encodeURIComponent(this.state.search.string))
         }
         let d = (new Date()).getTime()
-        if(this.state.searchTimerHandle != null) clearTimeout(this.state.searchTimerHandle)
+        if(this.state.search.timerHandle != null) clearTimeout(this.state.search.timerHandle)
         let searchString = this.state.search.string
-        this.state.searchTimerHandle = setTimeout(()=>{
+        this.state.search.timerHandle = setTimeout(()=>{
           this.doSearch(searchString, page1)
-          this.state.searchTimer = d
-        }, Math.min(1000, d-this.state.searchTimer))
+          this.state.search.timer = d
+        }, Math.min(1000, d-this.state.search.timer))
       } else {
 				this.state.search.string = this.state.search.string.trim()
 			}
     },
+    loadHotKeys(){
+      window.addEventListener('keydown',(e)=>{
+        if(e.keyCode == 77 && e.ctrlKey){
+          this.state.showControls = !this.state.showControls
+        }
+        if(e.keyCode == 89 && e.ctrlKey){
+          this.state.jumpToPlayingTrack()
+        }
+        if(e.keyCode == 37 && e.ctrlKey){
+          let cpt = this.currentPlayingTracks
+          if(cpt.length && cpt[0].mp3.currentTime>cpt[0].mp3.duration/20){
+            cpt[0].mp3.currentTime = 0
+          } else {
+            this.state.playPreviousTrack()
+          }
+        }
+        if(e.keyCode == 39 && e.ctrlKey){
+          this.state.playNextTrack()
+        }
+        if(e.keyCode == 32){
+          e.preventDefault()
+          e.stopPropagation()
+          this.state.playPauseCurrentTrack()
+        }
+      })
+    },
+		jumpToPlayingTrack(){
+			let l
+      if((l=this.state.currentTrack()).length){
+				l[0].jump++
+			}
+		},    
 		currentTrack(){
       if(this.state.search.string){
         return this.state.search.audiocloudTracks.filter(v=>v.playing)
@@ -884,19 +1070,23 @@ export default {
 		currentPlayingTracks(){
       if(this.state.search.string){
         this.state.search.audiocloudTracks = this.state.search.audiocloudTracks.map((v, i)=>{v.idx = i; return v})
+        if(this.state.search.audiocloudTracks.filter(v=>v.playing).length) this.state.curPlayId = this.state.search.audiocloudTracks.filter(v=>v.playing)[0].id
         return this.state.search.audiocloudTracks.filter(v=>v.playing)
       } else {
         switch(this.state.mode){
           case 'u':
             this.state.user.audiocloudTracks = this.state.user.audiocloudTracks.map((v, i)=>{v.idx = i; return v})
+            if(this.filteredUserTracks.filter(v=>v.playing).length) this.state.curPlayId = this.filteredUserTracks.filter(v=>v.playing)[0].id
             return this.filteredUserTracks.filter(v=>v.playing)
           break
           case 'track':
             //this.state.tracks.map((v, i)=>{v.idx = i})
+            if(this.state.tracks.filter(v=>v.playing).length) this.state.curPlayId = this.state.tracks.filter(v=>v.playing)[0].id
             return this.state.tracks.filter(v=>v.playing)
           break
           case 'default':
             this.state.landingPage.audiocloudTracks = this.state.landingPage.audiocloudTracks.map((v, i)=> {v.idx = i; return v})
+            if(this.state.landingPage.audiocloudTracks.filter(v=>v.playing).length) this.state.curPlayId = this.state.landingPage.audiocloudTracks.filter(v=>v.playing)[0].id
             return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
           break
         }
@@ -911,8 +1101,14 @@ export default {
     },
 	},
   watch:{
-    'state.exact'(val){
-      document.cookie = 'exactSearch=' + this.state.exact + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+    'state.search.string'(val){
+      if(!val) this.state.search.hits = 0
+    },
+    'state.search.exact'(val){
+      document.cookie = 'exactSearch=' + this.state.search.exact + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+    },
+    'state.search.allWords'(val){
+      document.cookie = 'allWords=' + this.state.search.allWords + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
     },
     'state.shuffle'(val){
     },
@@ -932,12 +1128,16 @@ export default {
     }
   },
   mounted(){
+    this.loadHotKeys()
     setInterval(()=>{
       this.state.globalT+=1/60
     },1/60*1000|0)
 		this.state.userAgent = navigator.userAgent
+    this.state.playPauseCurrentTrack = this.playPauseCurrentTrack
     this.state.toggleShowControls = this.toggleShowControls
     this.state.filteredUserTracks = this.filteredUserTracks
+    this.state.jumpToPlayingTrack = this.jumpToPlayingTrack
+		this.state.playPreviousTrack = this.playPreviousTrack
     this.state.showUserSettings = this.showUserSettings
     this.state.showLoginPrompt = this.showLoginPrompt
     this.state.incrementViews = this.incrementViews

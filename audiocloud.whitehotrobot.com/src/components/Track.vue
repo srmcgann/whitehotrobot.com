@@ -123,6 +123,7 @@
         class="playbutton"
         @click="playPauseTrack()"
         :class="{'disabledPlayButton': !track.canPlay}"
+        title="play/pause track [space]"
       ></button>
       <button
         v-else
@@ -134,14 +135,17 @@
         @click="loop=!loop"
         class="smallControlButton loopButton"
         :class="{'highlighted':loop}"
+        title="loop track"
       ></button>
       <button
         class="smallControlButton resetButton"
-        @click="track.mp3.currentTime = 0; if(skipRedraw)B=[],Draw(skipRedraw=false)"
+        @click="resetTrack()"
+        title="start of track (or prev. track if pos<dur/20) [ctrl+leftkey]"
       ></button>
       <button
         class="smallControlButton jumpToNextButton"
         @click="track.mp3.currentTime = Math.max(6e6, track.mp3.duration-.1);if(skipRedraw)B=[],Draw(skipRedraw=false)"
+        title="play next track [ctrl+rightkey]"
       ></button>
       <canvas ref="canvas" class="canvas"></canvas>
     </div>
@@ -257,6 +261,15 @@ export default {
     }
   },
   methods:{
+    resetTrack(){
+      if(this.track.mp3.currentTime < this.track.mp3.duration / 20){
+        if(this.skipRedraw)this.B=[],this.Draw(this.skipRedraw=false)
+        this.state.playPreviousTrack()
+      } else {
+        this.track.mp3.currentTime = 0;
+        if(this.skipRedraw)this.B=[],this.Draw(this.skipRedraw=false)
+      }
+    },
 		doMarquis(){
       if(this.track.playing){
         let s = this.track.author + ' - ' + this.track.trackName
@@ -660,6 +673,7 @@ export default {
 			} else {
 				this.$nextTick(()=>{
 					this.track.mp3.play()
+          this.state.curPlayId = this.track.id
 					this.$nextTick(()=>{
 						if(this.skipRedraw){
 							this.skipRedraw = false

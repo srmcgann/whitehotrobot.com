@@ -29,10 +29,10 @@
     </div>
 
     <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
-      <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying, 'bumpDown': !state.loggedin}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
+      <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying, 'bumpDown': !state.loggedin}" @click="state.jumpToPlayingTrack()" title="jump to playing track [ctrl+y]"></button>
 		</div>
     <div v-else style="display: inline-block; position: absolute;">
-			<button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
+			<button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="state.jumpToPlayingTrack()" title="jump to playing track"></button>
       <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
 
         <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'track' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
@@ -112,12 +112,6 @@ export default {
   name: 'Header',
   props: [ 'state' ],
   methods:{
-		jumpToPlayingTrack(){
-			let l
-      if((l=this.state.currentTrack()).length){
-				l[0].jump++
-			}
-		},
 		updateUserPrefs(pref){
 			this.$nextTick(()=>{
         let newval

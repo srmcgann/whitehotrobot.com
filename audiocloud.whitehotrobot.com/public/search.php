@@ -6,6 +6,7 @@
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $page = mysqli_real_escape_string($link, $data->{'page'});
   $exact = mysqli_real_escape_string($link, $data->{'exact'});
+  $allWords = mysqli_real_escape_string($link, $data->{'allWords'});
   $overrideMaxResults = mysqli_real_escape_string($link, $data->{'maxResultsPerPage'});
   if($overrideMaxResults) $maxResultsPerPage = $overrideMaxResults;
 
@@ -13,6 +14,12 @@
     $tokens = [ $string ];
   }else{
     $tokens = explode(' ', $string);
+  }
+  
+  if($allWords){
+    $clause = 'AND';
+  }else{
+    $clause = 'OR';
   }
   
   $admin = false;
@@ -39,7 +46,7 @@
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' OR description LIKE "%'.$token.'%"';
+        $sql .= ' ' . $clause . ' description LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -52,7 +59,7 @@
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' OR trackName LIKE "%'.$token.'%"';
+        $sql .= ' ' . $clause . ' trackName LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -65,7 +72,7 @@
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' OR author LIKE "%'.$token.'%"';
+        $sql .= ' ' . $clause . ' author LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -93,6 +100,6 @@
       $track['comments'][] = mysqli_fetch_assoc($res);
     }
   }
-	echo json_encode([$tracks, $totalPages, $page]);
+	echo json_encode([$tracks, $totalPages, $page, $totalRecords, $sql1]);
 ?>
 
