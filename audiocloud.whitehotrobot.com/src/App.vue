@@ -857,7 +857,7 @@ export default {
           this.state.searchTimer = d
         }, Math.min(1000, d-this.state.searchTimer))
       } else {
-				this.state.search.string = ''
+				this.state.search.string = this.state.search.string.trim()
 			}
     },
 		currentTrack(){
