@@ -840,7 +840,7 @@ export default {
       })
     },
     beginSearch(page1){
-      if(this.state.search.string){
+      if(1||this.state.search.string){
         this.state.searchInProgress = true
         if(page1){
           history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
