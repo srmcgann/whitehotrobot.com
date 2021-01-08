@@ -537,7 +537,7 @@ a{
   margin-left: -100px;
 }
 .bumpDown{
-  margin-top: 17px;
+  margin-top: 17px!important;
   margin-left: 0;
 }
 .jumpButton{
