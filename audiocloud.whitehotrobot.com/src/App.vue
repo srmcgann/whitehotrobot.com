@@ -786,7 +786,7 @@ export default {
       this.state.search.audiocloudTracks = []
       this.state.searchTimerHandle = null
       let sendData = {
-        string: searchString,
+        string: searchString.trim(),
         loggedinUserName: this.state.loggedinUserName,
         page: this.state.curPage,
         exact: this.state.exact,//this.state.exactClicked ? !this.state.exact : this.state.exact,
