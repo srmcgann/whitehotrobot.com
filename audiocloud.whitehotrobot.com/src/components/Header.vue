@@ -29,7 +29,7 @@
     </div>
 
     <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
-      <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
+      <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying, 'bumpDown': !state.loggedin}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
 		</div>
     <div v-else style="display: inline-block; position: absolute;">
 			<button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
