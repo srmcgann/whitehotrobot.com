@@ -30,7 +30,7 @@
 
     <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
       <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
-		</div<>
+		</div>
     <div v-else style="display: inline-block; position: absolute;">
 			<button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="jumpToPlayingTrack()" title="jump to playing track"></button>
       <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
