@@ -490,7 +490,7 @@ export default {
       var l=new Date(d)
 			let mn = '' + l.getMinutes()
       if(mn.length == 1) mn = '0' + mn
-      return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear() + ' • ' + (l.getHours()%13) + ':' + mn + ' ' + (l.getHours()<12?'AM':'PM')
+      return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear() + ' • ' + ((l.getHours()%12)+1) + ':' + mn + ' ' + (l.getHours()<12?'AM':'PM')
     },
     playPauseTrack(){
       if(!this.track.playing){
