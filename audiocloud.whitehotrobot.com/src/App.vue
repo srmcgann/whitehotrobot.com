@@ -22,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'https://audiocloud.whitehotrobot.com',
+        baseURL: 'http://local.audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -447,16 +447,16 @@ export default {
                 }
                 this.state.search.string = decodeURIComponent(vars[3])
                 search = '/' + vars[3]
-                history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(this.state.user.name) + '/' + (this.state.curPage + 1)) + search
+                history.pushState(null,null,window.location.origin + '/u/' + (this.state.user.name) + '/' + (this.state.curPage + 1)) + search
                 this.beginSearch()
               }else{
                 if(!this.state.curUserPage || this.state.curUserPage < 0 || this.state.curUserPage > 1e6) this.state.curUserPage = 0
-                history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+                history.pushState(null,null,window.location.origin + '/u/' + (vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
                 this.getPages()
               }
             } else {
               this.state.curUserPage = 0
-              history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+              history.pushState(null,null,window.location.origin + '/u/' + (vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
               this.getPages()
             }
           break
@@ -617,7 +617,7 @@ export default {
       })
     },
     firstPage(){
-      let search = this.state.search.string ? ('/1/' + encodeURIComponent(this.state.search.string)) : ''
+      let search = this.state.search.string ? ('/1/' + (this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
           window.location.href = window.location.origin + '/u/' + this.state.user.name + search
@@ -631,7 +631,7 @@ export default {
       }
     },
 		jumpToPage(pageNo){
-      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
 			switch(this.state.mode){
 			  case 'u':
 				window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo + search
@@ -645,7 +645,7 @@ export default {
 			}
 		},
     lastPage(){
-      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
           window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.totalUserPages + search
@@ -659,7 +659,7 @@ export default {
       }
     },
     advancePage(){
-      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
           window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + (this.state.curUserPage + 2) + search
@@ -673,7 +673,7 @@ export default {
       }
     },
     regressPage(){
-      let search = this.state.search.string ? ('/' + encodeURIComponent(this.state.search.string)) : ''
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
       switch(this.state.mode){
         case 'u':
           window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.curUserPage + search
@@ -1022,10 +1022,10 @@ export default {
       if(this.state.search.string.charAt(0) != ' '){
         this.state.search.inProgress = true
         if(page1){
-          history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
+          history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + (this.state.search.string))
           this.state.curPage = 0
         } else {
-          history.pushState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + encodeURIComponent(this.state.search.string))
+          history.pushState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + (this.state.search.string))
         }
         let d = (new Date()).getTime()
         if(this.state.search.timerHandle != null) clearTimeout(this.state.search.timerHandle)

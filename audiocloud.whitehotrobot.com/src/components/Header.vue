@@ -347,7 +347,7 @@ a{
   width: 100vw;
   height: 100vh;
   background: #001d;
-  z-index: 3000;
+  z-index: 30000;
   line-height: 1.05em;
 }
 .uploadProgressContainer{
@@ -357,7 +357,7 @@ a{
   width: 100vw;
   height: 100vh;
   background: #021d;
-  z-index: 3000;
+  z-index: 30020;
   line-height: 1.05em;
 }
 .uploadModalInner{
@@ -367,6 +367,7 @@ a{
   width: 400px;
   height: 280px;
   background: #103b;
+  z-index: 30000;
   box-shadow: 0px 0px 100px 100px #103b;
   transform: translate(-50%, -50%);
   border-radius: 10px;
