@@ -103,6 +103,7 @@ export default {
       if(val){
         this.$nextTick(()=>{
           this.$refs.searchInput.focus()
+          this.$refs.searchInput.select()
         })
       }
     }
