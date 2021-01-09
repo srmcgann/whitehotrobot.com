@@ -68,7 +68,7 @@ export default {
 				maxResultsPerPage: 0,
         showLoginPrompt: null,
         globalT: 0,
-        showControls: true,
+        showControls: false,
         toggleShowControls: null,
         closePrompts: null,
         loginPromptVisible: false,
