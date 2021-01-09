@@ -22,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'http://local.audiocloud.whitehotrobot.com',
+        baseURL: 'https://audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -831,7 +831,7 @@ export default {
             if(typeof el != 'undefined') el.playing = !el.playing
           break
           case 'track':
-            el = this.state.tracks.audiocloudTracks.filter(v=>v.id==this.state.curPlayId)[0]
+            el = this.state.tracks.filter(v=>v.id==this.state.curPlayId)[0]
             if(typeof el != 'undefined') el.playing = !el.playing
           break
           case 'default':
