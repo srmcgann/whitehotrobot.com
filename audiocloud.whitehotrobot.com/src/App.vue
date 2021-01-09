@@ -22,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'http://local.audiocloud.whitehotrobot.com',
+        baseURL: 'https://audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -438,6 +438,8 @@ export default {
             if(vars[2]){
               this.state.curUserPage = (+vars[2])-1
               if(vars[3]){
+                this.state.playall = true
+                this.state.shuffle = true
                 this.state.search.string = decodeURIComponent(vars[3])
                 search = '/' + vars[3]
                 history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(this.state.user.name) + '/' + (this.state.curPage + 1)) + search
@@ -1009,7 +1011,6 @@ export default {
     },
     beginSearch(page1){
       if(this.state.search.string.charAt(0) != ' '){
-				//this.state.search.string = this.state.search.string.trim()
         this.state.search.inProgress = true
         if(page1){
           history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + encodeURIComponent(this.state.search.string))
