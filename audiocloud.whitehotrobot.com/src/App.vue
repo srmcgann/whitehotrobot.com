@@ -22,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'https://audiocloud.whitehotrobot.com',
+        baseURL: 'http://local.audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -946,7 +946,6 @@ export default {
         passhash: this.state.passhash,
         maxResultsPerPage: this.state.maxResultsPerPage
       }
-      console.log(sendData)
       this.state.exactClicked = true
       fetch(this.state.baseURL + '/search.php',{
         method: 'POST',
@@ -957,7 +956,6 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         data[0] = data[0].map(v=>{
           v.playing = false
           v.private = !!(+v.private)
@@ -1046,7 +1044,6 @@ export default {
         if(e.keyCode == 39){
           e.preventDefault()
           e.stopPropagation()
-          console.log(e)
           if(e.shiftKey){
             let el
             if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.min(el[0].mp3.duration, el[0].mp3.currentTime + 10)
