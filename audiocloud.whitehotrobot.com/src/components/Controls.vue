@@ -39,7 +39,7 @@
                 <option style="background: #800;color: #fff;" value="50">50</option>
               </select>
               <span v-if="state.loggedin" class="maxResultsLabel">max results</span>
-              <button class="navButton" style="margin-left: 10px;" title="hotkeys" @click="showHotkeys()">?</button>
+              <button class="navButton" style="margin-left: 10px;font-size: 12px;min-height: 20px; height: 20px;width: 50px;margin-top: 5px;vertical-align: top;" title="hotkeys" @click="showHotkeys()">hotkeys</button>
             </div>
             <div v-else class="advancedControls">
               <label for="disco" style="margin-left: 20px;">
@@ -63,7 +63,7 @@ export default {
   },
   methods:{
     showHotkeys(){
-      alert("hotkeys cheat-sheet...\n\n    [space] : play/pause current track\n    [right-key] : advance to the next song (shuffle applies)\n    [left-key] : restart track if pos > 5%, else prev. track (shuffle applies)\n    [shift+right-key] : advance song by 5%\n    [shift+left-key] : rewind trank by 5%\n    [ESC] : show/hide advanced controls section\n    [enter] : jump to current playing track")
+      alert("hotkeys cheat-sheet...\n\n    [space] : play/pause current track\n    [right-key] : advance to the next song (shuffle applies)\n    [left-key] : restart track if pos > 5%, else prev. track (shuffle applies)\n    [shift+right-key] : advance track by 5%\n    [shift+left-key] : rewind track by 5%\n    [ESC] : show/hide advanced controls section\n    [enter] : jump to current playing track")
     },
 		updateUserPrefs(pref){
 			this.$nextTick(()=>{
