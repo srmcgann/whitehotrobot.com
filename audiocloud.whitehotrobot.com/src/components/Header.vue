@@ -29,48 +29,46 @@
     </div>
 
     <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
-      <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying, 'bumpDown': !state.loggedin}" @click="state.jumpToPlayingTrack()" title="jump to playing track [ctrl+y]"></button>
+      <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="state.jumpToPlayingTrack()" title="jump to playing track [ctrl+y]"></button>
 		</div>
     <div v-else style="display: inline-block; position: absolute;">
 			<button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="state.jumpToPlayingTrack()" title="jump to playing track"></button>
       <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
-
-        <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'track' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
-          <button
-            class="navButton"
-            :class="{'disabled': curPage < 1}"
-            :disabled="curPage < 1"
-            @click="state.firstPage()"
-          >
-            &lt;&lt;
-          </button>
-          <button
-            class="navButton"
-            :disabled="curPage < 1"
-            :class="{'disabled': curPage < 1}"
-            @click="state.regressPage()"
-          >
-            &lt;
-          </button>
-          {{pagenumber}}
-          <button
-            class="navButton"
-            :class="{'disabled': totalPages == curPage+1}"
-            :disabled="totalPages == curPage+1"
-            @click="state.advancePage()"
-          >
-            &gt;
-          </button>
-          <button
-            class="navButton"
-            :class="{'disabled': totalPages == curPage+1}"
-            :disabled="totalPages == curPage+1"
-            @click="state.lastPage()"
-          >
-            &gt;&gt;
-          </button>
-        </div>
-
+    </div>
+    <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'track' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
+      <button
+        class="navButton"
+        :class="{'disabled': curPage < 1}"
+        :disabled="curPage < 1"
+        @click="state.firstPage()"
+      >
+        &lt;&lt;
+      </button>
+      <button
+        class="navButton"
+        :disabled="curPage < 1"
+        :class="{'disabled': curPage < 1}"
+        @click="state.regressPage()"
+      >
+        &lt;
+      </button>
+      {{pagenumber}}
+      <button
+        class="navButton"
+        :class="{'disabled': totalPages == curPage+1}"
+        :disabled="totalPages == curPage+1"
+        @click="state.advancePage()"
+      >
+        &gt;
+      </button>
+      <button
+        class="navButton"
+        :class="{'disabled': totalPages == curPage+1}"
+        :disabled="totalPages == curPage+1"
+        @click="state.lastPage()"
+      >
+        &gt;&gt;
+      </button>
     </div>
     <div class="workingSpace">
       <div class="loggedinDiv">
@@ -528,7 +526,7 @@ a{
   background: #888;
 }
 .bumpLeft{
-  margin-left: -100px;
+  margin-left: -30px;
 }
 .bumpDown{
   margin-top: 17px!important;
