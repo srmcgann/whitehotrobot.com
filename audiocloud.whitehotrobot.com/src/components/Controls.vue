@@ -7,7 +7,7 @@
           <div class="navContainer">
             <div v-if="state.mode !== 'track'" class="advancedControls">
               <div style="position: absolute; z-index:-1!important;background: #246;width: 505px;height: 70px;opacity: .5;margin-top: -10px;margin-left: 60px;border-radius: 5px;"></div>
-              <input type="text" spellcheck="false" ref="searchInput" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="searchInput" style="display: inline-block;float: left;margin-bottom: 25px;margin-left: 75px;margin-top: 15px;position: relative!important: z-index:10000!important;">
+              <input id="searchInput" type="text" spellcheck="false" ref="searchInput" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="searchInput" style="display: inline-block;float: left;margin-bottom: 25px;margin-left: 75px;margin-top: 15px;position: relative!important: z-index:10000!important;">
               <label for="allWords" style="float: left;margin-left: 0px;margin-bottom:0px;display: inline-block;margin-left: 20px;">
                 <input type="checkbox" :disabled="state.search.exact" :checked="state.search.allWords || state.search.exact" id="allWords" v-model="state.search.allWords" @input="state.beginSearch(1)">require all words
               </label><br>

@@ -1055,9 +1055,11 @@ export default {
           }
         }
         if(e.keyCode == 32){
-          e.preventDefault()
-          e.stopPropagation()
-          this.state.playPauseCurrentTrack()
+          if(document.activeElement.id != 'searchInput'){
+            e.preventDefault()
+            e.stopPropagation()
+            this.state.playPauseCurrentTrack()
+          }
         }
       })
     },
