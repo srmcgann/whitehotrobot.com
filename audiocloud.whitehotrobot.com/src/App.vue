@@ -360,6 +360,7 @@ export default {
       document.cookie = 'loggedinuserID=' + this.state.loggedinUserID + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'token=' + this.state.passhash + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'autoplay=' + this.state.playall + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+      document.cookie = 'shuffle=' + this.state.shuffle + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'showControls=' + this.state.showControls + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'exactSearch=' + this.state.search.exact + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
       document.cookie = 'allWords=' + this.state.search.allWords + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
@@ -409,6 +410,8 @@ export default {
     checkAutoplayPref(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='autoplay')
       if(l.length) this.state.playall = l[0].split('=')[1]=='true'
+      l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='shuffle')
+      if(l.length) this.state.shuffle = l[0].split('=')[1]=='true'
     },
     checkExactSearchPref(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='exactSearch')
@@ -463,6 +466,10 @@ export default {
               if(vars[1]){
                 this.state.search.string = decodeURIComponent(vars[1])
                 search = '/' + vars[1]
+                if(search) {
+                  this.state.playall = true
+                  this.state.shuffle = true
+                }
                 history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1)) + search
                 this.beginSearch()
               }else{
@@ -1151,12 +1158,16 @@ export default {
     },
     'state.shuffle'(val){
     },
+    'state.shuffle'(val){
+      document.cookie = 'shuffle=' + this.state.shuffle + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
+    },
     'state.playall'(val){
       if(val){
         if(this.state.loaded) this.playNextTrack()
 			} else {
 				this.state.pauseVisible()
 			}
+      document.cookie = 'autoplay=' + this.state.playall + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
     },
     'state.showUploadModal'(val){
       if(val){
