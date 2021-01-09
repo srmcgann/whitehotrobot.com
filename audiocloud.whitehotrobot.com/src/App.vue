@@ -1034,7 +1034,7 @@ export default {
           let cpt = this.currentPlayingTracks
           if(e.shiftKey){
             let el
-            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.max(0, el[0].mp3.currentTime - el[0].mp3.duration/20)
+            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.max(0, el[0].mp3.currentTime - 10)
           }else{
             if(cpt.length && cpt[0].mp3.currentTime>cpt[0].mp3.duration/20){
               cpt[0].mp3.currentTime = 0
@@ -1049,7 +1049,7 @@ export default {
           console.log(e)
           if(e.shiftKey){
             let el
-            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.min(el[0].mp3.duration, el[0].mp3.currentTime + el[0].mp3.duration/20)
+            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.min(el[0].mp3.duration, el[0].mp3.currentTime + 10)
           }else{
             this.state.playNextTrack()
           }
