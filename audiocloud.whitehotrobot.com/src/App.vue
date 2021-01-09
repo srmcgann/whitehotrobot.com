@@ -1018,13 +1018,19 @@ export default {
     },
     loadHotKeys(){
       window.addEventListener('keydown',(e)=>{
-        if(e.keyCode == 77 && e.ctrlKey){
+        if(e.keyCode == 27){
+          e.preventDefault()
+          e.stopPropagation()
           this.state.toggleShowControls()
         }
-        if(e.keyCode == 89 && e.ctrlKey){
+        if(e.keyCode == 13){
+          e.preventDefault()
+          e.stopPropagation()
           this.state.jumpToPlayingTrack()
         }
-        if(e.keyCode == 37 && e.ctrlKey){
+        if(e.keyCode == 37){
+          e.preventDefault()
+          e.stopPropagation()
           let cpt = this.currentPlayingTracks
           if(cpt.length && cpt[0].mp3.currentTime>cpt[0].mp3.duration/20){
             cpt[0].mp3.currentTime = 0
@@ -1032,7 +1038,9 @@ export default {
             this.state.playPreviousTrack()
           }
         }
-        if(e.keyCode == 39 && e.ctrlKey){
+        if(e.keyCode == 39){
+          e.preventDefault()
+          e.stopPropagation()
           this.state.playNextTrack()
         }
         if(e.keyCode == 32){
