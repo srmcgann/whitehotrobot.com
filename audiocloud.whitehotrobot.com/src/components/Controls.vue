@@ -63,7 +63,7 @@ export default {
   },
   methods:{
     showHotkeys(){
-      alert("hotkeys cheat-sheet...\n\n    [space] : play/pause current track\n    [right-key] : advance to the next song (shuffle applies)\n    [left-key] : restart track if pos > 5%, else prev. track (shuffle applies)\n    [shift+right-key] : advance track by 5%\n    [shift+left-key] : rewind track by 5%\n    [ESC] : show/hide advanced controls section\n    [enter] : jump to current playing track")
+      alert("hotkeys cheat-sheet...\n\n    [space] : play/pause current track\n    [right-key] : advance to the next song (shuffle applies)\n    [left-key] : restart track if pos > 5%, else prev. track (shuffle applies)\n    [shift+right-key] : advance track by 10s\n    [shift+left-key] : rewind track by 10s\n    [ESC] : show/hide advanced controls section\n    [enter] : jump to current playing track")
     },
 		updateUserPrefs(pref){
 			this.$nextTick(()=>{
