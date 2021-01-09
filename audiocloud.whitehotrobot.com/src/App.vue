@@ -1022,37 +1022,43 @@ export default {
           this.state.toggleShowControls()
         }
         if(e.keyCode == 13){
-          e.preventDefault()
-          e.stopPropagation()
-          this.state.jumpToPlayingTrack()
+          if(!document.activeElement.classList.contains('textInput')){
+            e.preventDefault()
+            e.stopPropagation()
+            this.state.jumpToPlayingTrack()
+          }
         }
         if(e.keyCode == 37){
-          e.preventDefault()
-          e.stopPropagation()
-          let cpt = this.currentPlayingTracks
-          if(e.shiftKey){
-            let el
-            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.max(0, el[0].mp3.currentTime - 10)
-          }else{
-            if(cpt.length && cpt[0].mp3.currentTime>cpt[0].mp3.duration/20){
-              cpt[0].mp3.currentTime = 0
-            } else {
-              this.state.playPreviousTrack()
+          if(!document.activeElement.classList.contains('textInput')){
+            e.preventDefault()
+            e.stopPropagation()
+            let cpt = this.currentPlayingTracks
+            if(e.shiftKey){
+              let el
+              if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.max(0, el[0].mp3.currentTime - 10)
+            }else{
+              if(cpt.length && cpt[0].mp3.currentTime>cpt[0].mp3.duration/20){
+                cpt[0].mp3.currentTime = 0
+              } else {
+                this.state.playPreviousTrack()
+              }
             }
           }
         }
         if(e.keyCode == 39){
-          e.preventDefault()
-          e.stopPropagation()
-          if(e.shiftKey){
-            let el
-            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.min(el[0].mp3.duration, el[0].mp3.currentTime + 10)
-          }else{
-            this.state.playNextTrack()
+          if(!document.activeElement.classList.contains('textInput')){
+            e.preventDefault()
+            e.stopPropagation()
+            if(e.shiftKey){
+              let el
+              if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.min(el[0].mp3.duration, el[0].mp3.currentTime + 10)
+            }else{
+              this.state.playNextTrack()
+            }
           }
         }
         if(e.keyCode == 32){
-          if(document.activeElement.id != 'searchInput'){
+          if(!document.activeElement.classList.contains('textInput')){
             e.preventDefault()
             e.stopPropagation()
             this.state.playPauseCurrentTrack()

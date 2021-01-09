@@ -9,12 +9,13 @@
             style="position: absolute; z-index:-1; opacity: 0;z-index: -1"
             ref="loginTabAnchor"
             v-on:keydown.shift.tab="$refs.bottomTabAnchor.focus()" type="text"
+            class="textInput"
           >
           <input
             type="text"
             ref="username"
             v-model="state.username"
-            class="input"
+            class="input textInput"
             v-on:keydown.enter="state.login()"
             v-on:keydown.shift.tab="$refs.bottomTabAnchor.focus()"
           ><br>
@@ -69,6 +70,7 @@
             style="position: absolute;; z-index:-1; opacity: 0;z-index: -1;"
             ref="loginTabAnchor"
             type="text"
+            class="textInput" 
             v-on:keydown.enter="submit()"
             v-on:keydown.shift.tab="$refs.bottomTabAnchor.focus()"
           >
@@ -76,7 +78,7 @@
             type="text"
             ref="regusername"
             v-model="state.regusername"
-            class="input"
+            class="input textInput"
             maxlength="16"
             :class="{'userNameUnavailable': !userNameAvailable, 'userNameAvailable': userNameAvailable && state.regusername}"
             @input="checkUserNameAvailability()"
@@ -132,6 +134,7 @@
           style="position: absolute;; z-index:-1; opacity: 0;z-index: -1"
           ref="bottomTabAnchor"
           type="text"
+          class="textInput" 
         >
       </div>
     </div>

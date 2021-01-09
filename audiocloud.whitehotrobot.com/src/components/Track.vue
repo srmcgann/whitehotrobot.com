@@ -17,6 +17,7 @@
         :class="{'success':updated['trackName']==1,'failure':updated['trackName']==-1}"
         style="width: 350px;float:left;"
         placeholder="track name"
+        class="textInput" 
         @input="updateTrackItem(track.id, 'trackName')" type="text" v-model="track.trackName"
       >
       <span style="word-break: keep-all;display: inline-block;">{{track.plays + ' view' + (track.plays != 1 ? 's' : '')}}</span>
@@ -42,6 +43,7 @@
                maxlength="256"
               :class="{'success':updated['trackName']==1,'failure':updated['trackName']==-1}"
               @input="updateTrackItem(track.id, 'trackName')" type="text" v-model="track.trackName"
+              class="textInput"
             >
           </div>
           <div v-else class="trackElem">
@@ -57,6 +59,7 @@
             <input
                maxlength="256"
               :class="{'success':updated['description']==1,'failure':updated['description']==-1}"
+              class="textInput" 
               @input="updateTrackItem(track.id, 'description')" type="text" v-model="track.description"
             >
           </div>
