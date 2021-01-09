@@ -441,8 +441,10 @@ export default {
             if(vars[2]){
               this.state.curUserPage = (+vars[2])-1
               if(vars[3]){
-                this.state.playall = true
-                this.state.shuffle = true
+                if(!this.state.loggedin){
+                  this.state.playall = true
+                  this.state.shuffle = true
+                }
                 this.state.search.string = decodeURIComponent(vars[3])
                 search = '/' + vars[3]
                 history.pushState(null,null,window.location.origin + '/u/' + encodeURIComponent(this.state.user.name) + '/' + (this.state.curPage + 1)) + search
@@ -466,7 +468,7 @@ export default {
               if(vars[1]){
                 this.state.search.string = decodeURIComponent(vars[1])
                 search = '/' + vars[1]
-                if(search) {
+                if(search && !this.state.loggedin) {
                   this.state.playall = true
                   this.state.shuffle = true
                 }
