@@ -22,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'https://audiocloud.whitehotrobot.com',
+        baseURL: 'https//audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
@@ -693,9 +693,11 @@ export default {
             if(this.state.shuffle){
               let idx
               this.state.search.audiocloudTracks[idx = Math.random()*this.state.search.audiocloudTracks.length|0].playing = true
+              this.state.curPlayId = this.state.search.audiocloudTracks[idx].id
               this.state.search.audiocloudTracks[idx].jump++
             }else{
               this.state.search.audiocloudTracks[0].playing = true
+              this.state.curPlayId = this.state.search.audiocloudTracks[0].id
               this.state.search.audiocloudTracks[0].jump++
             }
           } else {
@@ -705,13 +707,16 @@ export default {
                   let idx
                   while((idx = Math.random()*this.state.search.audiocloudTracks.length|0) == curplayIdx && this.state.search.audiocloudTracks.length > 1);
                   this.state.search.audiocloudTracks[idx].playing = true
+                  this.state.curPlayId = this.state.search.audiocloudTracks[idx].id
                   this.state.search.audiocloudTracks[idx].jump++
                 }else{
                   if(i < this.state.search.audiocloudTracks.length-1){
                     this.state.search.audiocloudTracks[i+1].playing = true
+                    this.state.curPlayId = this.state.search.audiocloudTracks[i+1].id
                     this.state.search.audiocloudTracks[i+1].jump++
                   } else {
                     this.state.search.audiocloudTracks[0].playing = true
+                    this.state.curPlayId = this.state.search.audiocloudTracks[0].id
                     this.state.search.audiocloudTracks[0].jump++
                   }
                 }
@@ -728,6 +733,7 @@ export default {
                   let idx
                   this.filteredUserTracks[idx = Math.random()*this.filteredUserTracks.length|0].playing = true
                   this.filteredUserTracks[idx].jump++
+                  this.state.curPlayId = this.filteredUserTracks[idx].id
                 }else{
                   this.filteredUserTracks[0].playing = true
                   this.filteredUserTracks[0].jump++
@@ -739,13 +745,16 @@ export default {
                       let idx
                       while((idx = Math.random()*this.filteredUserTracks.length|0) == curplayIdx && this.filteredUserTracks.length > 1);
                       this.filteredUserTracks[idx].playing = true
+                      this.state.curPlayId = this.filteredUserTracks[idx].id
                       this.filteredUserTracks[idx].jump++
                     }else{
                       if(i < this.filteredUserTracks.length-1){
                         this.filteredUserTracks[i+1].playing = true
+                        this.state.curPlayId = this.filteredUserTracks[i+1].id
                         this.filteredUserTracks[i+1].jump++
                       } else {
                         this.filteredUserTracks[0].playing = true
+                        this.state.curPlayId = this.filteredUserTracks[0].id
                         this.filteredUserTracks[0].jump++
                       }
                     }
@@ -764,8 +773,10 @@ export default {
                   let idx
                   this.state.landingPage.audiocloudTracks[idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0].playing = true
                   this.state.landingPage.audiocloudTracks[idx].jump++
+                  this.state.curPlayId = this.state.landingPage.audiocloudTracks[idx].id
                 }else{
                   this.state.landingPage.audiocloudTracks[0].playing = true
+                  this.state.curPlayId = this.state.landingPage.audiocloudTracks[0].id
                   this.state.landingPage.audiocloudTracks[0].jump++
                 }
               } else {
@@ -775,13 +786,16 @@ export default {
                       let idx
                       while((idx = Math.random()*this.state.landingPage.audiocloudTracks.length|0) == curplayIdx && this.state.landingPage.audiocloudTracks.length > 1);
                       this.state.landingPage.audiocloudTracks[idx].playing = true
+                      this.state.curPlayId = this.state.landingPage.audiocloudTracks[idx].id
                       this.state.landingPage.audiocloudTracks[idx].jump++
                     }else{
                       if(i < this.state.landingPage.audiocloudTracks.length-1){
                         this.state.landingPage.audiocloudTracks[i+1].playing = true
+                        this.state.curPlayId = this.state.landingPage.audiocloudTracks[i+1].id
                         this.state.landingPage.audiocloudTracks[i+1].jump++
                       } else {
                         this.state.landingPage.audiocloudTracks[0].playing = true
+                        this.state.curPlayId = this.state.landingPage.audiocloudTracks[0].id
                         this.state.landingPage.audiocloudTracks[0].jump++
                       }
                     }

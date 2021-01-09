@@ -143,12 +143,12 @@
       <button
         class="smallControlButton resetButton"
         @click="resetTrack()"
-        title="start of track (or prev. track if pos<dur/20) [ctrl+leftkey]"
+        title="start of track (or prev. track if pos<dur/20) [left arrow key]"
       ></button>
       <button
         class="smallControlButton jumpToNextButton"
         @click="track.mp3.currentTime = Math.max(6e6, track.mp3.duration-.1);if(skipRedraw)B=[],Draw(skipRedraw=false)"
-        title="play next track [ctrl+rightkey]"
+        title="play next track [right arrow key]"
       ></button>
       <canvas ref="canvas" class="canvas"></canvas>
     </div>
