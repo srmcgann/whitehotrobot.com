@@ -22,7 +22,7 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'https//audiocloud.whitehotrobot.com',
+        baseURL: 'http://local.audiocloud.whitehotrobot.com',
         baseDemoURL: 'https://code.whitehotrobot.com',
         baseVideoURL: 'https://whitehotrobot.com',
         baseDomain: 'audiocloud.whitehotrobot.com',
