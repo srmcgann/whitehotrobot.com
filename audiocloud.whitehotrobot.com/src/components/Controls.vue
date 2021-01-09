@@ -1,7 +1,7 @@
 <template>
   <div class="controls" v-if="!state.showUploadModal" :class="{'shortControlsContainer':!state.showControls}">
     <div class="controlsWorkingSpace">
-      <div @click="state.toggleShowControls" title="show additional controls [ctrl+m]" :class="{'showImg':!state.showControls, 'hideImg': state.showControls, 'bump': state.mode=='track' || !state.loggedin}" style="margin-top:-70px;"></div>
+      <div @click="state.toggleShowControls" title="show additional controls [ESC]" :class="{'showImg':!state.showControls, 'hideImg': state.showControls, 'bump': state.mode=='track' || !state.loggedin}" style="margin-top:-70px;"></div>
       <transition name="fade">
         <div v-if="state.showControls">
           <div class="navContainer">
