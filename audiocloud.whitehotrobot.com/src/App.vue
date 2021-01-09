@@ -1032,16 +1032,27 @@ export default {
           e.preventDefault()
           e.stopPropagation()
           let cpt = this.currentPlayingTracks
-          if(cpt.length && cpt[0].mp3.currentTime>cpt[0].mp3.duration/20){
-            cpt[0].mp3.currentTime = 0
-          } else {
-            this.state.playPreviousTrack()
+          if(e.shiftKey){
+            let el
+            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.max(0, el[0].mp3.currentTime - el[0].mp3.duration/20)
+          }else{
+            if(cpt.length && cpt[0].mp3.currentTime>cpt[0].mp3.duration/20){
+              cpt[0].mp3.currentTime = 0
+            } else {
+              this.state.playPreviousTrack()
+            }
           }
         }
         if(e.keyCode == 39){
           e.preventDefault()
           e.stopPropagation()
-          this.state.playNextTrack()
+          console.log(e)
+          if(e.shiftKey){
+            let el
+            if((el=this.currentPlayingTracks).length)el[0].mp3.currentTime = Math.min(el[0].mp3.duration, el[0].mp3.currentTime + el[0].mp3.duration/20)
+          }else{
+            this.state.playNextTrack()
+          }
         }
         if(e.keyCode == 32){
           e.preventDefault()
