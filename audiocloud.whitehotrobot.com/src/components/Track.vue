@@ -170,8 +170,9 @@
             <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
               <input
                 maxlength="256"
+                type="text"
                 :ref="'comment' + comment.id"
-                class="commentInput"
+                class="commentInput textInput"
                 style="width: calc(100% - 100px);"
                 @input="editComment(comment)"
                 v-model="comment.text"
@@ -218,7 +219,7 @@
           maxlength="256"
           v-on:keyup.enter="postComment(track.id)"
           :ref="'newComment' + track.id" placeholder="say something..."
-          class="commentInput newComment"
+          class="commentInput newComment textInput"
           style="margin-left: 0;margin-top: 16px;"
         >
         <button
