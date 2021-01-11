@@ -216,7 +216,7 @@
       </div>
       <div v-if="state.loggedin">
         <input
-          maxlength="256"
+          maxlength="1024"
           v-on:keyup.enter="postComment(track.id)"
           :ref="'newComment' + track.id" placeholder="say something..."
           class="commentInput newComment textInput"
