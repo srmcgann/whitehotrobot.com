@@ -169,7 +169,7 @@
             </span><br>
             <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
               <input
-                maxlength="256"
+                maxlength="1024"
                 type="text"
                 :ref="'comment' + comment.id"
                 class="commentInput textInput"
