@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build;mkdir dist/thumbs;chmod 777 dist/thumbs;php dist/rebuildThumbs.php"
+    "build": "/var/www/html/code.whitehotrobot.com/prebuild.sh; vue-cli-service build; mkdir dist/thumbs;chmod 777 dist/thumbs;php dist/rebuildThumbs.php; /var/www/html/code.whitehotrobot.com/genlink.sh"
   },
   "dependencies": {
     "core-js": "^3.6.5",

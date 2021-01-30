@@ -11,7 +11,7 @@
           <input
             type="text"
             :ref="'demoTitle' + item.id"
-            maxlength="60"
+            maxlength="120"
             @click="$event.target.select()"
             v-model="item.title"
             class="input demoInput"
