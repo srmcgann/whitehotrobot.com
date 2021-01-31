@@ -57,6 +57,7 @@ export default {
           exact: false,
           allWords: true
         },
+        showControlsToggleTimer: 0,
         loggedin: false,
         totalUserPages: 0,
         totalPages: 0,
@@ -1041,9 +1042,12 @@ export default {
     loadHotKeys(){
       window.addEventListener('keydown',(e)=>{
         if(e.keyCode == 27){
-          e.preventDefault()
-          e.stopPropagation()
-          this.state.toggleShowControls()
+          if(this.state.showControlsToggleTimer < (new Date()).getTime()){
+            this.state.showControlsToggleTimer = (new Date()).getTime()+100
+            e.preventDefault()
+            e.stopPropagation()
+            this.toggleShowControls()
+          }
         }
         if(e.keyCode == 13){
           if(!document.activeElement.classList.contains('textInput')){
