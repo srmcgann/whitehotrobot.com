@@ -29,6 +29,7 @@ export default {
         closePrompts: null,
         loginPromptVisible: false,
         viewAuthor: null,
+        escaped_name: '',
         isAdmin: false,
         showUserPages: false,
         checkEnabled: null,
@@ -267,8 +268,10 @@ export default {
             this.state.invalidLoginAttemp = false
             this.state.userInfo[this.state.loggedinUserID] = {}
             this.state.userInfo[this.state.loggedinUserID].name = this.state.regusername
+            this.state.userInfo[this.state.loggedinUserID].escaped_name = data[4]
             this.state.userInfo[this.state.loggedinUserID].avatar = data[2]
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
+            this.state.escaped_name = data[4]
             if(+data[3]) this.state.isAdmin = true
             if(this.state.mode !== 'u'){
               sendData = {userID: this.state.loggedinUserID}

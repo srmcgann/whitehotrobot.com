@@ -1,13 +1,30 @@
 <template>
   <div class="header">
+    <div class="contactMenu">
+      <button @click="launchWeb()" class="socialButton" title="videos and demos https://code.whitehotrobot.com">
+        <img src="../assets/web.png" class="socialIcon">
+      </button>
+      <!--
+      <button @click="launchFacebook()" class="socialButton" title="Open our Facebook Page">
+        <img src="../assets/facebook.png" class="socialIcon">
+      </button>
+      -->
+      <button @click="launchEmail()" class="socialButton" title="contact">
+        <img src="../assets/email.png" class="socialIcon">
+      </button>
+      <button @click="launchAdmin()" class="socialButton" title="Admin Section">
+        <img src="../assets/admin.png" class="socialIcon">
+      </button>
+    </div>
     <div class="workingSpace">
       <div class="loggedinDiv">
         <div v-if="state.loggedin" class="loggedInTitle">
           <span style="color: #afe;font-size: 16px;">Welcome,</span><br>
-          <a :href="'/u/' + state.loggedinUserName" v-html="truncate(state.loggedinUserName)"></a>
+          <a :href="'/u/' + state.escaped_name" v-html="truncate(state.loggedinUserName)"></a>
         </div>
         <Account :state="state"/>
       </div>
+      <div class="infoButton" title="about whitehot robot" @click="launchInfoPage()"></div>
       <a :href="origin" class="appName">
         <div class="appNameText">
           Free Web
@@ -28,6 +45,30 @@ export default {
   name: 'Header',
   props: [ 'state' ],
   methods:{
+    launchInfoPage(){
+      let a = document.createElement('a')
+      a.setAttribute('href', 'https://whitehotrobot.com/about')
+      a.setAttribute('target', '_blank')
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
+      a.parentNode.removeChild(a)
+    },
+    launchFacebook () {
+      window.open('https://www.facebook.com/RedwoodFord/', '_blank')
+    },
+    launchInstagram () {
+      window.open('https://www.instagram.com/redwoodford/?hl=en', '_blank')
+    },
+    launchEmail () {
+      location.href = 'mailto: whitehotrobot@gmail.com?subject=I%20come%20from%20the%20Internet!&body=I%20have%20a%20comment%20or%20concern%20about%20the%20website(code.whitehotrobot.com)...'
+    },
+    launchWeb () {
+      window.open('http://code.whitehotrobot.com/', '_blank')
+    },
+    launchAdmin () {
+      window.open('https://whitehotrobot.com/admin/', '_blank')
+    },
     truncate(str){
       if(typeof str === 'undefined') return
       return str.length > 9 ? str.substring(0,5) + '...' + str.substring(str.length-3) : str
@@ -110,8 +151,52 @@ export default {
 .username{
   font-size: 1em;
 }
+.infoButton{
+  position: relative;
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  margin-right: 20px;
+  z-index: 1000;
+  float: right;
+  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  background-position: center center;
+  cursor: pointer;
+}
 a{
   color: #ff0!important;
   text-decoration: none;
+}
+.contactMenu{
+  position: absolute;
+  left: 50%;
+  z-index: 1000;
+  transform: translate(-50%);
+  margin-top: 8px;
+}
+.socialIcon{
+  height: 28px;
+  margin-bottom: 4px;
+}
+.socialButton{
+  width: 60px!important;
+  cursor: pointer;
+  margin: 5px;
+  padding: 2px;
+  border-radius: 5px;
+  background: #123;
+  border: 1px solid #1ae8;
+  font-weight: 900;
+  color: #204;
+  font-size: 30px;
+  height: 35px;
+  min-width: 40px!important;
+  max-width: 50px;
+  font-family: 'Oxanium';
+}
+.socialButton:focus{
+  outline: none;
 }
 </style>
