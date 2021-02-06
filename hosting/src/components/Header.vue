@@ -1,7 +1,7 @@
 <template>
   <div class="header">
     <div class="contactMenu">
-      <button @click="launchWeb()" class="socialButton" title="videos and playlists https://whitehotrobot.com">
+      <button @click="launchWeb()" class="socialButton" title="videos and demos https://code.whitehotrobot.com">
         <img src="../assets/web.png" class="socialIcon">
       </button>
       <!--
@@ -20,13 +20,16 @@
       <div class="loggedinDiv">
         <div v-if="state.loggedin" class="loggedInTitle">
           <span style="color: #afe;font-size: 16px;">Welcome,</span><br>
-          <a :href="'/u/' + state.loggedinUserName" v-html="truncate(state.loggedinUserName)"></a>
+          <a :href="'/u/' + state.escaped_name" v-html="truncate(state.loggedinUserName)"></a>
         </div>
         <Account :state="state"/>
       </div>
       <div class="infoButton" title="about whitehot robot" @click="launchInfoPage()"></div>
-      <a :href="state.baseURL" class="appName">
-        <div class="appNameText">Videos<br> & Demos</div>
+      <a :href="origin" class="appName">
+        <div class="appNameText">
+          Free Web
+          Hosting
+        </div>
         <div class="clear"></div>
       </a>
     </div>
@@ -61,14 +64,19 @@ export default {
       location.href = 'mailto: whitehotrobot.com@gmail.com?subject=I%20come%20from%20the%20Internet!&body=I%20have%20a%20comment%20or%20concern%20about%20the%20website(code.whitehotrobot.com)...'
     },
     launchWeb () {
-      window.open('http://whitehotrobot.com/', '_blank')
+      window.open('http://code.whitehotrobot.com/', '_blank')
     },
     launchAdmin () {
       window.open('https://whitehotrobot.com/admin/', '_blank')
     },
     truncate(str){
       if(typeof str === 'undefined') return
-      return str.length > 16 ? str.substring(0,12) + '...' + str.substring(str.length-3) : str
+      return str.length > 9 ? str.substring(0,5) + '...' + str.substring(str.length-3) : str
+    }
+  },
+  computed:{
+    origin(){
+      return window.location.origin
     }
   }
 }
@@ -86,6 +94,7 @@ export default {
   background-position: 10px 50%;
   background-size: 50px 50px;
   height: 50px;
+  z-index: 100;
   border-radius: 10px;
   min-width: 180px;
   
@@ -94,7 +103,9 @@ export default {
   position: absolute;
   left: 62%;
   top: 50%;
+  color: #f80;
   width: 100%;
+  line-height: .8em;
   transform: translate(-50%,-50%);
 }
 .clear{
@@ -103,6 +114,7 @@ export default {
 .header{
   position: fixed;
   top: 0;
+  left: 0;
   z-index: 1000;
   height: 60px;
   width: 100%;
@@ -144,8 +156,8 @@ export default {
   width: 40px;
   height: 40px;
   top: 10px;
+  margin-right: 20px;
   z-index: 1000;
-  margin-right: 5px;
   float: right;
   background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
   background-repeat: no-repeat;

@@ -42,7 +42,7 @@ export default {
         showUserSettings: null,
         userSettingsVisible: false,
         getAvatar: null,
-        autoplay: true,
+        autoplay: false,
         toggleAutoplay: null,
         demoDataReceived: false,
         confirmpassword: '',

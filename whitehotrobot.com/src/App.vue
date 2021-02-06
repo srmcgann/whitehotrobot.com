@@ -2,16 +2,18 @@
   <div>
     <div class="admin" @click="loadAdminPage()"></div>
     <Main :state="state"/>
+    <Footer :state="state"/>
   </div>
 </template>
 
 <script>
 import Main from './components/Main'
-
+import Footer from './components/Footer'
 export default {
   name: 'App',
   components: {
-    Main
+    Main,
+    Footer
   },
   data(){
     return {

@@ -3,6 +3,7 @@
     class="header"
     :class="{'hidden': state.error404}"
   >
+  <div class="infoButton" title="about whitehot robot" @click="launchInfoPage()"></div>
     <div v-if="!state.error404">
       <div style="position: relative; margin-top: -13px;">
         <div class="headerTitle">Whitehot Robot - Jukebox</div><br>
@@ -32,6 +33,15 @@ export default {
   name: 'Header',
   props: [ 'state' ],
   methods:{
+    launchInfoPage(){
+      let a = document.createElement('a')
+      a.setAttribute('href', 'https://whitehotrobot.com/about')
+      a.setAttribute('target', '_blank')
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
+      a.parentNode.removeChild(a)
+    },
     videoTitle(video){
       if(typeof video == 'undefined'){
         return ''
@@ -57,6 +67,20 @@ export default {
   font-size: 20px;
   text-align: center;
   max-height: 30px;
+}
+.infoButton{
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  z-index: 1000;
+  margin-left: 0;
+  right: 0px;
+  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  background-position: center center;
+  cursor: pointer;
 }
 .bottomBorder{
   position: absolute;

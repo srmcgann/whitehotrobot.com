@@ -48,7 +48,7 @@
                     <div v-if="filteredPlaylistThumbs(playlist)">
                       <div style="display: flex; flex-wrap:wrap; justify-content: space-around;width: 100%;align-items: stretch;">
                         <div v-for="vid in filteredPlaylistThumbs(playlist)" :key="vid" style="width:85px;border: 1px solid #6fc4;margin:3px;margin-left: 2px; margin-right: 2px">
-                          <a v-if="vid" :href="state.baseURL + '/video/' + state.decToAlpha(vid.id) " target="_blank">
+                          <a v-if="vid" :href="state.baseURL + '/video/' + state.decToAlpha(vid.id) " target="_blank" :title="vid.author + ' - ' + vid.title">
                             <img :src="vid.videoThumb" class="playlistVidThumb" style="position: relative; top: 50%; transform: translate(0,-50%);vertical-align: initial;">
                           </a>
                         </div>
@@ -98,7 +98,7 @@
                   <div class="spacerDiv"></div>
                   <span class="yellow">User:&nbsp;</span>
                   {{video.author}}<br>
-                  <a :href="state.baseURL + '/user/' + video.author" class="videoShareLink">videos</a>
+                  <a :href="state.baseURL + '/user/' + video.author.replace(' ', '_')" class="videoShareLink">videos</a>
                   <a :href="state.baseDemoURL + '/u/' + video.author" class="demoShareLink">demos</a><br>
                   <div class="spacerDiv"></div>
                   <button v-if="video.playing" @click="fullscreen('#videoElement'+idx)" class="fullscreenButton" style="margin-top: -2px;">fullscreen</button>
@@ -184,7 +184,7 @@
                   <div class="spacerDiv"></div>
                   <span class="yellow">User:&nbsp;</span>
                   {{video.author}}<br>
-                  <a :href="state.baseURL + '/user/' + video.author" class="videoShareLink">videos</a>
+                  <a :href="state.baseURL + '/user/' + video.author.replace(' ', '_')" class="videoShareLink">videos</a>
                   <a :href="state.baseDemoURL + '/u/' + video.author" class="demoShareLink">demos</a><br>
                   <div class="spacerDiv"></div>
                   <button v-if="video.playing" @click="fullscreen('#videoElement'+idx)" class="fullscreenButton">fullscreen</button>
@@ -270,7 +270,7 @@
                   <div class="spacerDiv"></div>
                   <span class="yellow">User:&nbsp;</span>
                   {{video.author}}<br>
-                  <a :href="state.baseURL + '/user/' + video.author" class="videoShareLink">videos</a>
+                  <a :href="state.baseURL + '/user/' + video.author.replace(' ','_')" class="videoShareLink">videos</a>
                   <a :href="state.baseDemoURL + '/u/' + video.author" class="demoShareLink">demos</a><br>
                   <div class="spacerDiv"></div>
                   <button v-if="video.playing" @click="fullscreen('#videoElement'+idx)" class="fullscreenButton">fullscreen</button>
@@ -387,7 +387,7 @@ export default {
     },
     filteredPlaylistThumbs(playlist){
       if(typeof playlist !== 'undefined'){
-        let a =JSON.parse(playlist.item_ids)
+        let a = JSON.parse(playlist.item_ids).sort(function(a, b){return b-a})
         if(a.length){
           return a.map(v=>{
             return this.state.videos.filter(q=>{

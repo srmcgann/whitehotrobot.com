@@ -22,6 +22,7 @@
 			$videos = [];
 			$sql = 'USE ' . $db;
 			mysqli_query($link, $sql);
+			rsort($item_ids);
   		foreach($item_ids as $id) {
         if(($idx=inArray($item_ids, 'id', $id)) !== false){
 					$videos[] = $videos[$idx];

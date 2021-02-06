@@ -1,7 +1,7 @@
 <template>
   <div ref="footerBar" class="footerBar" id="footerBar">
     <div class="footerMenu">
-      <button @click="launchWeb()" class="socialButton" title="Code & Demos https://code.whitehotrobot.com">
+      <button @click="launchWeb()" class="socialButton" title="audiocloud https://audiocloud.whitehotrobot.com">
         <img src="../assets/web.png" class="socialIcon">
       </button>
       <!--
@@ -9,7 +9,7 @@
         <img src="../assets/facebook.png" class="socialIcon">
       </button>
       -->
-      <button @click="launchEmail()" class="socialButton" title="Email us!">
+      <button @click="launchEmail()" class="socialButton" title="contact">
         <img src="../assets/email.png" class="socialIcon">
       </button>
       <button @click="launchAdmin()" class="socialButton" title="Admin Section">
@@ -37,7 +37,7 @@ export default {
       location.href = 'mailto: whitehotrobot.com@gmail.com?subject=I%20come%20from%20the%20Internet!&body=I%20have%20a%20comment%20or%20concern%20about%20the%20website(audiocloud.whitehotrobot.com)...'
     },
     launchWeb () {
-      window.open('http://code.whitehotrobot.com/', '_blank')
+      window.open('http://audiocloud.whitehotrobot.com/', '_blank')
     },
     launchAdmin () {
       window.open('https://whitehotrobot.com/admin/', '_blank')
@@ -56,7 +56,7 @@ export default {
   height: 45px;
   font-size: 32px;
   color: #603;
-  background: linear-gradient(90deg, #000, #222a);
+  background: linear-gradient(90deg, #00080fee, #012a);
   transition: opacity 2s;
 }
 .footerMenu{

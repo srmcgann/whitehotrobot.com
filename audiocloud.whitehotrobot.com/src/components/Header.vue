@@ -78,6 +78,7 @@
         </div>
         <Account :state="state"/>
       </div>
+      <div class="infoButton" title="about whitehot robot" @click="launchInfoPage()"></div>
       <a :href="origin" class="appName">
         <div class="appNameText">
           <div style="display: inline-block;transform: scalex(1.2);margin-right: 10px;">
@@ -110,6 +111,15 @@ export default {
   name: 'Header',
   props: [ 'state' ],
   methods:{
+    launchInfoPage(){
+      let a = document.createElement('a')
+      a.setAttribute('href', 'https://whitehotrobot.com/about')
+      a.setAttribute('target', '_blank')
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
+      a.parentNode.removeChild(a)
+    },
 		updateUserPrefs(pref){
 			this.$nextTick(()=>{
         let newval
@@ -532,6 +542,19 @@ a{
 .bumpDown{
   margin-top: 17px!important;
   margin-left: 0;
+}
+.infoButton{
+  position: relative;
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  margin-right: 5px;
+  float: right;
+  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  background-position: center center;
+  cursor: pointer;
 }
 .jumpButton{
   background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);
