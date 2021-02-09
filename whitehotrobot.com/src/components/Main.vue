@@ -379,7 +379,8 @@ export default {
     filteredUsers(playlist){
         if(typeof playlist !== 'undefined' && this.state.users.length){
           return [...JSON.parse(playlist.user_ids)].map(v=>this.state.users.filter(q=>+q.id==+v)[0].name).map(v=>{
-            return '<a class="shareButton" style="display: block; padding:3px;padding-bottom: 5px;padding-left:8px;padding-right:8px;margin:2px;margin-top: 5px;font-size: 18px;" href="' + this.state.baseURL + '/user/' + v + '" target="_blank">' + v + '</a>'
+            let l = v.replace(' ', '_')
+            return '<a class="shareButton" style="display: block; padding:3px;padding-bottom: 5px;padding-left:8px;padding-right:8px;margin:2px;margin-top: 5px;font-size: 18px;" href="' + this.state.baseURL + '/user/' + l + '" target="_blank">' + l + '</a>'
           }).join('')
         } else {
           return []

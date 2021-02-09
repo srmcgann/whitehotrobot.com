@@ -27,12 +27,14 @@ export default {
     }
   },
   methods: {
+    /*
     launchFacebook () {
       window.open('https://www.facebook.com/RedwoodFord/', '_blank')
     },
     launchInstagram () {
       window.open('https://www.instagram.com/redwoodford/?hl=en', '_blank')
     },
+    */
     launchEmail () {
       location.href = 'mailto:whitehotrobot@gmail.com?subject=I%20come%20from%20the%20Internet!&body=I%20have%20a%20comment%20or%20concern%20about%20the%20website(audiocloud.whitehotrobot.com)...'
     },
