@@ -106,7 +106,7 @@
         <div class="logo"></div>
         about whitehot robot
         <div class="smallertext"><br>
-          whitehot robot is an umbrella moniker for the band, art, and suite of free online tools (listed below), which are made by and for artists, with emphasis on music and computer graphics. This project has grown, beginning in 2015 as small collection of audio tracks on youtube, into a repository of public domain artwork, music, and social platforms for artists to to share and demo their work.
+          whitehot robot is an umbrella moniker for the band, art, and suite of free online tools (listed below), which are made by and for artists, with emphasis on music, computer graphics, and literature. This project has grown, beginning in 2015 as small collection of audio tracks on youtube, into a repository of public domain artwork, music, and social platforms for artists to to share and demo their work.
           <br><br>
           Registration is free and all contributions are understood to be available for free download, modification, reproduction and possible inclusion in projects at any user's discretion - on the condition that the spirit of art development remain at the heart of every derivative of artwork submitted here AND that the net effect of any artwork or its derivative is deemed by the community and the administrators (of whitehot robot) to be reasonably positive and healthy to the community as a whole. Obscene, profane, or otherwise inappropriate work may be removed at the administrator's discretion, however this project's primary mission is to always exemplify extreme tolerance and foster artistic open-mindedness, so the removal of any music or artwork will never be done lightly - per this mission statement.<br><br>click the links below to explore...<br><br>
         
@@ -115,6 +115,7 @@
           <a href="https://code.whitehotrobot.com" target="_blank">demos / code with videos</a><br>
           <a href="https://audiocloud.whitehotrobot.com" target="_blank">audiocloud (music library)</a><br>
           <a href="https://hosting.whitehotrobot.com" target="_blank">static page hosting with code playground</a><br>
+          <a href="https://words.whitehotrobot.com" target="_blank">blog / literature</a><br>
         </div>
         </div>
       </div>

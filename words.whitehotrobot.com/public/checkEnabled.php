@@ -12,7 +12,7 @@
 			$row['id'],
 			$row['avatar'],
 			$row['admin'],
-			$row['postsPerPage']
+			$row['wordsPostsPerPage']
 	  ]);
   } else {
     echo json_encode([false,'']);

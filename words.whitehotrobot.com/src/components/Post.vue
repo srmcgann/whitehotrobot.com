@@ -10,7 +10,7 @@
     <div v-if="state.loggedinUserName.toUpperCase() == post.author.toUpperCase() || state.isAdmin" class="postElem" style="display: inline-block;width:490px;float:left;">
       <span style="word-break: keep-all;display: inline-block;">{{post.views + ' view' + (post.views != 1 ? 's' : '')}}</span>
     </div>
-    <div v-else class="postElem" style="width: 400px;text-align: center;margin-top: 10px;margin-left: auto; margin-right: auto;">
+    <div v-else class="postElem" style="min-width: 400px; width: 50%; text-align: center;margin-top: 10px;margin-left: auto; margin-right: auto;">
       <span class="postTitle" v-html="'<span style=\'font-size: .8em;color:#aaa;\'>Title:</span> ' + '&quot;'+post.title+'&quot;'" style="font-size: 26px;font-style:oblique;color: #0f8;word-break: break-word"></span>
       <span style="margin-left: 20px;word-break: keep-all;display: inline-block;">{{post.views + ' view' + (post.views > 1 ? 's' : '')}}</span>
     </div>
@@ -518,9 +518,9 @@ export default {
   watch:{
   },
   mounted(){
-    if(this.state.mode == 'post'){
-      document.getElementsByTagName('html')[0].scroll(0, document.getElementsByTagName('html')[0].clientHeight/3.5)
-    }
+    //if(this.state.mode == 'post'){
+    //  document.getElementsByTagName('html')[0].scroll(0, document.getElementsByTagName('html')[0].clientHeight/3.5)
+   // }
   }
 }
 </script>
@@ -604,8 +604,8 @@ export default {
   background: #622!important;
 }
 .editHTMLsuccess{
-  background: #afe!important;
-  color: #123!important;
+  background: #234!important;
+  color: #ff8!important;
 }
 .editHTMLfailure{
   background: #622!important;
@@ -762,22 +762,17 @@ table{
   background-image: url(https://lookie.jsbot.net/uploads/14MAyj.png);
 }
 .singlePost{
-  position: absolute;
-  top: 47%;
-	margin-top: 250px;
-	margin-bottom: 200px;
-  transform: translate(0, -50%);
+  top: 60px;
+  margin-bottom: 100px;
 }
 .bumpUp{
   margin-top: -25px;
 }
-
 .textareaContainer{
-
 }
 .editHTML{
-  background: #fff;
-  color: #000;
+  background: #012;
+  color: #cc8;
   font-family: courier;
   font-size: 16px;
 }
@@ -796,16 +791,17 @@ table{
   resize: vertical;
   background: #000;
   color: #ff0;
-  max-height: 600px;
   line-height: 1em;
 }
 textarea{
   width: 100%;
   min-height: 200px;
-  max-height: 800px;
-  background: #0116;
+  background: #012;
   resize: vertical;
   border: 1px solid #246a;
   color: #ff0;
+}
+textarea:focus{
+  outline: #4686;
 }
 </style>

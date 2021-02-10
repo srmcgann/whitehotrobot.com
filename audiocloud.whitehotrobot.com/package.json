@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "/var/www/html/audiocloud.whitehotrobot.com/prebuild.sh; vue-cli-service build; /var/www/html/audiocloud.whitehotrobot.com/genlink.sh"
+    "build": "./prebuild.sh; vue-cli-service build; ./genlink.sh; ./push.sh"
   },
   "dependencies": {
     "core-js": "^3.6.5",
