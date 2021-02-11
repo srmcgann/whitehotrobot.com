@@ -678,7 +678,7 @@ export default {
   },
   computed:{
     embedCodeText(){
-      return '<iframe style="transform:scale(.75);width:640px;height:360px;border:none;" src="'+this.state.baseURL+'/embed/'+this.state.decToAlpha(this.track.id)+'"></iframe>'
+      return '<iframe style="transform:scale(.75);width:640px;height:360px;border:none;vertical-align:top;" src="'+this.state.baseURL+'/embed/'+this.state.decToAlpha(this.track.id)+'"></iframe>'
     },
     filteredComments(){
       return this.track.comments.filter((v,i)=>i<this.showComments)
