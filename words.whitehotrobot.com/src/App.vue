@@ -918,14 +918,14 @@ button:focus{
 }
 
 ::-webkit-scrollbar-track {
-  background: #133; 
+  background: #124; 
 }
 ::-webkit-scrollbar-track:hover {
   cursor: pointer!important;
 }
  
 ::-webkit-scrollbar-thumb {
-  background: #366; 
+  background: #148; 
 }
 
 ::-webkit-scrollbar-thumb:hover {

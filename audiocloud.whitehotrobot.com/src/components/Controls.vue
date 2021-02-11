@@ -27,7 +27,7 @@
               <label for="disco" style="margin-left: 20px;">
                 <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
               </label>
-              <select v-if="state.loggedin && state.mode != 'track'" style="font-size: 16px;margin-left: 20px;vertical-align: top;margin-top: 4px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('audiocloudNumTracksPerPage')">
+              <select v-if="state.loggedin && state.mode != 'track'" style="font-size: 16px;margin-left: 20px;vertical-align: top;margin-top: 4px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage"  @change="updateUserPrefs('audiocloudNumTracksPerPage')">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="4">4</option>

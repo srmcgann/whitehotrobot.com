@@ -1,20 +1,36 @@
 <template>
   <div ref="footerBar" class="footerBar" id="footerBar">
     <div class="footerMenu">
-      <button @click="launchWeb()" class="socialButton" title="Code & Demos https://code.whitehotrobot.com">
+      <button @click="launchPage('https://code.whitehotrobot.com')" class="socialButton" title="demos / code  https://code.whitehotrobot.com">
+        <img src="https://lookie.jsbot.net/uploads/1Zt7AV.png" class="socialIcon">
+      </button>
+      <!--
+      <button @click="launchPage('https://audiocloud.whitehotrobot.com')" class="socialButton" title="audiocloud https://audiocloud.whitehotrobot.com">
+        <img src="https://lookie.jsbot.net/uploads/1zROT5.png" class="socialIcon">
+      </button>
+      -->
+      <button @click="launchPage('https://hosting.whitehotrobot.com')" class="socialButton" title="static page hosting https://hosting.whitehotrobot.com">
         <img src="../assets/web.png" class="socialIcon">
+      </button>
+      <button @click="launchPage('https://words.whitehotrobot.com')" class="socialButton" title="blog / literature https://words.whitehotrobot.com">
+        <img src="https://lookie.jsbot.net/uploads/1oHzZO.png" class="socialIcon">
+      </button>
+      <button @click="launchPage('https://whitehotrobot.com')" class="socialButton" title="music videos / playlists https://whitehotrobot.com">
+        <img src="https://lookie.jsbot.net/uploads/cdR9g.png" class="socialIcon">
       </button>
       <!--
       <button @click="launchFacebook()" class="socialButton" title="Open our Facebook Page">
         <img src="../assets/facebook.png" class="socialIcon">
       </button>
       -->
-      <button @click="launchEmail()" class="socialButton" title="Email us!">
+      <button @click="launchEmail()" class="socialButton" title="contact">
         <img src="../assets/email.png" class="socialIcon">
       </button>
-      <button @click="launchAdmin()" class="socialButton" title="Admin Section">
+      <!--
+      <button @click="launchPage('https://whitehotrobot.com/admin')" class="socialButton" title="Admin Section">
         <img src="../assets/admin.png" class="socialIcon">
       </button>
+      -->
     </div>
   </div>
 </template>
@@ -38,8 +54,8 @@ export default {
     launchEmail () {
       location.href = 'mailto:whitehotrobot@gmail.com?subject=I%20come%20from%20the%20Internet!&body=I%20have%20a%20comment%20or%20concern%20about%20the%20website(audiocloud.whitehotrobot.com)...'
     },
-    launchWeb () {
-      window.open('http://code.whitehotrobot.com/', '_blank')
+    launchPage(loc) {
+      window.open(loc, '_blank')
     },
     launchAdmin () {
       window.open('https://whitehotrobot.com/admin/', '_blank')

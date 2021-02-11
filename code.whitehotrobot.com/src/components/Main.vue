@@ -6,7 +6,7 @@
       <div v-if="state.demoDataReceived && state.mode == 'user' && !state.demos.length" class="e404">
         <span style="color:#ff0;font-size: 1.5em;">{{state.viewAuthor}}</span><br>
         has no demos at this time!<br><br>
-        <div v-if="state.mode === 'user' && state.viewAuthor === state.loggedinUserName">
+        <div v-if="state.mode === 'user' && state.viewAuthor.toUpperCase() === state.loggedinUserName.toUpperCase()">
           <button @click="state.createDemo()">create a demo</button>
           <br><br>- or -<br><br>
         </div>
@@ -32,7 +32,7 @@
       </div>
       <div v-else>
         <div v-for="(item, idx) in filteredDemos" :key="item.id">
-          <div class="demoItem" v-if="state.mode === 'all' || (state.mode === 'user' && item.author === state.viewAuthor) || (state.mode ==='single' && item.id === state.viewDemo)">
+          <div class="demoItem" v-if="state.mode === 'all' || (state.mode === 'user' && item.author.toUpperCase() === state.viewAuthor.toUpperCase()) || (state.mode ==='single' && item.id === state.viewDemo)">
 
               <div v-if="item.forkHistory.length" class="forkHistoryCluster">
                 <div
