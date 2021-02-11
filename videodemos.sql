@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 09, 2020 at 05:09 PM
--- Server version: 8.0.21-0ubuntu0.20.04.4
--- PHP Version: 7.3.22-1+ubuntu20.04.1+deb.sury.org+1
+-- Generation Time: Feb 10, 2021 at 05:27 PM
+-- Server version: 8.0.23-0ubuntu0.20.04.1
+-- PHP Version: 7.3.27-1+ubuntu20.04.1+deb.sury.org+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -21,6 +21,81 @@ SET time_zone = "+00:00";
 --
 -- Database: `videodemos`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audiocloudComments`
+--
+
+CREATE TABLE `audiocloudComments` (
+  `id` int NOT NULL,
+  `userID` int NOT NULL,
+  `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trackID` int NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audiocloudPlaylists`
+--
+
+CREATE TABLE `audiocloudPlaylists` (
+  `id` int NOT NULL,
+  `name` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userID` int NOT NULL,
+  `author` varchar(256) NOT NULL,
+  `trackIDs` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audiocloudTracks`
+--
+
+CREATE TABLE `audiocloudTracks` (
+  `id` int NOT NULL,
+  `userID` int NOT NULL,
+  `author` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `trackName` varchar(256) NOT NULL,
+  `playlists` text NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `private` tinyint(1) NOT NULL,
+  `description` text NOT NULL,
+  `audioFile` varchar(2048) NOT NULL,
+  `plays` int NOT NULL,
+  `allowDownload` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `audiocloudTrackViews`
+--
+
+CREATE TABLE `audiocloudTrackViews` (
+  `decIP` bigint NOT NULL,
+  `trackID` int NOT NULL,
+  `time` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `demoComments`
+--
+
+CREATE TABLE `demoComments` (
+  `id` int NOT NULL,
+  `text` text,
+  `demoID` int NOT NULL,
+  `userID` int NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -107,7 +182,12 @@ CREATE TABLE `users` (
   `avatar` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
   `admin` tinyint(1) NOT NULL DEFAULT '0',
   `has_hosting` tinyint(1) NOT NULL DEFAULT '0',
-  `escaped_name` varchar(256) NOT NULL
+  `escaped_name` varchar(256) NOT NULL,
+  `audiocloudNumTracksPerPage` int NOT NULL DEFAULT '6',
+  `audiocloudPlayAll` tinyint(1) NOT NULL DEFAULT '0',
+  `audiocloudShuffle` tinyint(1) NOT NULL DEFAULT '0',
+  `audiocloudDisco` tinyint(1) NOT NULL DEFAULT '0',
+  `wordsPostsPerPage` int NOT NULL DEFAULT '6'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -134,9 +214,79 @@ CREATE TABLE `views` (
   `time` bigint NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `words`
+--
+
+CREATE TABLE `words` (
+  `id` int NOT NULL,
+  `text` text NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `userID` int NOT NULL,
+  `views` int NOT NULL,
+  `author` varchar(256) NOT NULL,
+  `title` varchar(256) NOT NULL,
+  `description` varchar(1024) NOT NULL,
+  `private` tinyint(1) NOT NULL,
+  `allowDownload` tinyint(1) NOT NULL,
+  `tags` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT ''
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wordsComments`
+--
+
+CREATE TABLE `wordsComments` (
+  `id` int NOT NULL,
+  `userID` int NOT NULL,
+  `text` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `postID` int NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `wordsViews`
+--
+
+CREATE TABLE `wordsViews` (
+  `decIP` bigint NOT NULL,
+  `postID` int NOT NULL,
+  `time` bigint NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `audiocloudComments`
+--
+ALTER TABLE `audiocloudComments`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `audiocloudPlaylists`
+--
+ALTER TABLE `audiocloudPlaylists`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `audiocloudTracks`
+--
+ALTER TABLE `audiocloudTracks`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
+-- Indexes for table `demoComments`
+--
+ALTER TABLE `demoComments`
+  ADD UNIQUE KEY `id` (`id`);
 
 --
 -- Indexes for table `items`
@@ -163,8 +313,44 @@ ALTER TABLE `users`
   ADD UNIQUE KEY `id` (`id`);
 
 --
+-- Indexes for table `words`
+--
+ALTER TABLE `words`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `wordsComments`
+--
+ALTER TABLE `wordsComments`
+  ADD UNIQUE KEY `id` (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `audiocloudComments`
+--
+ALTER TABLE `audiocloudComments`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `audiocloudPlaylists`
+--
+ALTER TABLE `audiocloudPlaylists`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `audiocloudTracks`
+--
+ALTER TABLE `audiocloudTracks`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `demoComments`
+--
+ALTER TABLE `demoComments`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -188,6 +374,18 @@ ALTER TABLE `playlists`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `words`
+--
+ALTER TABLE `words`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `wordsComments`
+--
+ALTER TABLE `wordsComments`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 COMMIT;
 
