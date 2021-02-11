@@ -4,7 +4,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
   devServer: {
-    host: 'audiocloud.whitehotrobot.com',
+    host: 'local.audiocloud.whitehotrobot.com',
 	  port:8000,
     publicPath: '/',
   },

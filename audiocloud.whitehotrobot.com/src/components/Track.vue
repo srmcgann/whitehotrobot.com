@@ -1,8 +1,15 @@
 <template>
   <div class="trackContainer"
 	  :ref="'trackContainer' + track.id"
-    :class="{'singleTrack': state.mode=='track'}"
+    :class="{'singleTrack': state.mode=='track', 'embedTrack': state.mode=='embed'}"
   >
+  <div class="embedCode" v-if="showEmbedCode">
+    <div class="embedCodeInner">
+      <div class="embedcodetext" :ref="'embedCodeText' + track.id" :class="{'pulse':pulse}">{{embedCodeText}}</div>
+      <button @click="copyDivToClipboard('embedCodeText' + track.id)" class="embedbutton copytoclipbutton" :class="{'pulse':pulse}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;copy</button>
+      <button @click="showEmbedCode=false" class="embedbutton">close</button>
+    </div>
+  </div>
   <transition name="fadePulse">
 	  <div v-if="showPulse" style="position:absolute; width: 100%; background: #0f0;z-index: -1;margin-left: -10px; margin-top:-10px;border-radius: 10px;" :ref="'pulse' + track.id"></div>
   </transition>
@@ -93,6 +100,16 @@
           >
             download file
           </a>
+          <button
+            v-if="track.allowDownload == 1 || state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin"
+            class="fileLink"
+            :href="'/audio/' + track.audioFile.split('/')[track.audioFile.split('/').length-1]"
+            :download="track.author + ' - ' + track.trackName + track.audioFile.substring(track.audioFile.length-4).toLowerCase()"
+            style="margin-left: 10px; padding-left: 12px; padding-right: 12px;min-width: initial;"
+            @click="showEmbedCode=true"
+          >
+            embed code
+          </button>
         </td>
       </tr>
     </table>
@@ -120,7 +137,7 @@
         </td>
       </tr>
     </table>
-    <div class="audioContainer">
+    <div class="audioContainer" :class="{'embedAudioContainer': state.mode=='embed'}">
       <button
         v-if="!track.playing"
         class="playbutton"
@@ -153,7 +170,7 @@
       <canvas ref="canvas" class="canvas"></canvas>
     </div>
 
-    <div class="commentContainer">
+    <div class="commentContainer" v-if="state.mode!='embed'">
       <div class="commentsHeader" style="background: linear-gradient(90deg, #102f, #1023, #0000);display: inline-block;padding-right: 200px;padding-left: 10px;color:#2f4;margin-bottom: 10px;height: 25px;line-height: 20px;margin-left: -10px;">
         comments
       </div>
@@ -245,6 +262,8 @@ export default {
       showComments: 2,
 			skipRedraw: false,
       moreCommentsVal: 5,
+      pulse: false,
+      showEmbedCode: false,
       x: null,
       B: [],
       P: [],
@@ -265,6 +284,16 @@ export default {
     }
   },
   methods:{
+    copyDivToClipboard(ref) {
+      var range = document.createRange()
+      range.selectNode(this.$refs[ref])
+      window.getSelection().removeAllRanges()
+      window.getSelection().addRange(range)
+      document.execCommand("copy")
+      window.getSelection().removeAllRanges()
+      this.pulse = true
+      setTimeout(()=>this.pulse=false,200)
+    },
     resetTrack(){
       if(this.track.mp3.currentTime < this.track.mp3.duration / 20){
         if(this.skipRedraw)this.B=[],this.Draw(this.skipRedraw=false)
@@ -538,9 +567,8 @@ export default {
         let perc = this.track.mp3.currentTime/this.track.mp3.duration
         x.lineTo(c.width*perc,0)
         x.lineTo(c.width*perc,c.height)
-        x.lineWidth=2
+        x.lineWidth=(2+c.width/400)|0
         x.stroke()
-        x.lineWidth=2
         for(let i=res;i--;){
           let col1
           let col2
@@ -649,6 +677,9 @@ export default {
     }
   },
   computed:{
+    embedCodeText(){
+      return '<iframe style="transform:scale(.75);width:640px;height:360px;border:none;" src="'+this.state.baseURL+'/embed/'+this.state.decToAlpha(this.track.id)+'"></iframe>'
+    },
     filteredComments(){
       return this.track.comments.filter((v,i)=>i<this.showComments)
     },
@@ -716,6 +747,14 @@ export default {
     })
     this.c.width = this.c.clientWidth
     this.c.height = this.c.clientHeight
+    window.addEventListener('resize',()=>{
+      this.c.width = this.c.clientWidth
+      this.c.height = this.c.clientHeight
+      if(this.skipRedraw){
+        this.skipRedraw=false
+        this.Draw()
+      }
+    })
     this.x = this.c.getContext('2d')
     this.t = 0
     
@@ -895,6 +934,9 @@ export default {
   width: calc(100% - 112px);
   height: 102px;
   vertical-align: top;
+}
+.embedAudioContainer{
+  width: calc(100% - 30px);
 }
 .success{
   background: #264!important;
@@ -1078,6 +1120,15 @@ table{
 	margin-bottom: 200px;
   transform: translate(0, -50%);
 }
+.embedTrack{
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0;
+  width: 100%;
+  background: #012;
+  height: calc(100% - 65px);
+}
 .bumpUp{
   margin-top: -25px;
 }
@@ -1090,5 +1141,47 @@ table{
 }
 .fadePulse-enter, .fadePulse-leave-to{
   opacity: 0;
+}
+.embedCode{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: #103c;
+  z-index: 3000;
+}
+.embedCodeInner{
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.embedcodetext{
+   background: #000;
+   width: calc(100% - 40px);
+   text-align: left;
+   word-break: break-all;
+   font-family: courier, arial, tahoma;
+   padding: 20px;
+}
+.copytoclipbutton{
+  background-image: url(https://cantelope.org/clippy.svg);
+  background-position: 5px 4px;
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+}
+.pulse{
+  background-color: #0fcc!important;
+  color: #012;
+}
+.embedbutton{
+  background-color: #18c;
+  color: #cfd;
+  text-shadow: 1px 1px 1px #000;
+  min-width: initial;
+  max-width: initial;
+  width: 100px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div class="main" :class="{'footerPadding': state.mode=='track'}">
     <div v-if="state.search.string==''">
-      <div v-if="state.mode=='track'" class="trackDiv" :class="{'highTop':state.showControls}">
+      <div v-if="state.mode=='track' || state.mode=='embed'" class="trackDiv" :class="{'highTop':state.showControls}">
         <div v-if="state.tracks.length" class="flex">
           <Track v-for="track in state.tracks" :key="track.id" :track="track" :state="state"/>
         </div>

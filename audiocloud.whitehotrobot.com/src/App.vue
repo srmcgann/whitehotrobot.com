@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <Controls :state="state" />
-    <Header :state="state"/>
+    <Controls :state="state" v-if="state.mode !== 'embed'"/>
+    <Header :state="state" v-if="state.mode !== 'embed'"/>
     <Main :state="state"/>
     <UserSettings v-if="state.userSettingsVisible" :state="state"/>
     <LoginPrompt v-if="state.loginPromptVisible" :state="state"/>
@@ -138,6 +138,9 @@ export default {
             this.state.user.audiocloudTracks.map(v=>v.playing=false)
           break
           case 'track':
+            this.state.tracks.map(v=>v.playing=false)
+          break
+          case 'embed':
             this.state.tracks.map(v=>v.playing=false)
           break
           case 'default':
@@ -405,6 +408,11 @@ export default {
             this.state.invalidLoginAttempt = true
           }
           this.getMode()
+          if(this.state.mode=='embed'){
+            this.state.loggedinUserName=''
+            this.state.loggedin=false
+            this.state.isAdmin=false
+          }
         })
       }
     },
@@ -424,6 +432,11 @@ export default {
       let vars = window.location.pathname.split('/').filter(v=>v)
       if(vars.length>0){
         switch(vars[0]){
+          case 'embed':
+            this.state.mode = 'embed'
+            this.state.curPage = (+vars[1])-1
+            this.$nextTick(()=>this.loadTrack(this.alphaToDec(vars[1])))
+            break
           case 'track':
             this.state.mode = 'track'
             this.state.curPage = (+vars[1])-1
@@ -778,6 +791,9 @@ export default {
           case 'track':
             this.state.tracks[0].playing=true
           break
+          case 'embed':
+            this.state.tracks[0].playing=true
+          break
           case 'default':
             if(this.state.landingPage.audiocloudTracks.length) {
               if(curplayId == -1){
@@ -832,6 +848,10 @@ export default {
             if(typeof el != 'undefined') el.playing = !el.playing
           break
           case 'track':
+            el = this.state.tracks.filter(v=>v.id==this.state.curPlayId)[0]
+            if(typeof el != 'undefined') el.playing = !el.playing
+          break
+          case 'embed':
             el = this.state.tracks.filter(v=>v.id==this.state.curPlayId)[0]
             if(typeof el != 'undefined') el.playing = !el.playing
           break
@@ -924,6 +944,9 @@ export default {
           case 'track':
             this.state.tracks[0].playing=true
           break
+          case 'embed':
+            this.state.tracks[0].playing=true
+          break
           case 'default':
             if(this.state.landingPage.audiocloudTracks.length) {
               if(curplayId == -1){
@@ -1011,6 +1034,10 @@ export default {
             this.state.totalPages = +data[1]
             if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
           break
+          case 'embed':
+            this.state.totalPages = +data[1]
+            if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          break
         }
         this.state.loaded = true
         if(this.state.playall) {
@@ -1049,7 +1076,7 @@ export default {
             this.toggleShowControls()
           }
         }
-        if(e.keyCode == 13){
+        if(e.keyCode == 13 && this.state.mode !== 'track' && this.state.mode !== 'embed'){
           if(!document.activeElement.classList.contains('textInput')){
             e.preventDefault()
             e.stopPropagation()
@@ -1111,6 +1138,9 @@ export default {
           case 'track':
             return this.state.tracks.filter(v=>v.playing)
           break
+          case 'embed':
+            return this.state.tracks.filter(v=>v.playing)
+          break
           case 'default':
             return this.state.landingPage.audiocloudTracks.filter(v=>v.playing)
           break
@@ -1132,6 +1162,11 @@ export default {
             return this.filteredUserTracks.filter(v=>v.playing)
           break
           case 'track':
+            //this.state.tracks.map((v, i)=>{v.idx = i})
+            if(this.state.tracks.filter(v=>v.playing).length) this.state.curPlayId = this.state.tracks.filter(v=>v.playing)[0].id
+            return this.state.tracks.filter(v=>v.playing)
+          break
+          case 'embed':
             //this.state.tracks.map((v, i)=>{v.idx = i})
             if(this.state.tracks.filter(v=>v.playing).length) this.state.curPlayId = this.state.tracks.filter(v=>v.playing)[0].id
             return this.state.tracks.filter(v=>v.playing)

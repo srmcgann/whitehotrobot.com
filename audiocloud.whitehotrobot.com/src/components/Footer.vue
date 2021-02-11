@@ -31,6 +31,7 @@
         <img src="../assets/admin.png" class="socialIcon">
       </button>
       -->
+      <div v-if="state.mode=='embed'" class="socialButton infoButton" title="about whitehot robot" @click="launchInfoPage()"></div>
     </div>
   </div>
 </template>
@@ -43,6 +44,15 @@ export default {
     }
   },
   methods: {
+    launchInfoPage(){
+      let a = document.createElement('a')
+      a.setAttribute('href', 'https://whitehotrobot.com/about')
+      a.setAttribute('target', '_blank')
+      a.style.display = 'none'
+      document.body.appendChild(a)
+      a.click()
+      a.parentNode.removeChild(a)
+    },
     /*
     launchFacebook () {
       window.open('https://www.facebook.com/RedwoodFord/', '_blank')
@@ -100,5 +110,19 @@ button{
   min-width: 40px!important;
   max-width: 50px;
   font-family: 'Oxanium';
+}
+.infoButton{
+  width: 40px;
+  height: 40px;
+  top: 10px;
+  display: inline-block;
+  margin-bottom: -3px;
+  margin-left:-5px;
+  margin-right: 5px;
+  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-repeat: no-repeat;
+  background-size: 40px 40px;
+  background-position: center center;
+  cursor: pointer;
 }
 </style>
