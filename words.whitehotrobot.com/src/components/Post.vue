@@ -33,6 +33,7 @@
           <div v-if="state.loggedinUserName.toUpperCase() == post.author.toUpperCase() || state.isAdmin" class="postElem">
             <input
                maxlength="256"
+              placeholder="description"
               :class="{'success':updated['description']==1,'failure':updated['description']==-1}"
               class="textInput" 
               @input="updatePostItem(post.id, 'description')" type="text" v-model="post.description"
@@ -49,6 +50,7 @@
           <div v-if="state.loggedinUserName.toUpperCase() == post.author.toUpperCase() || state.isAdmin" class="postElem">
             <input
                maxlength="256"
+              placeholder="tags"
               :class="{'success':updated['tags']==1,'failure':updated['tags']==-1}"
               class="textInput" 
               @input="updatePostItem(post.id, 'tags')" type="text" v-model="post.tags"
@@ -168,6 +170,7 @@
               <input
                 maxlength="1024"
                 type="text"
+                placeholder="say something..."
                 :ref="'comment' + comment.id"
                 class="commentInput textInput"
                 style="width: calc(100% - 100px);"
