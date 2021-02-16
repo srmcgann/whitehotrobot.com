@@ -93,6 +93,7 @@ export default {
   text-align: center;
   margin-top: 60px;
   padding-bottom: 60px;
+  position: relative;
 }
 .flex{
   display: flex;

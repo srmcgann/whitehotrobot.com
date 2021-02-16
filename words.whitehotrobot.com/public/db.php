@@ -3,7 +3,7 @@
   $db_pass="";
   $db_host="localhost";
   $db="videodemos";
-  $maxResultsPerPage = 6;
+  $maxResultsPerPage = 2;
   
   
 	$local = false;

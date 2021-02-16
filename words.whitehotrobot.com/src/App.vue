@@ -817,6 +817,7 @@ html{
   scroll-behavior: smooth;
 }
 body{
+  overflow: hidden;
   margin: 0;
   overflow-X: hidden;
   background: #002;
