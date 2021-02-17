@@ -300,28 +300,13 @@ export default {
       }else{
         switch(this.state.mode){
           case 'default':
-            //if(item == 'text' && !this.state.landingPage.posts.filter(v=>v.id==postID)[0]['editHTML']){
-              //let el = this.$refs['contenteditable' + postID]
-              //newItemVal = el.innerHTML
-            //}else{
-              newItemVal = this.state.landingPage.posts.filter(v=>v.id==postID)[0][item]
-            //}
+            newItemVal = this.state.landingPage.posts.filter(v=>v.id==postID)[0][item]
             break
           case 'post':
-            //if(item == 'text' && !this.state.posts.filter(v=>v.id==postID)[0]['editHTML']){
-              //let el = this.$refs['contenteditable' + postID]
-              //newItemVal = el.innerHTML
-            //}else{
-              newItemVal = this.state.posts.filter(v=>v.id==postID)[0][item]
-            //}
+            newItemVal = this.state.posts.filter(v=>v.id==postID)[0][item]
             break
           case 'u':
-            //if(item == 'text' && !this.state.user.posts.filter(v=>v.id==postID)[0]['editHTML']){
-              //let el = this.$refs['contenteditable' + postID]
-              //newItemVal = el.innerHTML
-            //}else{
-              newItemVal = this.state.user.posts.filter(v=>v.id==postID)[0][item]
-            //}
+            newItemVal = this.state.user.posts.filter(v=>v.id==postID)[0][item]
             break
         }
       }
