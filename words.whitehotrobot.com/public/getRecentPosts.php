@@ -1,5 +1,6 @@
 <?
-  require('db.php');
+  require_once('db.php');
+  require_once('getBackups.php');
   $data = json_decode(file_get_contents('php://input'));
   $page = mysqli_real_escape_string($link, $data->{'page'});
   $overrideMaxResults = mysqli_real_escape_string($link, $data->{'maxResultsPerPage'});
@@ -20,6 +21,7 @@
   }
   forEach($posts as &$post){
 		$postID = $post['id'];
+    $post['backups'] = getBackups($postID);
     $sql = 'SELECT * FROM wordsComments WHERE postID = ' . $postID;
     $res2 = mysqli_query($link, $sql);
     $post['comments'] = [];

@@ -2,13 +2,31 @@
   <div class="postContainer"
 	  :ref="'postContainer' + post.id"
     :class="{'singlePost': state.mode=='post'}"
-  >
+  >  
     <button v-if="state.loggedinUserName.toUpperCase() == post.author.toUpperCase() || state.isAdmin" class="deletePostButton" @click="deletePost(post)">
     </button>
     <div class="avatar" :style="'float: left;max-width: 100px;background-image:url('+state.getAvatar(post.userID)+');width:100px;height:100px;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
     <a :href="state.baseURL + '/u/' + post.author" target="_blank" class="link" v-html="post.author" style="float: left;"></a>
     <div v-if="state.loggedinUserName.toUpperCase() == post.author.toUpperCase() || state.isAdmin" class="postElem" style="display: inline-block;width:490px;float:left;">
       <span style="word-break: keep-all;display: inline-block;">{{post.views + ' view' + (post.views != 1 ? 's' : '')}}</span>
+      <button class="revertButton" v-html="showRevert ? 'close':'revert changes'" @click="showRevert = !showRevert"></button>
+      <div v-if="showRevert" class="revertMenu">
+        <div style="font-size: 18px;color: #ccc; background: #012;padding: 5px; margin-bottom: 10px;">snapshots</div>
+        <div v-if="!post.backups.length" style="color:#ace; font-size: 14px;text-align: left;padding: 10px;">
+          no backups yet...<br><br>
+          backups happen at the following intervals:<br><br>
+          &bull; hourly<br>
+          &bull; daily<br>
+          &bull; weekly<br>
+          &bull; monthly<br>
+          &bull; yearly<br>
+        </div>
+        <div v-else>
+          <div v-for="backup in post.backups">
+              <button @click="revertTo(backup, post.id)" class="revertInnerButton" v-html="backup.backup_date"></button>
+          </div>
+        </div>
+      </div>
     </div>
     <div v-else class="postElem" style="min-width: 400px; width: 50%; text-align: center;margin-top: 10px;margin-left: auto; margin-right: auto;">
       <span class="postTitle" v-html="'<span style=\'font-size: .8em;color:#aaa;\'>Title:</span> ' + '&quot;'+post.title+'&quot;'" style="font-size: 26px;font-style:oblique;color: #0f8;word-break: break-word"></span>
@@ -123,7 +141,7 @@
     <div class="textareaContainer" type="text">
       <textarea
         v-if="post.editHTML"
-        @input="updatePostItem(post.id, 'text')" 
+        @input="updatePostItem(post.id, 'text')"
         v-model="post.text"
         :class="{'textareasuccess':updated['text']==1 && !post.editHTML,
                  'failure':updated['text']==-1 && !post.editHTML,
@@ -238,6 +256,7 @@ export default {
   props: [ 'state', 'post' ],
   data(){
     return {
+      showRevert: false,
       showComments: 3,
       moreCommentsVal: 3,
       updated:{
@@ -250,6 +269,71 @@ export default {
     }
   },
   methods:{
+    updatePostItem(postID, item){
+      let newItemVal
+      if(this.state.search.string){
+        newItemVal = this.state.search.posts.filter(v=>v.id==postID)[0][item]
+      }else{
+        switch(this.state.mode){
+          case 'default':
+            if(item == 'text' && !this.state.landingPage.posts.filter(v=>v.id==postID)[0]['editHTML']){
+              let el = this.$refs['contenteditable' + postID]
+              newItemVal = el.innerHTML
+            }else{
+              newItemVal = this.state.landingPage.posts.filter(v=>v.id==postID)[0][item]
+            }
+            break
+          case 'post':
+            if(item == 'text' && !this.state.posts.filter(v=>v.id==postID)[0]['editHTML']){
+              let el = this.$refs['contenteditable' + postID]
+              newItemVal = el.innerHTML
+            }else{
+              newItemVal = this.state.posts.filter(v=>v.id==postID)[0][item]
+            }
+            break
+          case 'u':
+            if(item == 'text' && !this.state.user.posts.filter(v=>v.id==postID)[0]['editHTML']){
+              let el = this.$refs['contenteditable' + postID]
+              newItemVal = el.innerHTML
+            }else{
+              newItemVal = this.state.user.posts.filter(v=>v.id==postID)[0][item]
+            }
+            break
+        }
+      }
+      if(item == 'private') newItemVal = !newItemVal ? 1 : 0
+      if(item == 'allowDownload') newItemVal = !newItemVal ? 1 : 0
+      let sendData = {
+        userName: this.state.loggedinUserName,
+        item,
+        newItemVal,
+        passhash: this.state.passhash,
+        postID: postID
+      }
+      fetch(this.state.baseURL + '/updatePostItem.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data[0]){
+          this.updated[item] = 1
+          setTimeout(()=>this.updated[item] = 0, 1000)
+        } else {
+          this.updated[item] = -1
+          setTimeout(()=>this.updated[item] = 0, 1000)
+        }
+      })
+    },
+    revertTo(backup, postID){
+      if(confirm("Are you SURE you want to revert to this backup?\n\nThis will replace all of this post's data with the data from this backup...\n\n>>> " + backup.backup_date + " <<<\n Including: text, title, description, tags, and comments...\n\n this is IRREVERSIBLE!!!")){
+        this.state.loadPostFromBackup(this.post, backup.Database, this.$refs['contenteditable' + postID])
+        this.showRevert = false
+      }
+    },
     incrComments(){
       this.showComments += this.moreCommentsVal
     },
@@ -434,65 +518,6 @@ export default {
         post.text = this.$refs['contenteditable'+ postID].innerHTML
       }
     },
-    updatePostItem(postID, item){
-      let newItemVal
-      if(this.state.search.string){
-        newItemVal = this.state.search.posts.filter(v=>v.id==postID)[0][item]
-      }else{
-        switch(this.state.mode){
-          case 'default':
-            if(item == 'text' && !this.state.landingPage.posts.filter(v=>v.id==postID)[0]['editHTML']){
-              let el = this.$refs['contenteditable' + postID]
-              newItemVal = el.innerHTML
-            }else{
-              newItemVal = this.state.landingPage.posts.filter(v=>v.id==postID)[0][item]
-            }
-            break
-          case 'post':
-            if(item == 'text' && !this.state.posts.filter(v=>v.id==postID)[0]['editHTML']){
-              let el = this.$refs['contenteditable' + postID]
-              newItemVal = el.innerHTML
-            }else{
-              newItemVal = this.state.posts.filter(v=>v.id==postID)[0][item]
-            }
-            break
-          case 'u':
-            if(item == 'text' && !this.state.user.posts.filter(v=>v.id==postID)[0]['editHTML']){
-              let el = this.$refs['contenteditable' + postID]
-              newItemVal = el.innerHTML
-            }else{
-              newItemVal = this.state.user.posts.filter(v=>v.id==postID)[0][item]
-            }
-            break
-        }
-      }
-      if(item == 'private') newItemVal = !newItemVal ? 1 : 0
-      if(item == 'allowDownload') newItemVal = !newItemVal ? 1 : 0
-      let sendData = {
-        userName: this.state.loggedinUserName,
-        item,
-        newItemVal,
-        passhash: this.state.passhash,
-        postID: postID
-      }
-      fetch(this.state.baseURL + '/updatePostItem.php',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sendData),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data[0]){
-          this.updated[item] = 1
-          setTimeout(()=>this.updated[item] = 0, 1000)
-        } else {
-          this.updated[item] = -1
-          setTimeout(()=>this.updated[item] = 0, 1000)
-        }
-      })
-    },
     formattedDate(d){
       let M=['January','February','March','April','May','June','July','August','September','October','November','December']
       var l=new Date(d)
@@ -519,6 +544,11 @@ export default {
     }
   },
   watch:{
+    'state.closeMenus'(val){
+      if(val){
+       this.$nextTick(()=>this.showRevert = false)
+      }
+    }
   },
   mounted(){
     //if(this.state.mode == 'post'){
@@ -806,5 +836,28 @@ textarea{
 }
 textarea:focus{
   outline: #4686;
+}
+.revertButton{
+  display: inline-block;
+  font-size: 18px;
+  background: #804;
+  color: #fcc;
+}
+.revertMenu{
+  position: absolute;
+  width: 200px;
+  margin-top:-10px;
+  margin-left: 215px;
+  background: #135e;
+  z-index: 100;
+}
+.revertInnerButton{
+  padding: 3px;
+  font-size: 14px;
+  background: #288;
+  color: #8ff;
+  text-shadow: 1px 1px 1px #004;
+  margin:0;
+  margin-bottom: 10px;
 }
 </style>

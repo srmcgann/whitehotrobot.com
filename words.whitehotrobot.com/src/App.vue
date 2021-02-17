@@ -53,8 +53,10 @@ export default {
         },
         showControlsToggleTimer: 0,
         loggedin: false,
+        updatePostItem: null,
         totalUserPages: 0,
         totalPages: 0,
+        loadPostFromBackup: null,
         showUploadModal: false,
         toggleLogin: null,
 				maxResultsPerPage: 0,
@@ -86,6 +88,7 @@ export default {
         lastPage: null,
         regpassword: '',
         preload: 2,
+        closeMenus: 0,
         decToAlpha: null,
         alphaToDec: null,
         showRegister: false,
@@ -252,6 +255,93 @@ export default {
         this.state.loaded = true
       })
     },
+    loadPostFromBackup(post, database, el){
+      let sendData = {
+        userName: this.state.loggedinUserName,
+        passhash: this.state.passhash,
+        postID: post.id,
+        database
+      }
+      fetch(this.state.baseURL + '/loadBackup.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        data.private = !!(+data.private)
+        data.editHTML = false
+				this.fetchUserData(data.userID)
+        data.comments = data.comments.map(q=>{
+          q.updated = false
+          q.editing = false
+          this.fetchUserData(q.userID)
+          return q
+        })
+        data.allowDownload = !!(+data.allowDownload)
+        switch(this.state.mode){
+          case 'u':
+          break
+          case 'post':
+          break
+          default:
+          break
+        }
+        for (const [key, value] of Object.entries(post)) {
+          post[key] = data[key]
+          this.updatePostItem(post.id, key)
+        }
+      })
+    },
+    updatePostItem(postID, item){
+      let newItemVal
+      if(this.state.search.string){
+        newItemVal = this.state.search.posts.filter(v=>v.id==postID)[0][item]
+      }else{
+        switch(this.state.mode){
+          case 'default':
+            //if(item == 'text' && !this.state.landingPage.posts.filter(v=>v.id==postID)[0]['editHTML']){
+              //let el = this.$refs['contenteditable' + postID]
+              //newItemVal = el.innerHTML
+            //}else{
+              newItemVal = this.state.landingPage.posts.filter(v=>v.id==postID)[0][item]
+            //}
+            break
+          case 'post':
+            //if(item == 'text' && !this.state.posts.filter(v=>v.id==postID)[0]['editHTML']){
+              //let el = this.$refs['contenteditable' + postID]
+              //newItemVal = el.innerHTML
+            //}else{
+              newItemVal = this.state.posts.filter(v=>v.id==postID)[0][item]
+            //}
+            break
+          case 'u':
+            //if(item == 'text' && !this.state.user.posts.filter(v=>v.id==postID)[0]['editHTML']){
+              //let el = this.$refs['contenteditable' + postID]
+              //newItemVal = el.innerHTML
+            //}else{
+              newItemVal = this.state.user.posts.filter(v=>v.id==postID)[0][item]
+            //}
+            break
+        }
+      }
+      if(item == 'private') newItemVal = !newItemVal ? 1 : 0
+      if(item == 'allowDownload') newItemVal = !newItemVal ? 1 : 0
+      let sendData = {
+        userName: this.state.loggedinUserName,
+        item,
+        newItemVal,
+        passhash: this.state.passhash,
+        postID: postID
+      }
+      fetch(this.state.baseURL + '/updatePostItem.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+    },
     loadPost(postID){
       this.state.curPost = postID
       let sendData = {
@@ -389,9 +479,6 @@ export default {
             if(vars[2]){
               this.state.search.string = decodeURIComponent(vars[2])
             }
-            break
-          case 'playlist':
-            this.state.mode = 'playlist'
             break
           case 'u':
             if(!vars[1]) window.location.href = window.location.origin
@@ -710,6 +797,13 @@ export default {
 			}
     },
     loadHotKeys(){
+      window.addEventListener('click',e=>{
+        let close = true
+        e.path.forEach(v=>{
+          if(v.className && (v.className.indexOf('revertMenu')!==-1 || v.className.indexOf('revertButton')!==-1)) close = false
+        })
+        if(close) this.state.closeMenus++
+      })
       window.addEventListener('keydown',(e)=>{
         if(e.keyCode == 27){
           if(this.state.showControlsToggleTimer < (new Date()).getTime()){
@@ -751,9 +845,11 @@ export default {
     },1/60*1000|0)
 		this.state.userAgent = navigator.userAgent
     this.state.toggleShowControls = this.toggleShowControls
+    this.state.loadPostFromBackup = this.loadPostFromBackup
     this.state.filteredUserPosts = this.filteredUserPosts
     this.state.showUserSettings = this.showUserSettings
     this.state.showLoginPrompt = this.showLoginPrompt
+    this.state.updatePostItem = this.updatePostItem
     this.state.incrementViews = this.incrementViews
     this.state.openFullscreen = this.openFullscreen
     this.state.fetchUserData = this.fetchUserData

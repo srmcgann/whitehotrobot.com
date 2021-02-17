@@ -1,5 +1,6 @@
 <?
-  require('db.php');
+  require_once('db.php');
+  require_once('getBackups.php');
   $data = json_decode(file_get_contents('php://input'));
   $string = mysqli_real_escape_string($link, $data->{'string'});
   $loggedinUserName = mysqli_real_escape_string($link, $data->{'loggedinUserName'});
@@ -104,6 +105,11 @@
 	for($i = 0; $i < mysqli_num_rows($res); ++$i){
 		$posts[] = mysqli_fetch_assoc($res);
   }
+
+  foreach($posts as &$post){
+    $post['backups'] = getBackups($post['id']);
+  }
+
   forEach($posts as &$post){
 		$postID = $post['id'];
     $sql = 'SELECT * FROM wordsComments WHERE postID = ' . $postID;
@@ -113,6 +119,9 @@
       $post['comments'][] = mysqli_fetch_assoc($res);
     }
   }
-	echo json_encode([$posts, $totalPages, $page, $totalRecords, $sql1]);
+  
+  
+  
+	echo json_encode([$posts, $totalPages, $page, $totalRecords]);
 ?>
 

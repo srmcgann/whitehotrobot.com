@@ -6,7 +6,7 @@
   $maxResultsPerPage = 2;
   
   
-	$local = false;
+	$local = true;
 	if($local){
 		$baseURL='local.words.whitehotrobot.com';
     $baseAssetsURL = 'http://local.assets.whitehotrobot.com';

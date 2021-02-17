@@ -1,5 +1,6 @@
 <?
-  require('db.php');
+  require_once('db.php');
+  require_once('getBackups.php');
   $data = json_decode(file_get_contents('php://input'));
   $name = mysqli_real_escape_string($link, $data->{'name'});
   $page = mysqli_real_escape_string($link, $data->{'page'});
@@ -8,7 +9,7 @@
   $overrideMaxResults = mysqli_real_escape_string($link, $data->{'maxResultsPerPage'});
   if($overrideMaxResults) $maxResultsPerPage = $overrideMaxResults;
 
-$admin = false;
+  $admin = false;
 
   $start = $maxResultsPerPage * $page;
 
@@ -57,6 +58,7 @@ $admin = false;
   	}
     forEach($posts as &$post){
       $postID = $post['id'];
+      $post['backups'] = getBackups($postID);
       $sql = 'SELECT * FROM wordsComments WHERE postID = ' . $postID;
       $res2 = mysqli_query($link, $sql);
       $post['comments'] = [];
@@ -68,6 +70,6 @@ $admin = false;
   } else {
     $ret = '';
 	}
-	$ret['loggedinUserData']=$sql1;
+	//$ret['loggedinUserData']=$sql1;
 	echo json_encode([$ret, $totalPages]);
 ?>
