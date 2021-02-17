@@ -255,7 +255,7 @@ export default {
         this.state.loaded = true
       })
     },
-    loadPostFromBackup(post, database, el){
+    loadPostFromBackup(post, database){
       let sendData = {
         userName: this.state.loggedinUserName,
         passhash: this.state.passhash,
