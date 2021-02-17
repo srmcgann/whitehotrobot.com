@@ -14,21 +14,23 @@
       if(substr($db, 0, strlen($targetDB)) == $targetDB && strlen($db) > strlen($targetDB)){
         $sql = 'USE ' . $db . ';';
         mysqli_query($link, $sql);
-        $sql = 'SELECT * FROM ' . $targetTable . ' WHERE id = ' . $targetID . ' ORDER BY id;';
+        $sql = 'SELECT * FROM ' . $targetTable . ' WHERE id = ' . $targetID . ' ORDER BY id DESC;';
         if(($res2 = mysqli_query($link, $sql)) && mysqli_num_rows($res2)){
           $ar = mysqli_fetch_assoc($res2);
           $ar['Database'] = $db;
           $db_timestamp = explode('_', $db)[sizeof(explode('_', $db))-1];
-          $ar['backup_date'] = date('M d Y, H:i', $db_timestamp);
-          $add = true;
-          foreach($backups as $backup){
-            if($backup['text'] == $ar['text'] &&
-               $backup['title'] == $ar['title'] &&
-               $backup['description'] == $ar['description'] &&
-               $backup['tags'] == $ar['tags']) $add = false;
-          }
-          if($add){
-            $backups[]=$ar;
+          if($db_timestamp){
+            $ar['backup_date'] = date('M d Y, H:i', $db_timestamp) . ' PST';
+            $add = true;
+            foreach($backups as $backup){
+              if($backup['text'] == $ar['text'] &&
+                 $backup['title'] == $ar['title'] &&
+                 $backup['description'] == $ar['description'] &&
+                 $backup['tags'] == $ar['tags']) $add = false;
+            }
+            if($add){
+              $backups[]=$ar;
+            }
           }
         }
       }

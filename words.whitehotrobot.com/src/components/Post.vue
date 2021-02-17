@@ -15,7 +15,7 @@
         <div v-if="!post.backups.length" style="color:#ace; font-size: 14px;text-align: left;padding: 10px;">
           no backups yet...<br><br>
           backups happen at the following intervals:<br><br>
-          &bull; hourly<br>
+          &bull; half-hourly<br>
           &bull; daily<br>
           &bull; weekly<br>
           &bull; monthly<br>
