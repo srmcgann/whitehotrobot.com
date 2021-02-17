@@ -279,14 +279,6 @@ export default {
           return q
         })
         data.allowDownload = !!(+data.allowDownload)
-        switch(this.state.mode){
-          case 'u':
-          break
-          case 'post':
-          break
-          default:
-          break
-        }
         for (const [key, value] of Object.entries(post)) {
           post[key] = data[key]
           this.updatePostItem(post.id, key)
