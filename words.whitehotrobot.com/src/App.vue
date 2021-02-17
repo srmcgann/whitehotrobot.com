@@ -799,7 +799,8 @@ export default {
     loadHotKeys(){
       window.addEventListener('click',e=>{
         let close = true
-        e.path.forEach(v=>{
+        let path = e.path || (e.composedPath && e.composedPath())
+        path.forEach(v=>{
           if(v.className && (v.className.indexOf('revertMenu')!==-1 || v.className.indexOf('revertButton')!==-1)) close = false
         })
         if(close) this.state.closeMenus++
