@@ -66,7 +66,7 @@ export default {
         decToAlpha: null,
         alphaToDec: null,
         incrememtViews: null,
-        showControls: true,
+        showControls: false,
         toggleShowControls: null,
         logout: null,
         login: null,
