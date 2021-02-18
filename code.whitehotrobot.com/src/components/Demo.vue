@@ -23,7 +23,7 @@
             <div class="demoHeaderContainer"
               style="background: #000b;border: 1px solid #4566;padding-top: 50px;max-width: 500px; margin-left: auto; margin-right: auto;"
             >
-              <img v-if="demo.videoLink" :src="vidThumb(demo)" width=300 style="margin-right: 10px;border: 1px solid #4566;margin-bottom: 20px;"><br>
+              <img v-if="demo.videoLink" :src="vidThumb" width=300 style="margin-right: 10px;border: 1px solid #4566;margin-bottom: 20px;"><br>
               <demoHeader :state="state" :thisdemo="[demo]"  :demoid="demo.id" :forkhistoryview="1"/>
             </div>
 
@@ -282,14 +282,6 @@ export default {
     }
   },
   methods:{
-    vidThumb(item){
-			let link = this.demo.videoLink
-			if(link.substring(link.length-3).toUpperCase() === 'MP4'){
-				return item.videoIframeURL
-			} else {
-        return '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg'
-			}
-    },
     toggleShowForkHistory(item){
       if(item.showForkHistory){
         item.showForkHistory = false
@@ -583,6 +575,15 @@ export default {
     }
   },
   computed:{
+    vidThumb(){
+      let item = this.demo
+			let link = this.demo.videoLink
+			if(link.substring(link.length-3).toUpperCase() === 'MP4'){
+				this.$nextTick(()=>return item.videoIframeURL)
+			} else {
+        return this.$nextTick(()=>'//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg')
+			}
+    },
     filteredComments(){
       return this.demo.comments.filter((v,i)=>i<this.showComments)
     },

@@ -30,8 +30,8 @@ export default {
   data(){
     return {
       state: {
-        baseURL: 'https://code.whitehotrobot.com',
-				baseDemoURL: 'https://demo.whitehotrobot.com',
+        baseURL: 'http://local.code.whitehotrobot.com',
+				baseDemoURL: 'http://local.demo.whitehotrobot.com',
 				rootDomain: 'whitehotrobot.com',
         demos: [],
         loggedin: false,
