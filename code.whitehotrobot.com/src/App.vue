@@ -189,7 +189,6 @@ export default {
         .then(res => res.json())
         .then(data => {
   				if(data) {
-            console.log(data)
 						item.videoIframeURL = data
 					} else {
 						item.videoIframeURL = ''

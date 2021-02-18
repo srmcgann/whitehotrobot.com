@@ -35,6 +35,8 @@
         }
       }
     }
+    $sql = 'USE ' . $targetDB;
+    mysqli_query($link, $sql);
     return $backups;
   }
 ?>
