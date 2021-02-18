@@ -116,7 +116,7 @@ export default {
   },
   methods:{
 		fetchUserData(id){
-			if(typeof this.state.userData[id] == 'undefined'){
+			if(1||typeof this.state.userData[id] == 'undefined'){
         let sendData = {userID: id}
         fetch(this.state.baseURL + '/fetchUserData.php',{
           method: 'POST',
@@ -129,6 +129,10 @@ export default {
         .then(data => {
           if(data) {
             this.state.userData[id] = data
+            this.state.userInfo[id] = {}
+            this.state.userInfo[id].name = data.name
+            this.state.userInfo[id].avatar = data.avatar
+            this.state.userInfo[id].isAdmin = data.isAdmin
           }
         })
 			}
@@ -544,24 +548,9 @@ export default {
             v.play = this.state.autoplay
             v.show = true
             this.incrementViews(v.id)
+            this.fetchUserData(v.userID)
           })
           this.state.inView = Array(this.state.demos.length).fill().map(v=>false)
-          this.state.demos.map(v=>{
-            if(typeof this.state.userInfo[v.userID] == 'undefined'){
-              let sendData = {userID: v.userID}
-              fetch(this.state.baseURL + '/fetchUserData.php',{
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(sendData),
-              })
-              .then(res => res.json())
-              .then(data => {
-                this.state.userInfo[v.userID] = data
-              })
-            }
-          })
         }else{
           console.log('404')
           this.state.error404 = true
