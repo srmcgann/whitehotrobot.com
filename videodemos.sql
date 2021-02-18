@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Feb 10, 2021 at 05:27 PM
+-- Generation Time: Feb 18, 2021 at 08:37 AM
 -- Server version: 8.0.23-0ubuntu0.20.04.1
 -- PHP Version: 7.3.27-1+ubuntu20.04.1+deb.sury.org+1
 
@@ -116,7 +116,8 @@ CREATE TABLE `items` (
   `forkHistory` text NOT NULL,
   `views` int NOT NULL DEFAULT '0',
   `videoThumb` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT '',
-  `videoViews` int NOT NULL DEFAULT '0'
+  `videoViews` int NOT NULL DEFAULT '0',
+  `private` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -187,7 +188,8 @@ CREATE TABLE `users` (
   `audiocloudPlayAll` tinyint(1) NOT NULL DEFAULT '0',
   `audiocloudShuffle` tinyint(1) NOT NULL DEFAULT '0',
   `audiocloudDisco` tinyint(1) NOT NULL DEFAULT '0',
-  `wordsPostsPerPage` int NOT NULL DEFAULT '6'
+  `wordsPostsPerPage` int NOT NULL DEFAULT '6',
+  `demoPostsPerPage` int NOT NULL DEFAULT '6'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
