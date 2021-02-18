@@ -30,7 +30,7 @@ export default {
   data(){
     return {
       state: {
-        baseURL: 'httpis://code.whitehotrobot.com',
+        baseURL: 'https://code.whitehotrobot.com',
 				baseDemoURL: 'https://demo.whitehotrobot.com',
 				rootDomain: 'whitehotrobot.com',
         demos: [],
@@ -417,10 +417,12 @@ export default {
       }).then(res=>res.json()).then(data=>{
         this.state.demoDataReceived = true
         if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
-          v.updated = {}
-          for (const [key, value] of Object.entries(data[0].demos)) {
-            v.updated[key]=0
-          }
+          this.state.user.demos.map(v=>{
+            v.updated = {}
+            for (const [key, value] of Object.entries(data[0].demos)) {
+              v.updated[key]=0
+            }
+          })
           data[0].demos = this.state.user.demos
         }else{
           data[0].demos.map(v=>{
