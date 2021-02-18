@@ -110,7 +110,7 @@
              >delete demo</button>
              
             <iframe
-              :src="state.inView[idx] && demo.play ? state.baseDemoURL + '/?demoID=' + demo.id + '&v=' + iteration : ''"
+              :src="state.inView[idx] && demo.play ? state.baseDemoURL + '/?demoID=' + demo.id + '&v=' + demo.iteration : ''"
               sandbox="allow-same-origin allow-scripts"
               allow="autoplay *"
               class="demoIframe"
@@ -278,7 +278,6 @@ export default {
       spacers: [],
       e: [],
       cols: 0,
-      iteration: 0
     }
   },
   methods:{
@@ -364,6 +363,7 @@ export default {
         .then(data => {
           if(data[0]){
             this.updated[item] = 1
+            this.demo.iteration++
             setTimeout(()=>this.updated[item] = 0, 1000)
           } else {
             this.updated[item] = -1

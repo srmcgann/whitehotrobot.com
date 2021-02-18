@@ -256,7 +256,7 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
-        data[0] = data[0].map(v=>{
+        data[0].map(v=>{
           v.updated = {}
           for (const [key, value] of Object.entries(v)) {
             v.updated[key]=0
@@ -272,6 +272,7 @@ export default {
             this.state.fetchUserData(q.userID)
             return q
           })
+          v.iteration = 0
           this.extractEmbedURL(v)
           return v
         })
@@ -417,9 +418,6 @@ export default {
         this.state.demoDataReceived = true
         if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
           data[0].demos = this.state.user.demos
-          data[0].map(v=>{
-            this.extractEmbedURL(v)
-          })
         }else{
           data[0].demos.map(v=>{
             v.updated = {}
@@ -428,6 +426,7 @@ export default {
             }            
             if(this.state.mode != 'default') this.incrementViews(v.id)
             v.editHTML = false
+            v.iteration = 0
             v.private = !!(+v.private)
             v.allowDownload = !!(+v.allowDownload)
             v.comments = v.comments.map(q=>{
@@ -527,6 +526,7 @@ export default {
             for (const [key, value] of Object.entries(v)) {
               v.updated[key]=0
             }
+            v.iteration = 0
             this.extractEmbedURL(v)
             v.comments = v.comments.map(q=>{
               q.updated = false
@@ -599,6 +599,7 @@ export default {
           this.incrementViews(v.id)
 					this.loadUserData(v.author)
           v.videoPlaying = false
+          v.iteration = 0
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
@@ -769,6 +770,7 @@ export default {
             this.updateDemoItem(demo, key)
           }
         }
+        demo.iteration = 0
         this.state.extractEmbedURL(demo)
         this.state.closeMenus++
       })
