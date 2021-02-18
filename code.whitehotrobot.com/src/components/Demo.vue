@@ -580,7 +580,7 @@ export default {
       let item = this.demo
 			let link = this.demo.videoLink
 			if(link.substring(link.length-3).toUpperCase() === 'MP4'){
-				return item.videoIframeURL
+				return this.demo.videoIframeURL+'?'+this.iteration
 			} else {
         return '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg'
 			}
@@ -602,10 +602,10 @@ export default {
   mounted(){
     setInterval(()=>{
       if(!this.refreshedVideoIframeURL){
-        this.refreshedVideoIframeURL = true
+        //this.refreshedVideoIframeURL = true
         this.iteration++
       }
-    })
+    }, 1000)
     //if(this.state.mode == 'single'){
     //  document.getElementsByTagName('html')[0].scroll(0, document.getElementsByTagName('html')[0].clientHeight/3.5)
    // }
