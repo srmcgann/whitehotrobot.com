@@ -1,23 +1,47 @@
 <template>
   <div class="main">
-    <Controls :state="state"/>
-    <Header :state="state"/>
-    <div class="demoContainer" :class="{'highTop':!state.showControls}">
-      <div v-if="state.demoDataReceived && state.mode == 'user' && !state.demos.length" class="e404">
-        <span style="color:#ff0;font-size: 1.5em;">{{state.viewAuthor}}</span><br>
-        has no demos at this time!<br><br>
-        <div v-if="state.mode === 'user' && state.viewAuthor.toUpperCase() === state.loggedinUserName.toUpperCase()">
-          <button @click="state.createDemo()">create a demo</button>
-          <br><br>- or -<br><br>
+    <div v-if="state.search.string==''">
+      <div v-if="state.mode=='user' && state.loaded" class="demoDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.user.demos.length" class="demoDivInner">
+          <Demo v-for="(demo, idx) in state.user.demos" :key="demo.id" :demo="demo" :idx='idx' :state="state"/>
         </div>
-        <button @click="state.goHome()">home page</button>
+        <div v-else class="e404 demoDivInner">
+          <span style="color:#ff0;font-size: 1.5em;">{{state.viewAuthor}}</span><br>
+          has no demos at this time!<br><br>
+          <div v-if="state.mode === 'user' && state.viewAuthor.toUpperCase() === state.loggedinUserName.toUpperCase()">
+            <button @click="state.createDemo()">create a demo</button>
+            <br><br>- or -<br><br>
+          </div>
+          <button @click="state.goHome()">home page</button>
+        </div>
+      </div>
+      <div v-if="state.mode=='single'" class="demoDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.demos.length" class="demoDivInner">
+          <Demo v-for="(demo, idx) in state.demos" :key="demo.id" :demo="demo" :idx='idx' :state="state"/>
+        </div>
+        <div v-else-if="state.loaded" style="font-size: 1.5em;">
+          <br><br><br><br><br>OOPS!
+          <br><br><br>this demo could not be found!
+        </div>
+      </div>
+      <div v-if="state.mode=='default'" class="demoDiv" :class="{'highTop':state.showControls}">
+        <div v-if="filteredDemos.length" class="demoDivInner">
+          <Demo v-for="(demo, idx) in filteredDemos" :key="demo.id" :demo="demo" :idx='idx' :state="state"/>
+        </div>
+        <div v-else-if="state.loaded" style="font-size: 1.5em;">
+          <br><br><br>OOPS!
+          <br>we seem to be missing some demos!
+          <br><br>
+          :(<br><br>
+          maybe try a different search?
+        </div>
       </div>
       <div v-if="state.error404" class="e404">
         <div v-if="state.mode == 'user'">
           we don't know this user!<br><br>
           &quot;{{state.viewAuthor}}&quot;
         </div>
-        <div v-else-if="state.mode == 'single'">
+        <div v-else-if="state.mode == 'single'" class="demoDivInner">
           could not find<br>
           demo &quot;{{state.rawDemoID}}&quot;<br><br>
           <div v-if="state.loggedin">
@@ -30,231 +54,23 @@
           404!
         </div>
       </div>
-      <div v-else>
-        <div v-for="(item, idx) in filteredDemos" :key="item.id">
-          <div class="demoItem" v-if="state.mode === 'all' || (state.mode === 'user' && item.author.toUpperCase() === state.viewAuthor.toUpperCase()) || (state.mode ==='single' && item.id === state.viewDemo)">
-
-              <div v-if="item.forkHistory.length" class="forkHistoryCluster">
-                <div
-                  class="forkHistoryOverlay"
-                  style="width:100vw; min-height: 100%; background:#012e; color:#fff; position:fixed; display:none; top:0px; left:0;bottom:0;right:0;margin:0;z-index:10000;overflow:auto;"
-                  :class="{'display': item.showForkHistory}"
-                >
-                  <button @click="toggleShowForkHistory(item)"
-                    style="margin-top: 40px; background: #c94;color: #000; font-size: 1.5em;padding: 0px;padding-bottom: 5px;"
-                  >close</button><br><br>
-
-
-                  <div class="demoHeaderContainer"
-                    style="background: #000b;border: 1px solid #4566;padding-top: 50px;max-width: 500px; margin-left: auto; margin-right: auto;"
-                  >
-                    <img v-if="item.videoLink" :src="vidThumb(item)" width=300 style="margin-right: 10px;border: 1px solid #4566;margin-bottom: 20px;"><br>
-                    <demoHeader :state="state" :itemid="item.id" :forkhistoryview="1"/>
-                  </div>
-
-                  <span v-if="JSON.parse(item.forkHistory).length" style="font-size: 4em;">&uarr;</span><br>
-
-                  <div v-for="(itemID, idx) in JSON.parse(item.forkHistory)" :key="itemID">
-                      <demoHeader :state="state" :itemid="itemID" :forkhistoryview="1"/>
-                      <br>
-                      <span v-if="idx < JSON.parse(item.forkHistory).length-1" style="font-size: 4em;">&uarr;</span>
-                      <br><br>
-                  </div>
-
-                  <button v-if="JSON.parse(item.forkHistory).length > 1" @click="toggleShowForkHistory(item)"
-                    style="margin-top: -25px; margin-bottom: 60px; background: #c94;color: #000; font-size: 1.5em;padding: 0px;padding-bottom: 5px;"
-                  >close</button><br><br>
-
-                </div>
-                <button @click="toggleShowForkHistory(item)"
-                  :class="{'slideRight': item.userID !== state.loggedinUserID}"
-                  class="showForkHistoryButton"
-                >show<br>fork<br>history</button>
-              </div>
-
-            <div class="demoTitle">
-              <a :href="'/u/' + item.author">
-                <div class="avatarContainer">
-                  <div style="color: #fff8;font-size: 14px;line-height: .8em;"><i>author</i><br><br></div>
-                  <img class="avatar" :src="state.getAvatar(item.userID)"><br>
-                  {{item.author}}
-                </div>
-              </a>
-
-              <demoHeader :state="state" :itemid="item.id" :forkhistoryview="0"/>
-
-              <div class="clear"></div>
-            </div>
-            <div class="demoGraphicsCluster">
-              <div class="vidThumbContainer">
-                <div class="vidThumb" :ref="'vidThumb'+item.id">
-                  <iframe
-									  v-if="typeof item.videoIframeURL !== 'undefined' &&item.videoIframeURL.indexOf('/thumbs/')===-1"
-                    class="vidThumbImg"
-                    :src="item.videoIframeURL"
-                    frameborder="0"
-                    allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; autoplay '*'"
-                    allowfullscreen="true"
-                  ></iframe>
-									<div v-else-if="!item.videoPlaying" class="sizedThumb">
-									  <img :src="item.videoIframeURL" class="sizedThumbImg" />
-										<button class="startVidButton" @click="item.videoPlaying = !item.videoPlaying">⏵︎</button>
-								  </div>
-									<div v-else>
-                    <video
-                      class="vidThumbImg"
-                      :src="item.videoLink"
-                      frameborder="0"
-										  controls = true
-											autoplay=true
-                    ></video>
-									</div>
-                </div>
-              </div>
-
-              <div class="demoIframeContainer">
-                <button
-                  @click="playPause(item.id)"
-                  class="playPauseButton"
-                  v-html="item.play ? '❚❚' : '⏵︎'"
-                ></button>
-                <button
-                  v-if="state.loggedin"
-                  class="forkDemoButton"
-                  @click="forkDemo(item.id)"
-                 >fork demo</button>
-                <button
-                  class="fullScreenButton"
-                  @click="fullScreen(item.id)"
-                  :disabled="!item.play"
-                  :class="{'disabledButton':!item.play}"
-                 >full-screen</button>
-                <button
-                  v-if="state.isAdmin || state.loggedin && item.userID === state.loggedinUserID"
-                  class="deleteDemoButton"
-                  @click="deleteDemo(item.id)"
-                 >delete demo</button>
-                <iframe
-                  :src="state.inView[idx] && item.play ? state.baseDemoURL + '/?demoID=' + item.id + '&v=' + iteration : ''"
-                  sandbox="allow-same-origin allow-scripts"
-									allow="autoplay *"
-                  class="demoIframe"
-                  allowfullscreen
-                  :ref="'iframe' + item.id"
-                ></iframe>
-              </div>
-            </div>
-            <div class="clear"></div>
-            <div class="textareaCluster" :class="{'no-wrap': !wraptextareas}" :key="'textareaCluster'+item.id">
-              <div class='demoHTMLContainer textareaContainer' :key="'HTMLContainer'+item.id">
-                <div class="textAreaTitle no-select">
-                  HTML
-                  <div v-if="!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)" class="loginTitleButtonContainer">
-                    <button class="loginTitleButton" @click="state.showLoginPrompt()">login as author to edit</button>
-                  </div>
-                </div>
-                <textarea
-                  spellcheck = "false"
-                  v-html="item.demoHTML"
-                  @input="update(item.id)"
-                  :ref="'HTML' + item.id"
-                  :class="{'HTMLtextarea': state.isAdmin || state.loggedin && item.userID === state.loggedinUserID, 'disabledTextArea':!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)}"
-                  :disabled="0&&!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)"
-                ></textarea>
-              </div>
-              <div class='demoCSSContainer textareaContainer' :key="'CSSContainer'+item.id">
-                <div class="textAreaTitle no-select">
-                  CSS
-                  <div v-if="!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)" class="loginTitleButtonContainer">
-                    <button class="loginTitleButton" @click="state.showLoginPrompt()">login as author to edit</button>
-                  </div>
-                </div>
-                <textarea
-                  spellcheck = "false"
-                  v-html="item.demoCSS"
-                  @input="update(item.id)"
-                  :ref="'CSS' + item.id"
-                  :class="{'CSStextarea': state.isAdmin || state.loggedin && item.userID === state.loggedinUserID, 'disabledTextArea':!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)}"
-                  :disabled="0&&!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)"
-                ></textarea>
-              </div>
-              <div class='demoJSContainer textareaContainer' :key="'JSContainer'+item.id">
-                <div class="textAreaTitle no-select">
-                  JS
-                  <div v-if="!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)" class="loginTitleButtonContainer">
-                    <button class="loginTitleButton" @click="state.showLoginPrompt()">login as author to edit</button>
-                  </div>
-                </div>
-                <textarea
-                  spellcheck = "false"
-                  v-html="item.demoJS"
-                  @input="update(item.id)"
-                  :ref="'JS' + item.id"
-                  :class="{'JStextarea': state.isAdmin || state.loggedin && item.userID === state.loggedinUserID, 'disabledTextArea':!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)}"
-                  :disabled="0&&!(state.isAdmin || state.loggedin && item.userID === state.loggedinUserID)"
-                ></textarea>
-              </div>
-            </div>
-            <div class="commentContainer">
-			  		  <div class="commentsHeader">
-		  				  comments
-	  					</div>
-							<div v-if="item.comments.length">
-    						<div v-for="comment in item.comments">
-	  					    <div class="commentMain">
-		  				  		<span  v-if="typeof state.userData[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
-			  		  			  <img :src="state.userData[comment.userID].avatar || 'https://lookie.jsbot.net/uploads/1pnBdc.png'" class="commentAvatar">
-				    				  <a :href="state.baseURL + '/u/' + state.userData[comment.userID].name" target="_blank" style="color:#4dc!important;font-style: oblique;">{{state.userData[comment.userID].name}}</a>
-			  	  			  </span>
-						  			<div v-if="comment.editing && this.state.loggedin" style="display:inline-block;width:calc(100% - 350px);">
-    	  			  		  <input
-		  					  			:ref="'comment' + comment.id"
-			  					  		class="commentInput"
-										  	style="width: calc(100% - 100px);"
-				  						  @input="editComment(comment)"
-  					  					v-model="comment.text"
-                        :class="{'success':comment.updated==1,'failure':comment.updated==-1}"
-		  					  		>
-                      <button
-				  						  v-if="comment.userID == state.loggedinUserID || state.isAdmin"
-                        @click='comment.editing = !comment.editing'
-                        class="commentEditButton"
-                        style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
-                      ></button>
-								    	<button
-										    @click='deleteComment(comment, item)'
-										    class="commentDeleteButton"
-  											style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;"
-	  									></button>
-  	  							</div>
-                    <div v-else style="display: inline-block;width: calc(100% - 400px);padding-right: 0;">
-                      <span class="commentText" v-html="comment.text" v-linkified style="width: calc(100% - 68px)"></span>
-                      <button
-                        v-if="comment.userID == state.loggedinUserID || state.isAdmin"
-                        @click='toggleEditMode(comment)'
-                        class="commentEditButton"
-                        style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://lookie.jsbot.net/uploads/2cyWBg.png);"
-                      ></button>
-  								  </div>
-	  							  <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
-		  							<div style="clear:both;"></div>
-			  				  </div>
-				  		  </div>
-			  	    </div>
-              <div v-else>
-                -- no comments --
-	    					<div v-if="!state.loggedin">(log in to comment on this demo)</div>
-              </div>
-              <div v-if="state.loggedin">
-                <input v-on:keyup.enter="postComment(item.id)" :ref="'newComment' + item.id" placeholder="say something..." class="commentInput newComment" style="margin-left: 0;margin-top: 16px;">
-                <button
-                  @click="postComment(item.id)"
-                  style="padding: 2px;padding-bottom: 4px;margin: 0;margin-left: 25px;display: block; margin-top: 12px; min-width: initial; padding-left: 10px; padding-right: 10px;float:left;"
-                >post</button>
-                <div style="clear:both"></div>
-              </div>
-  					</div>
-					</div>
+    </div>
+    <div v-else>
+      <div class="demoDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.search.demos.length" class="demoDivInner">
+          <Demo v-for="(demo, idx) in state.search.demos" :key="demo.id" :demo="demo" :idx="idx" :state="state"/>
+        </div>
+        <div v-if="state.search.inProgress" style="font-size: 2em;" >
+          <br><br><br>
+          <div style="width: 300px;padding-left: 50px;margin-left: auto; margin-right: auto; text-align: left;">{{searchingText}}</div>
+        </div>
+        <div v-else-if="!state.search.demos.length && state.loaded" style="font-size: 1.5em;">
+          <br>DRAT!
+          <br><br>your search did not return anything!
+          <br><br>
+          maybe try something more general,<br>like &quot;whitehot robot&quot;
+          <br><br><br>
+          :(
         </div>
       </div>
     </div>
@@ -262,14 +78,12 @@
 </template>
 
 <script>
-import Header from './Header'
 import Controls from './Controls'
-import demoHeader from './demoHeader'
+import Demo from './Demo'
 export default {
   components:{
-    Header,
     Controls,
-    demoHeader
+    Demo,
   },
   data(){
     return {
@@ -286,13 +100,77 @@ export default {
   props: [ 'state' ],
   computed:{
     filteredDemos(){
-      return this.state.demos.filter(v=>v.show)
+      switch(this.state.mode){
+        case 'default':
+          return this.state.landingPage.demos
+        break
+        case 'user':
+          if(this.state.user != null && typeof this.state.user.demos !== 'undefined'){
+            return this.state.user.demos.filter(v=>!v.private || this.state.loggedinUserName.toUpperCase() == this.state.user.name.toUpperCase() || this.state.isAdmin)
+          } else {
+            return []
+          }
+        break
+      }
+    },
+    searchingText(){
+      return 'Searching' + ('.'.repeat((this.state.globalT*20|0)%8))
     },
     origin(){
       return window.location.origin
     }
   },
   methods:{
+    updateDemoItem(demoID, item){
+      let newItemVal
+      if(this.state.search.string){
+        newItemVal = this.state.search.demos.filter(v=>v.id==demoID)[0][item]
+      }else{
+        switch(this.state.mode){
+          case 'default':
+            newItemVal = this.state.landingPage.demos.filter(v=>v.id==demoID)[0][item]
+            break
+          case 'single':
+            newItemVal = this.state.demos.filter(v=>v.id==demoID)[0][item]
+            break
+          case 'user':
+            newItemVal = this.state.user.demos.filter(v=>v.id==demoID)[0][item]
+            break
+        }
+      }
+      if(item == 'private') newItemVal = !newItemVal ? 1 : 0
+      if(item == 'allowDownload') newItemVal = !newItemVal ? 1 : 0
+      let sendData = {
+        userName: this.state.loggedinUserName,
+        item,
+        newItemVal,
+        passhash: this.state.passhash,
+        demoID
+      }
+      fetch(this.state.baseURL + '/updateDemoItem.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        if(data[0]){
+          this.updated[item] = 1
+          setTimeout(()=>this.updated[item] = 0, 1000)
+        } else {
+          this.updated[item] = -1
+          setTimeout(()=>this.updated[item] = 0, 1000)
+        }
+      })
+    },
+    revertTo(backup, demoID){
+      if(confirm("Are you SURE you want to revert to this backup?\n\nThis will replace all of this demo's data with the data from this backup...\n\n>>> " + backup.backup_date + " <<<\n Including: text, title, description, tags, and comments...\n\n this is IRREVERSIBLE!!!")){
+        this.state.loadDemoFromBackup(this.demo, backup.Database, this.$refs['contenteditable' + demoID])
+        this.showRevert = false
+      }
+    },
 		toggleEditMode(comment){
 			comment.editing = !comment.editing
 			if(comment.editing){
@@ -321,7 +199,6 @@ export default {
         .then(data => {
           if(data[0]){
             item.comments = item.comments.filter(v=>v.id != id)
-            console.log('comment deleted...')
           }
         })
 		  }
@@ -894,20 +771,6 @@ a{
   min-width: 200px;
   max-width: 400px;
 }
-.demoItem{
-  margin-top: 30px;
-  margin-bottom: 100px;
-  border-radius: 0px;
-  width: calc(100% - 80px);
-  margin-left: auto;
-  margin-right: auto;
-  padding: 20px;
-  border-radius: 0px;
-  background: linear-gradient(#012a, #234a);
-  border: 1px solid #2466;
-  min-width:400px;
-  max-width: 1200px;
-}
 .demoIframeContainer{
   width: calc(50% - 8px);
   min-width: 190px;
@@ -961,18 +824,6 @@ a{
 }
 .JStextarea{
   color: #acf;
-}
-.demoContainer{
-  background: linear-gradient(135deg, #000, #024);
-  padding-top:155px;
-  padding-bottom: 100px;
-  min-height: calc(100vh - 280px);
-  text-align: center;
-  position: absolute;
-  width:100%;
-  min-width: 475px;
-  transition: 0.5s padding-top;
-  min-height: calc(100vh - 180px);
 }
 .highTop{
   padding-top: 80px;
@@ -1289,5 +1140,24 @@ td{
 .newComment{
 	width: calc(100% - 100px)!important;
 	float:left;
+}
+.demoDiv{
+  background: transparent;
+  text-align: center;
+  padding-top:0px;
+  margin-top:50px;
+  margin-bottom: 200px;
+  transition: 0.5s padding-top;
+}
+</style>
+<style>
+.highTop{
+  padding-top: 160px!important;
+}
+.footerPadding{
+  min-height: calc(100vh + 200px);
+}
+.demoDivInner{
+  text-align: center;
 }
 </style>

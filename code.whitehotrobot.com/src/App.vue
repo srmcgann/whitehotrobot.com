@@ -1,21 +1,30 @@
 <template>
   <div id="app">
+    <Controls :state="state"/>
+    <Header :state="state"/>
     <Main :state="state"/>
     <UserSettings v-if="state.userSettingsVisible" :state="state"/>
     <LoginPrompt v-if="state.loginPromptVisible" :state="state"/>
+    <Footer :state="state"/>
   </div>
 </template>
 
 <script>
 import Main from './components/Main'
 import LoginPrompt from './components/LoginPrompt'
+import Controls from './components/Controls'
 import UserSettings from './components/UserSettings'
+import Header from './components/Header'
+import Footer from './components/Footer'
 
 export default {
   name: 'App',
   components: {
     Main,
+    Header,
+    Controls,
     UserSettings,
+    Footer,
     LoginPrompt
   },
   data(){
@@ -27,7 +36,9 @@ export default {
         demos: [],
         loggedin: false,
         toggleLogin: null,
+        globalT: 0,
         showLoginPrompt: null,
+				userAgent: null,
         closePrompts: null,
         loginPromptVisible: false,
         username: '',
@@ -35,8 +46,9 @@ export default {
         passhash: '',
         userInfo: [],
 				userData: [],
-        createDemo: null,
+        updateDemoItem: null,
         regusername: '',
+        loadUserData: null,
         regpassword: '',
         showRegister: false,
         showUserSettings: null,
@@ -58,11 +70,11 @@ export default {
         toggleShowControls: null,
         logout: null,
         login: null,
-        mode: 'all', // all, user, single
+        mode: 'default', // default, user, single
         viewAuthor: '',
         isAdmin: false,
         goHome: null,
-        viewDemo: '',
+        //viewDemo: '',
         rawDemoID: '',
 				fetchUserData: null,
         error404: false,
@@ -70,7 +82,35 @@ export default {
         openFullscreen: null,
         invalidLoginAttempt: false,
         defaultAvatar: 'https://lookie.jsbot.net/uploads/1pnBdc.png',
-        inView:[]
+        inView:[],
+        maxCommentsBeforeExpansion: 3,
+        curPage: 0,
+        beginSearch: null,
+        curSearchPage: 0,
+				totalPages: 0,
+        jumpToPage: null,
+        curUserPage: null,
+        search: {
+          string: '',
+          demos: [],
+          hits: 0,
+          inProgress: false,
+          timer: 0,
+          timerHandle: null,
+          exact: false,
+          allWords: true
+        },
+        showControlsToggleTimer: 0,
+        loadDemoFromBackup: null,
+				maxResultsPerPage: 0,
+        advancePage: null,
+        regressPage: null,
+        firstPage: null,
+        lastPage: null,
+        landingPage:{
+          demos: []
+        },
+        closeMenus: 0
       }
     }
   },
@@ -93,7 +133,38 @@ export default {
         })
 			}
 		},
+    loadHotKeys(){
+      window.addEventListener('click',e=>{
+        let close = true
+        let path = e.path || (e.composedPath && e.composedPath())
+        path.forEach(v=>{
+          if(v.className && (v.className.indexOf('revertMenu')!==-1 || v.className.indexOf('revertButton')!==-1)) close = false
+        })
+        if(close) this.state.closeMenus++
+      })
+      window.addEventListener('click',e=>{
+        let close = true
+        let path = e.path || (e.composedPath && e.composedPath())
+        path.forEach(v=>{
+          if(v.className && (v.className.indexOf('revertMenu')!==-1 || v.className.indexOf('revertButton')!==-1)) close = false
+        })
+        if(close) this.state.closeMenus++
+      })
+      window.addEventListener('keydown',(e)=>{
+        if(e.keyCode == 27){
+          if(this.state.showControlsToggleTimer < (new Date()).getTime()){
+            this.state.showControlsToggleTimer = (new Date()).getTime()+100
+            e.preventDefault()
+            e.stopPropagation()
+            this.toggleShowControls()
+          }
+        }
+        if(e.keyCode == 13){
+        }
+      })
+    },
     extractEmbedURL(item){
+      if(typeof item.id == 'undefined' ) return
       if(item.videoLink.indexOf('youtu')!==-1){
         fetch(this.state.baseURL + '/vidThumb.php?id=' + item.id)
 				let l=''
@@ -163,16 +234,148 @@ export default {
     goHome(){
       window.location.href = window.location.origin
     },
+    doSearch(searchString, page1){
+      this.state.search.demos = []
+      this.state.search.timerHandle = null
+      let sendData = {
+        string: searchString.trim(),
+        loggedinUserName: this.state.loggedinUserName,
+        page: this.state.curPage,
+        allWords: this.state.search.allWords,
+        exact: this.state.search.exact,
+        passhash: this.state.loggedin ? this.state.passhash : '',
+        maxResultsPerPage: this.state.maxResultsPerPage
+      }
+      this.state.exactClicked = true
+      fetch(this.state.baseURL + '/search.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+      .then(res => res.json())
+      .then(data => {
+        data[0] = data[0].map(v=>{
+          v.updated = {}
+          for (const [key, value] of Object.entries(v)) {
+            v.updated[key]=0
+          }
+          v.editHTML = false
+          v.private = !!(+v.private)
+          v.allowDownload = !!(+v.allowDownload)
+          this.state.incrementViews(v.id)
+          this.state.loadUserData(v.author)
+          v.comments = v.comments.map(q=>{
+            q.updated = false
+            q.editing = false
+            this.state.fetchUserData(q.userID)
+            return q
+          })
+          this.extractEmbedURL(v)
+          return v
+        })
+        if(this.state.search.string) this.state.search.hits = +data[3]
+        this.state.search.demos = data[0]
+        switch(this.state.mode){
+          case 'user':
+            this.state.totalUserPages = +data[1]
+            if(this.state.curUserPage && this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+          break
+          case 'default':
+            this.state.totalPages = +data[1]
+            if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          break
+          case 'single':
+            this.state.totalPages = +data[1]
+            if(this.state.curPage && this.state.curPage+1 > this.state.totalPages) this.lastPage()
+          break
+        }
+        this.state.loaded = true
+        this.state.search.inProgress = false
+      })
+    },
+    beginSearch(page1){
+      if(this.state.search.string.charAt(0) != ' '){
+        this.state.search.inProgress = true
+        if(page1){
+          history.pushState(null, null, window.location.origin + '/' + 1 + (this.state.search.string ? '/' : '') + (this.state.search.string))
+          this.state.curPage = 0
+        } else {
+          history.pushState(null, null, window.location.origin + '/' + (this.state.curPage+1) + '/' + (this.state.search.string))
+        }
+        let d = (new Date()).getTime()
+        if(this.state.search.timerHandle != null) clearTimeout(this.state.search.timerHandle)
+        let searchString = this.state.search.string
+        this.state.search.timerHandle = setTimeout(()=>{
+          this.doSearch(searchString, page1)
+          this.state.search.timer = d
+        }, Math.min(1000, d-this.state.search.timer))
+      } else {
+				this.state.search.string = this.state.search.string.trim()
+			}
+    },
     getMode(){
       let vars = window.location.pathname.split('/').filter(v=>v)
-      this.state.mode = 'all'
-      if(vars.length>1){
+      if(vars.length>0){
         switch(vars[0]){
-          case 'd': this.state.mode = 'single'; this.state.viewDemo = this.alphaToDec(vars[1]); this.state.rawDemoID = vars[1]; break
-          case 'u': this.state.mode = 'user'; this.state.viewAuthor = decodeURIComponent(vars[1]); break
+          case 'd':
+            this.state.mode = 'single'
+            this.state.curPage = (+vars[1])-1
+            //this.state.viewDemo = this.alphaToDec(vars[1])
+            this.state.rawDemoID = vars[1]
+            this.$nextTick(()=>this.loadDemo(this.alphaToDec(vars[1])))
+            if(vars[2]){
+              this.state.search.string = decodeURIComponent(vars[2])
+            }
+            break
+          case 'u':
+            if(!vars[1]) window.location.href = window.location.origin
+            this.state.viewAuthor = decodeURIComponent(vars[1]);
+            this.state.user = {name: decodeURIComponent(vars[1])}
+            this.state.mode = 'user'
+            if(vars[2]){
+              this.state.curUserPage = (+vars[2])-1
+              if(vars[3]){
+                this.state.search.string = decodeURIComponent(vars[3])
+                search = '/' + vars[3]
+                history.pushState(null,null,window.location.origin + '/u/' + (this.state.user.name) + '/' + (this.state.curPage + 1)) + search
+                this.beginSearch()
+              }else{
+                if(!this.state.curUserPage || this.state.curUserPage < 0 || this.state.curUserPage > 1e6) this.state.curUserPage = 0
+                history.pushState(null,null,window.location.origin + '/u/' + (vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+                this.getPages()
+              }
+            } else {
+              this.state.curUserPage = 0
+              history.pushState(null,null,window.location.origin + '/u/' + (vars[1]) + ((this.state.curUserPage) ? '/' + (this.state.curUserPage + 1) : ''))
+              this.getPages()
+            }
+          break
+          default:
+            this.state.mode = 'default'
+            let search = ''
+            if(vars[0]){
+              this.state.curPage = (+vars[0])-1
+              if(vars[1]){
+                this.state.search.string = decodeURIComponent(vars[1])
+                search = '/' + vars[1]
+                history.pushState(null,null,window.location.origin + '/' + (this.state.curPage + 1)) + search
+                this.beginSearch()
+              }else{
+                history.pushState(null,null,window.location.origin + '/' + this.state.curPage ? (this.state.curPage + 1) : '')
+                if(!this.state.curPage || this.state.curPage < 0 || this.state.curPage > 1e6) this.state.curPage = 0
+                this.getPages()
+              }
+            }else{
+              window.location.href = window.location.origin
+            }
+          break
         }
       }else{
-        if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+        this.state.mode = 'default'
+        this.getPages()
+				if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
       }
     },
     incrementViews(id){
@@ -185,185 +388,225 @@ export default {
         body: JSON.stringify(sendData),
       })
       .then(res=>res.json()).then(data=>{
-        this.state.demos.filter(v=>v.id==id)[0].views++
+        if(this.state.search.string){
+          if(this.state.search.demos.filter(v=>v.id==id).length) this.state.search.demos.filter(v=>v.id==id)[0].views++
+        }else{
+          switch(this.state.mode){
+            case 'user': this.state.user.demos.filter(v=>v.id==id)[0].views++; break
+            case 'default': if(this.state.landingPage.demos.filter(v=>v.id==id).length) this.state.landingPage.demos.filter(v=>v.id==id)[0].views++; break
+            case 'single': this.state.demos.filter(v=>v.id==id)[0].views++; break
+          }
+        }
       })
     },
-    createDemo(){
-      if(this.state.loggedin){
-        let sendData = {userName: this.state.loggedinUserName, passhash: this.state.passhash}
-        fetch(this.state.baseURL + '/createDemo.php',{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(sendData),
-        })
-        .then(res => res.json())
-        .then(data => {
-          if(data[0]){
-            window.location.href = window.location.origin + '/d/' + this.state.decToAlpha(data[1])
-          }
-        })
-      }else{
-        this.state.showRegister = true
-        this.state.displayLoginRequired = true
-        this.state.showLoginPrompt()
+    loadUserData(name){
+      let sendData = {
+        name: decodeURIComponent(name),
+        loggedinUserName: this.state.loggedinUserName,
+        passhash: this.state.passhash,
+				maxResultsPerPage: this.state.maxResultsPerPage,
+        page: this.state.curUserPage
       }
-    },
-    loadDemos(){
-      let sendData
-      switch(this.state.mode){
-        case 'all':
-          fetch(this.state.baseURL + '/getDemos.php').then(res=>res.json()).then(data=>{
-            this.state.demos=data
-            this.state.demoDataReceived = true
-            this.state.demos.map((v,i)=>{
-              this.extractEmbedURL(v)
-              v.showForkHistory = false
-              v.videoPlaying = false
-							v.play = this.state.autoplay
-              if(i < this.state.preload){
-                v.show = true
-                this.incrementViews(v.id)
-              } else {
-                v.show = false
-              }
+      fetch(this.state.baseURL + '/fetchUserDataByName.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        this.state.demoDataReceived = true
+        if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
+          data[0].demos = this.state.user.demos
+        }else{
+          data[0].demos.map(v=>{
+            v.updated = {}
+            this.extractEmbedURL(v)
+            for (const [key, value] of Object.entries(v)) {
+              v.updated[key]=0
+            }            
+            if(this.state.mode != 'default') this.incrementViews(v.id)
+            v.editHTML = false
+            v.private = !!(+v.private)
+            v.allowDownload = !!(+v.allowDownload)
+            v.comments = v.comments.map(q=>{
+              q.updated = false
+              q.editing = false
+              this.fetchUserData(q.userID)
+              return q
             })
-            if(data){
-              this.state.inView = Array(this.state.demos.length).fill().map(v=>false)
-              data.map(v=>{
-								v.comments = v.comments.map(q=>{
-									q.updated = false
-									q.editing = false
-									this.fetchUserData(q.userID)
-									return q
-								})
-                if(typeof this.state.userInfo[v.userID] == 'undefined'){
-                  let sendData = {userID: v.userID}
-                  fetch(this.state.baseURL + '/fetchUserData.php',{
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(sendData),
-                  })
-                  .then(res => res.json())
-                  .then(data => {
-                    this.state.userInfo[v.userID] = data
-                  })
-                }
-              })
-            }else{
-              console.log('404')
-              this.state.error404 = true
-            }
           })
+        }
+        this.state.totalUserPages = data[1]
+        if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
+        this.state.user = data[0]
+        this.state.userInfo[this.state.user.id] = {}
+        this.state.userInfo[this.state.user.id].name = this.state.user.name
+        this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
+        this.state.userInfo[this.state.user.id].isAdmin = this.state.user.isAdmin
+				this.state.refreshAvatar = true
+        this.state.loaded = true
+      })
+    },
+    firstPage(){
+      let search = this.state.search.string ? ('/1/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'user':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + search
+        break
+        case 'default':
+          window.location.href = window.location.origin + search
         break
         case 'single':
-          sendData = {demoID: this.state.viewDemo}
-          fetch(this.state.baseURL + '/getSingle.php',{
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(sendData),
-          })
-          .then(res => res.json())
-          .then(data => {
-            this.state.demoDataReceived = true
-            if(data.length){
-              this.state.demos=data
-              this.state.demos.map(v=>{
-                v.comments = v.comments.map(q=>{
-                  q.updated = false
-                  q.editing = false
-                  this.fetchUserData(q.userID)
-                  return q
-                })
-                this.extractEmbedURL(v)
-                v.videoPlaying = false
-								v.play = this.state.autoplay
-                v.show = true
-                this.incrementViews(v.id)
-              })
-              this.state.inView = Array(this.state.demos.length).fill().map(v=>false)
-              data.map(v=>{
-                if(typeof this.state.userInfo[v.userID] == 'undefined'){
-                  let sendData = {userID: v.userID}
-                  fetch(this.state.baseURL + '/fetchUserData.php',{
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(sendData),
-                  })
-                  .then(res => res.json())
-                  .then(data => {
-                    this.state.userInfo[v.userID] = data
-                  })
-                }
-              })
-            }else{
-              console.log('404')
-              this.state.error404 = true
-            }
-          })
-        break
-        case 'user':
-          sendData = {userName: this.state.viewAuthor}
-          fetch(this.state.baseURL + '/getUserDemos.php',{
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(sendData),
-          })
-          .then(res => res.json())
-          .then(data => {
-            this.state.demos=data
-            this.state.demoDataReceived = true
-            this.state.demos.map((v,i)=>{
-              v.comments = v.comments.map(q=>{
-                q.updated = false
-                q.editing = false
-                this.fetchUserData(q.userID)
-                return q
-              })
-              this.extractEmbedURL(v)
-              v.videoPlaying = false
-							v.play = this.state.autoplay
-              if(i < this.state.preload){
-                v.show = true
-                this.incrementViews(v.id)
-              } else {
-                v.show = false
-              }
-            })
-            if(data){
-              this.state.inView = Array(this.state.demos.length).fill().map(v=>false)
-              data.map(v=>{
-                if(typeof this.state.userInfo[v.userID] == 'undefined'){
-                  let sendData = {userID: v.userID}
-                  fetch(this.state.baseURL + '/fetchUserData.php',{
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                  body: JSON.stringify(sendData),
-                  })
-                  .then(res => res.json())
-                  .then(data => {
-                    this.state.userInfo[v.userID] = data
-                  })
-                }
-              })
-            }else{
-              console.log('404')
-              this.state.error404 = true
-            }
-          })
+          window.location.href = window.location.origin + '/d/' + this.state.curPost + search
         break
       }
+    },
+    lastPage(){
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'u':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.totalUserPages + search
+        break
+        case 'default':
+          window.location.href = window.location.origin + '/' + this.state.totalPages + search
+        break
+        case 'post':
+          window.location.href = window.location.origin + '/post/' + this.decToAlpha(this.state.curPost) + '/' + this.state.totalPages + search
+        break
+      }
+    },
+    advancePage(){
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'user':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + (this.state.curUserPage + 2) + search
+        break
+        case 'default':
+          window.location.href = window.location.origin + '/' + (this.state.curPage + 2) + search
+        break
+        case 'single':
+          window.location.href = window.location.origin + '/d/' + this.decToAlpha(this.state.curPost) + '/' +(this.state.curPage + 2) + search
+        break
+      }
+    },
+    regressPage(){
+      let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
+      switch(this.state.mode){
+        case 'user':
+          window.location.href = window.location.origin + '/u/' + this.state.user.name + '/' + this.state.curUserPage + search
+        break
+        case 'default':
+          window.location.href = window.location.origin + '/' + this.state.curPage + search
+        break
+        case 'single':
+          window.location.href = window.location.origin + '/d/' + this.decToAlpha(this.state.curPost) + '/' +(this.state.curPage + 2) + search
+        break
+      }
+    },
+    loadDemo(demoID){
+      this.state.curDemo = demoID
+      let sendData = {
+        demoID
+      }
+      fetch(this.state.baseURL + '/fetchDemo.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        if(data){
+          this.state.demos=[data]
+          this.state.viewDemo = data.id
+          this.state.demos.map(v=>{
+            v.updated = {}
+            for (const [key, value] of Object.entries(v)) {
+              v.updated[key]=0
+            }
+            v.comments = v.comments.map(q=>{
+              q.updated = false
+              q.editing = false
+              this.fetchUserData(q.userID)
+              return q
+            })
+            this.extractEmbedURL(v)
+            v.videoPlaying = false
+            v.play = this.state.autoplay
+            v.show = true
+            this.incrementViews(v.id)
+          })
+          this.state.inView = Array(this.state.demos.length).fill().map(v=>false)
+          this.state.demos.map(v=>{
+            if(typeof this.state.userInfo[v.userID] == 'undefined'){
+              let sendData = {userID: v.userID}
+              fetch(this.state.baseURL + '/fetchUserData.php',{
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(sendData),
+              })
+              .then(res => res.json())
+              .then(data => {
+                this.state.userInfo[v.userID] = data
+              })
+            }
+          })
+        }else{
+          console.log('404')
+          this.state.error404 = true
+        }
+      })
+    },
+		getPages(){
+      if(this.state.search.string != '') this.beginSearch()
+			switch(this.state.mode){
+				case 'user':
+        this.loadUserData(this.state.user.name)
+				break
+				case 'single':
+				this.loadDemo()
+				break
+				case 'default':
+				this.loadLandingPage()
+				break
+			}
+		},
+    loadLandingPage(){
+      let sendData = {
+        page: this.state.curPage,
+        maxResultsPerPage: this.state.maxResultsPerPage
+      }
+      fetch(this.state.baseURL + '/getRecentDemos.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        this.state.demoDataReceived = true
+				data[0].map(v=>{
+          v.updated = {}
+          for (const [key, value] of Object.entries(v)) {
+            v.updated[key]=0
+          }
+          v.private = !!(+v.private)
+          v.allowDownload = !!(+v.allowDownload)
+          this.incrementViews(v.id)
+					this.loadUserData(v.author)
+          v.comments = v.comments.map(q=>{
+            q.updated = false
+            q.editing = false
+            this.fetchUserData(q.userID)
+            return q
+          })
+          this.extractEmbedURL(v)
+        })
+        this.state.landingPage.demos = data[0]
+        this.state.totalPages = data[1]
+        if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
+				this.state.loaded = true
+      })
     },
     decToAlpha(n){
       let alphabet='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -417,7 +660,9 @@ export default {
     },
     checkEnabled(){
       if(this.state.loggedinUserName) {
-        let sendData = {userName: this.state.loggedinUserName, passhash: this.state.passhash}
+        let sendData = {
+          userName: this.state.loggedinUserName, passhash: this.state.passhash,
+        }
         fetch(this.state.baseURL + '/checkEnabled.php',{
           method: 'POST',
           headers: {
@@ -427,18 +672,19 @@ export default {
         })
         .then(res => res.json())
         .then(data => {
-          if(data[0]){
+          if(!!(+data[0])){
             this.state.loggedin = true
-            this.state.loggedinUserID = data[1]
+            this.state.loggedinUserID = +data[1]
+            this.state.fetchUserData(this.state.loggedinUserID)
             this.setCookie()
             this.state.loginPromptVisible = false
             this.state.invalidLoginAttemp = false
             this.state.userInfo[this.state.loggedinUserID] = {}
-            this.state.userInfo[this.state.loggedinUserID].name = this.state.regusername
+            this.state.userInfo[this.state.loggedinUserID].name = this.state.regusername || this.state.loggedinUserName
             this.state.userInfo[this.state.loggedinUserID].avatar = data[2]
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
-            this.state.fetchUserData(this.state.loggedinUserID)
             if(+data[3]) this.state.isAdmin = true
+						this.state.maxResultsPerPage = +data[4]
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -447,6 +693,7 @@ export default {
             this.state.isAdmin = false
             this.state.invalidLoginAttempt = true
           }
+          this.getMode()
         })
       }
     },
@@ -481,6 +728,75 @@ export default {
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='autoplay')
       if(l.length) this.state.autoplay = l[0].split('=')[1]=='true'
     },
+    checkExactSearchPref(){
+      let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='exactSearch')
+      if(l.length) this.state.search.exact = l[0].split('=')[1]=='true'
+      l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='allWords')
+      if(l.length) this.state.search.allWords = l[0].split('=')[1]=='true'
+    },
+    loadDemoFromBackup(demo, database){
+      let sendData = {
+        userName: this.state.loggedinUserName,
+        passhash: this.state.passhash,
+        demoID: demo.id,
+        database
+      }
+      fetch(this.state.baseURL + '/loadBackup.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        data.private = !!(+data.private)
+				this.fetchUserData(data.userID)
+        data.comments = data.comments.map(q=>{
+          q.updated = false
+          q.editing = false
+          this.fetchUserData(q.userID)
+          return q
+        })
+        data.allowDownload = !!(+data.allowDownload)
+        for (const [key, value] of Object.entries(demo)) {
+          if(key !== 'updated'){
+            demo[key] = data[key]
+            this.updateDemoItem(demo, key)
+          }
+        }
+        this.state.extractEmbedURL(demo)
+        this.state.closeMenus++
+      })
+    },
+    updateDemoItem(demo, item){
+      if(item !== 'updated'){
+        let newItemVal = demo[item]
+        if(item == 'private') newItemVal = !newItemVal ? 1 : 0
+        if(item == 'allowDownload') newItemVal = !newItemVal ? 1 : 0
+        let sendData = {
+          userName: this.state.loggedinUserName,
+          item,
+          newItemVal,
+          passhash: this.state.passhash,
+          demoID: demo.id
+        }
+        fetch(this.state.baseURL + '/updateDemoItem.php',{
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(sendData),
+        }).then(res => res.json()).then(data=>{
+          demo.updated[item] = 1
+          if(item=='videoLink'){
+            this.state.extractEmbedURL(demo)
+            demo.videoPlaying = false
+          }
+          setTimeout(()=>{
+            demo.updated[item] = 0
+          }, 1000)
+        })
+      }
+    },
     login(){
       let sendData = {userName: this.state.username, password: this.state.password}
       fetch(this.state.baseURL + '/login.php',{
@@ -507,7 +823,9 @@ export default {
           this.state.userInfo[this.state.loggedinUserID].avatar = data[3]
           this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[4]
           this.checkAutoplayPref()
+          this.checkExactSearchPref()
           this.checkShowControlsPref()
+          this.getPages()
         }else{
           this.state.loggedin = false
           this.state.invalidLoginAttempt = true
@@ -521,14 +839,23 @@ export default {
           document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
         }
       })
+      if(this.state.search.string != '') this.state.search.demos = this.state.search.demos.filter(v=>!v.private)
+      switch(this.state.mode){
+        case 'user':
+        this.state.user.demos = this.state.user.demos.filter(v=>!v.private)
+        break
+        case 'single':
+        this.state.demos = this.state.demos.filter(v=>!v.private)
+        break
+        case 'default':
+        this.state.landingPage.demos = this.state.landingPage.demos.filter(v=>!v.private)
+        break
+      }
       this.state.loggedin = false
       this.state.isAdmin = false
       this.state.loggedinUserID = this.state.loggedinUserName = ''
     },
     checkLogin(){
-      
-      this.checkAutoplayPref()
-      this.checkShowControlsPref()
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinuser')
       if(l.length){
         this.state.loggedinUserName = l[0].split('=')[1]
@@ -541,30 +868,45 @@ export default {
             this.checkEnabled()
           }
         }
+      } else {
+        this.getMode() 
       }
+      this.checkShowControlsPref()
+      this.checkAutoplayPref()
+      this.checkExactSearchPref()
     }
   },
   mounted(){
-    this.getMode()
+    this.loadHotKeys()
+    setInterval(()=>{
+      this.state.globalT+=1/60
+    },1/60*1000|0)
+		this.state.userAgent = navigator.userAgent
     this.state.toggleLogin = this.toggleLogin
     this.state.showLoginPrompt = this.showLoginPrompt
     this.state.toggleShowControls = this.toggleShowControls
+    this.state.loadDemoFromBackup = this.loadDemoFromBackup
     this.state.showUserSettings = this.showUserSettings
     this.state.extractEmbedURL= this.extractEmbedURL
     this.state.toggleAutoplay = this.toggleAutoplay
     this.state.incrementViews = this.incrementViews
     this.state.openFullscreen = this.openFullscreen
+    this.state.updateDemoItem = this.updateDemoItem
     this.state.fetchUserData = this.fetchUserData
+    this.state.loadUserData = this.loadUserData
     this.state.closePrompts = this.closePrompts
-    this.state.createDemo = this.createDemo
+    this.state.beginSearch = this.beginSearch
+    this.state.advancePage = this.advancePage
+    this.state.regressPage = this.regressPage
     this.state.decToAlpha = this.decToAlpha
     this.state.alphaToDec = this.alphaToDec
     this.state.setCookie = this.setCookie
+    this.state.firstPage = this.firstPage
     this.state.getAvatar = this.getAvatar
+    this.state.lastPage = this.lastPage
     this.state.goHome = this.goHome
     this.state.logout = this.logout
     this.state.login = this.login
-    this.loadDemos()
     this.checkLogin()
   }
 }
@@ -575,10 +917,20 @@ export default {
 #app{
   min-width: 475px;
 }
-body,html{
+html{
   margin: 0;
   overflow-X: hidden;
-  background: #011;
+  font-family: Play;
+  color: #8fc;
+  min-height: 100%;
+  min-width: 475px;
+  scroll-behavior: smooth;
+}
+body{
+  overflow: hidden;
+  margin: 0;
+  overflow-X: hidden;
+  background: linear-gradient(45deg, #001, #011);
   font-family: Play;
   color: #8fc;
   min-height: 100%;
@@ -593,7 +945,26 @@ body,html{
   width: 300px;
   color: #ffa;
 }
-.input:focus{
+input[type=text]{
+  font-size: 24px;
+  background: #0004;
+  border: none;
+  border-bottom: 2px solid #2fa;
+  width: 300px;
+  color: #ffa;
+}
+input[type=checkbox]{
+  transform: scale(1.5);
+  margin: 8px;
+  margin-left: 5px;
+}
+input:focus{
+  outline: none;
+}
+button:focus{
+  outline: none;
+}
+select:focus{
   outline: none;
 }
 button{
@@ -611,35 +982,36 @@ button{
   min-width: 140px;
   cursor: pointer;
 }
-button:focus{
-  //outline: none;
-}
 .hideOverflow{
   overflow: hidden;
 }
 /* width */
+option{
+  text-align: center;
+}
+select{
+  background: #012;
+	color: #ff0;
+}
 ::-webkit-scrollbar {
-  width: 10px;
-  cursor: ns-resize;
+  width: 12px;
+}
+::-webkit-scrollbar:hover{
+  cursor: pointer!important;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-  background: #234;
+  background: #124; 
 }
-
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #789;
+::-webkit-scrollbar-track:hover {
+  cursor: pointer!important;
 }
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  cursor: ns-resize!important;
-  background: #abc;
+a,button{
+  cursor: pointer;
 }
-textarea{
-  cursor: auto;
+a{
+  color: #fa0;
+  text-decoration: none;
 }
 .spacerDiv{
   width: 100%;

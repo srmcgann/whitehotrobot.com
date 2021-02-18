@@ -36,7 +36,7 @@
       if(mysqli_num_rows($res)){
 	$demo = mysqli_fetch_assoc($res);
         $title=mysqli_real_escape_string($link, $demo['title']);
-        $videoLink='';//mysqli_real_escape_string($link, $demo['videoLink']);
+        $videoLink=mysqli_real_escape_string($link, $demo['videoLink']);
         $demoHTML=mysqli_real_escape_string($link, $demo['demoHTML']);
         $demoCSS=mysqli_real_escape_string($link, $demo['demoCSS']);
 	$demoJS=mysqli_real_escape_string($link, $demo['demoJS']);

@@ -16,6 +16,7 @@
           $resized = imagecreatetruecolor($newWidth, $newHeight);
           imagecopyresampled($resized, $original, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
           imagejpeg($resized, './thumbs/' . $fileName);
+					exec('chmod 775 ./thumbs/' . $fileName);
         }
         return  (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https:" : "http:") . "//{$_SERVER['HTTP_HOST']}" . '/thumbs/' . $fileName;
       } else {

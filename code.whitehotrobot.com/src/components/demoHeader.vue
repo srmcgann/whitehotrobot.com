@@ -1,72 +1,112 @@
 <template>
-  <div v-if="itemid === -1" style="font-size: 32px;background:#8338; max-width: 500px;margin-left: auto; margin-right:auto; color: #fcc;margin-top: 35px;">
-    <br>
-    &gt;&gt; deleted &lt;&lt;
-    <br><br>
-  </div>
-  <div v-else class="demoHeader">
-    <table v-if="typeof item !== 'undefined'">
-      <tr><td class="leftCell"><i>demo title</i></td><td class="rightCell">
-        <div v-if="state.isAdmin || state.loggedin && item.userID === state.loggedinUserID">
-          <input
-            type="text"
-            :ref="'demoTitle' + item.id"
-            maxlength="120"
-            @click="$event.target.select()"
-            v-model="item.title"
-            class="input demoInput"
-            :class="{'success':titleUpdated==1,'failure':titleUpdated==-1}"
-            @input="updateDemoTitle(item.id)"
-          >
-        </div>
-        <div v-else>
-          {{item.title}}
-        </div>
-      </td></tr>
-      <!--<tr><td class="leftCell"><i>author</i></td><td class="rightCell">{{item.author}}</td></tr>-->
-      <tr v-if="state.isAdmin || state.loggedin && item.userID === state.loggedinUserID">
-        <td class="leftCell">
-          <i>video URL</i>
-        </td><td class="rightCell">
-          <input
-            type="text"
-            :ref="'videoLink' + item.id"
-            maxlength="2048"
-            @click="$event.target.select()"
-            v-model="item.videoLink"
-            class="input demoInput"
-            :class="{'success':URLUpdated==1,'failure':URLUpdated==-1}"
-            @input="updateVideoURL(item)"
-          >
-        </td>
-      </tr>
-      <tr><td class="leftCell"><i>views</i></td><td class="rightCell">{{item.views-1}}</td></tr>
-      <tr><td class="leftCell"><i>created</i></td><td class="rightCell">{{formattedDate(item.created)}}</td></tr>
-      <tr><td class="leftCell"><i>share</i></td><td class="rightCell">
-        <a
-          :href="origin+'/d/'+state.decToAlpha(item.id)"
-          target="_blank"
-          v-html="'/d/'+state.decToAlpha(item.id)"
-          class="shareLink"
-        ></a>
-      </td></tr>
-      <tr v-if="forkhistoryview"><td class="leftCell"><i>user</i></td><td class="rightCell">
-        <a
-          :href="origin+'/u/'+item.author"
-          target="_blank"
-          v-html="item.author"
-          style = "text-decoration: none;"
-        ></a>
-      </td></tr>
-      <tr v-else><td class="leftCell"></td><td class="rightCell">
-        <a
-          :href="origin+'/u/'+item.author"
-          target="_blank"
-          v-html="'/u/'+truncate(item.author)"
-          class="shareLink"
-        ></a>
-      </td></tr>
-    </table>
+  <div v-if="loaded" class="demoHeader">
+    <div v-if="demo.id === -1" style="font-size: 32px;background:#8338; max-width: 500px;margin-left: auto; margin-right:auto; color: #fcc;margin-top: 35px;">
+      <br>
+      &gt;&gt; deleted &lt;&lt;
+      <br><br>
+    </div>
+    <div v-else >
+      <table v-if="typeof demo !== 'undefined'">
+        <tr><td class="leftCell"><i>demo title</i></td><td class="rightCell">
+          <div v-if="state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID">
+            <input
+              type="text"
+              :ref="'demoTitle' + demo.id"
+              maxlength="120"
+              @click="$event.target.select()"
+              v-model="demo.title"
+              class="input demoInput"
+              :class="{'success':demo.updated.title==1,'failure':demo.updated.title==-1}"
+              @input="state.updateDemoItem(demo, 'title')"
+            >
+          </div>
+          <div v-else>
+            {{demo.title}}
+          </div>
+        </td></tr>
+        <!--<tr><td class="leftCell"><i>author</i></td><td class="rightCell">{{demo.author}}</td></tr>-->
+        <tr v-if="state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID">
+          <td class="leftCell">
+            <i>video URL</i>
+          </td><td class="rightCell">
+            <input
+              type="text"
+              :ref="'videoLink' + demo.id"
+              maxlength="2048"
+              @click="$event.target.select()"
+              v-model="demo.videoLink"
+              class="input demoInput"
+              :class="{'success':demo.updated.videoLink==1,'failure':demo.updated.videoLink==-1}"
+              @input="state.updateDemoItem(demo, 'videoLink')"
+            >
+          </td>
+        </tr>
+        <tr>
+          <td class="leftCell"><i>views</i></td>
+          <td class="rightCell">
+            {{demo.views-1}}
+              <label :for="'privateCheckBox' + demo.id" v-if="state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID" title="omit this post from the home page">
+              <input
+                :id="'privateCheckBox' + demo.id"
+                style="margin-left: 30px;"
+                @input="state.updateDemoItem(demo, 'private')"
+                type="checkbox"
+                v-model="demo.private"
+              >
+              private
+              </label>
+          </td>
+        </tr>
+        <tr><td class="leftCell"><i>created</i></td><td class="rightCell">{{formattedDate(demo.created)}}</td></tr>
+        <tr><td class="leftCell"><i>share</i></td><td class="rightCell">
+          <a
+            :href="origin+'/d/'+state.decToAlpha(demo.id)"
+            target="_blank"
+            v-html="'/d/'+state.decToAlpha(demo.id)"
+            class="shareLink"
+          ></a>
+        </td></tr>
+        <tr v-if="forkhistoryview"><td class="leftCell"><i>user</i></td><td class="rightCell">
+          <a
+            :href="origin+'/u/'+demo.author"
+            target="_blank"
+            v-html="demo.author"
+            style = "text-decoration: none;"
+          ></a>
+        </td></tr>
+        <tr v-else><td class="leftCell"></td><td class="rightCell">
+          <a
+            :href="origin+'/u/'+demo.author"
+            target="_blank"
+            v-html="'/u/'+truncate(demo.author)"
+            class="shareLink"
+          ></a>
+        </td></tr>
+        <tr v-if="!forkhistoryview && state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID">
+          <td></td>
+          <td style="text-align: left;">
+            <button class="revertButton" v-html="showRevert ? 'close':'revert'" @click="showRevert = !showRevert" title="roll back changes to backed up versions, if available"></button>
+            <div v-if="showRevert" class="revertMenu">
+              <div style="font-size: 18px;color: #ccc; background: #012;padding: 5px; margin-bottom: 10px;">snapshots</div>
+              <div v-if="!demo.backups.length" style="color:#ace; font-size: 14px;text-align: left;padding: 10px;">
+                no backups yet...<br><br>
+                backups happen at the following intervals:<br><br>
+                &bull; hourly<br>
+                &bull; daily<br>
+                &bull; weekly<br>
+                &bull; monthly<br>
+                &bull; yearly<br>
+              </div>
+              <div v-else>
+                <div v-for="backup in demo.backups">
+                    <button @click="revertTo(backup, demo.id)" class="revertInnerButton" v-html="backup.backup_date"></button>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -77,15 +117,51 @@ export default {
       iteration: 0,
       cols: 0,
       e: [],
+      demo: {},
       titleUpdated: 0,
-      item: [],
-      URLUpdated: 0,
       spacers: [],
-      wraptextareas: false
+      showRevert: false,
+      wraptextareas: false,
+      loaded: false
     }
   },
   name: 'demoHeader',
-  props: [ 'state', 'itemid', 'forkhistoryview'],
+  props: [ 'state', 'thisdemo', 'demoid', 'forkhistoryview'],
+  watch:{
+    'state.closeMenus'(val){
+      if(val){
+       this.$nextTick(()=>{
+         this.loaded = true
+         this.showRevert = false
+       })
+      }
+    }
+  },
+  mounted(){
+    if(this.forkhistoryview){
+      let sendData = {
+        demoID: this.demoid
+      }
+      fetch(this.state.baseURL + '/fetchDemo.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        this.demo = this.thisdemo[0] = data
+        this.demo.updated = {}
+        this.demo.private = !!(+this.demo.private)
+        for (const [key, value] of Object.entries(this.demo)) {
+          this.demo.updated[key]=0
+        }
+        this.loaded = true
+      })
+    } else {
+      this.demo = this.thisdemo[0]
+      this.loaded = true
+    }
+  },
   computed:{
     filteredDemos(){
       return this.state.demos.filter(v=>v.show)
@@ -94,86 +170,17 @@ export default {
       return window.location.origin
     }
   },
-  mounted(){
-    if(typeof this.state.demos.filter(v=>v.id===this.itemid)[0] !== 'undefined'){
-      this.item = this.state.demos.filter(v=>v.id===this.itemid)[0]
-    } else {
-      let sendData = {demoID: this.itemid}
-      fetch(this.state.baseURL + '/getSingle.php',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sendData),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data.length){
-          if(typeof this.state.demos.filter(v=>v.id===this.itemid)[0] === 'undefined'){
-            data[0].show = false
-            this.state.demos.push(data[0])
-            this.item = this.state.demos.filter(v=>v.id===this.itemid)[0]
-          }
-        }
-      })
-    }
-  },
   methods:{
+    revertTo(backup, demoID){
+      if(confirm("Are you SURE you want to revert to this backup?\n\nThis will replace all of this demo's data with the data from this backup...\n\n>>> " + backup.backup_date + " <<<\n Including: code, title, video link, and comments...\n\n this is IRREVERSIBLE!!!")){
+        this.loaded = false
+        this.state.loadDemoFromBackup(this.demo, backup.Database)
+        this.showRevert = false
+      }
+    },
     truncate(str){
       if(typeof str === 'undefined') return
       return str.length > 9 ? str.substring(0,5) + '...' + str.substring(str.length-3) : str
-    },
-    updateDemoTitle(){
-      let sendData = {
-        userName: this.state.loggedinUserName,
-        newTitle: this.item.title,
-        passhash: this.state.passhash,
-        demoID: this.item.id
-      }
-      fetch(this.state.baseURL + '/updateDemoTitle.php',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sendData),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data[0]){
-          this.titleUpdated = 1
-          setTimeout(()=>this.titleUpdated = 0, 1000)
-        } else {
-          this.titleUpdated = -1
-          setTimeout(()=>this.titleUpdated = 0, 1000)
-        }
-      })
-    },
-    updateVideoURL(item){
-      let sendData = {
-        userName: this.state.loggedinUserName,
-        newURL: this.item.videoLink,
-        passhash: this.state.passhash,
-        demoID: item.id
-      }
-      fetch(this.state.baseURL + '/updateVideoURL.php',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sendData),
-      })
-      .then(res => res.json())
-      .then(data => {
-        if(data[0]){
-          this.URLUpdated = 1
-          this.state.extractEmbedURL(item)
-					item.videoPlaying = false
-          setTimeout(()=>this.URLUpdated = 0, 1000)
-        } else {
-          this.URLUpdated = -1
-          setTimeout(()=>this.URLUpdated = 0, 1000)
-        }
-      })
     },
     formattedDate(d){
       let M=['January','February','March','April','May','June','July','August','September','October','November','December']
@@ -303,5 +310,31 @@ td{
 }
 .display{
   display: block!important;
+}
+.revertButton{
+  display: inline-block;
+  font-size: 18px;
+  background: #804;
+  width: initial;
+  min-width: initial;
+  color: #fcc;
+}
+.revertMenu{
+  position: absolute;
+  width: 200px;
+  margin-top:-10px;
+  margin-left: 10px;
+  background: #135e;
+  z-index: 100;
+  text-align: center;
+}
+.revertInnerButton{
+  padding: 3px;
+  font-size: 14px;
+  background: #288;
+  color: #8ff;
+  text-shadow: 1px 1px 1px #004;
+  margin:0;
+  margin-bottom: 10px;
 }
 </style>

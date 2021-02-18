@@ -1,36 +1,44 @@
 <template>
-  <div class="header">
-    <div class="contactMenu">
-      <!--
-      <button @click="launchPage('https://code.whitehotrobot.com')" class="socialButton" title="demos / code  https://code.whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/1Zt7AV.png" class="socialIcon">
+  <div class="header" id="header">
+    <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
+		</div>
+    <div v-else style="display: inline-block; position: absolute;">
+      <button :class="{'bumpDown': state.mode == 'single'}" @click="createDemo()" class="createDemoButton">create demo</button>
+    </div>
+    <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'single' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
+      <button
+        class="navButton"
+        :class="{'disabled': curPage < 1}"
+        :disabled="curPage < 1"
+        @click="state.firstPage()"
+      >
+        &lt;&lt;
       </button>
-      -->
-      <button @click="launchPage('https://audiocloud.whitehotrobot.com')" class="socialButton" title="audiocloud https://audiocloud.whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/1zROT5.png" class="socialIcon">
+      <button
+        class="navButton"
+        :disabled="curPage < 1"
+        :class="{'disabled': curPage < 1}"
+        @click="state.regressPage()"
+      >
+        &lt;
       </button>
-      <button @click="launchPage('https://hosting.whitehotrobot.com')" class="socialButton" title="static page hosting https://hosting.whitehotrobot.com">
-        <img src="../assets/web.png" class="socialIcon">
+      {{pagenumber}}
+      <button
+        class="navButton"
+        :class="{'disabled': totalPages == curPage+1}"
+        :disabled="totalPages == curPage+1"
+        @click="state.advancePage()"
+      >
+        &gt;
       </button>
-      <button @click="launchPage('https://words.whitehotrobot.com')" class="socialButton" title="blog / literature https://words.whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/1oHzZO.png" class="socialIcon">
+      <button
+        class="navButton"
+        :class="{'disabled': totalPages == curPage+1}"
+        :disabled="totalPages == curPage+1"
+        @click="state.lastPage()"
+      >
+        &gt;&gt;
       </button>
-      <button @click="launchPage('https://whitehotrobot.com')" class="socialButton" title="music videos / playlists https://whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/cdR9g.png" class="socialIcon">
-      </button>
-      <!--
-      <button @click="launchFacebook()" class="socialButton" title="Open our Facebook Page">
-        <img src="../assets/facebook.png" class="socialIcon">
-      </button>
-      -->
-      <button @click="launchEmail()" class="socialButton" title="contact">
-        <img src="../assets/email.png" class="socialIcon">
-      </button>
-      <!--
-      <button @click="launchPage('https://whitehotrobot.com/admin')" class="socialButton" title="Admin Section">
-        <img src="../assets/admin.png" class="socialIcon">
-      </button>
-      -->
     </div>
     <div class="workingSpace">
       <div class="loggedinDiv">
@@ -41,8 +49,16 @@
         <Account :state="state"/>
       </div>
       <div class="infoButton" title="about whitehot robot" @click="launchInfoPage()"></div>
-      <a :href="state.baseURL" class="appName">
-        <div class="appNameText">Videos<br> & Demos</div>
+      <a :href="origin" class="appName">
+        <div class="appNameText">
+          <div style="display: inline-block;transform: scalex(1.2);margin-right: 10px;">
+          whitehot
+          </div><br>
+          <div style="display: inline-block;transform: scalex(2.05);margin-right: 30px">
+            robot
+          </div><br>
+          <div style="transform: scalex(2.4);margin-right: 43px">code</div>
+        </div>
         <div class="clear"></div>
       </a>
     </div>
@@ -54,6 +70,13 @@ import Account from './Account'
 export default {
   components: {
     Account
+  },
+  data(){
+    return {
+      dragover: false,
+      showUploadProgress: false,
+      filesUploading: []
+    }
   },
   name: 'Header',
   props: [ 'state' ],
@@ -67,29 +90,70 @@ export default {
       a.click()
       a.parentNode.removeChild(a)
     },
-    /*
-    launchFacebook () {
-      window.open('https://www.facebook.com/RedwoodFord/', '_blank')
-    },
-    launchInstagram () {
-      window.open('https://www.instagram.com/redwoodford/?hl=en', '_blank')
-    },
-    */
-    launchEmail () {
-      location.href = 'mailto:whitehotrobot@gmail.com?subject=I%20come%20from%20the%20Internet!&body=I%20have%20a%20comment%20or%20concern%20about%20the%20website(code.whitehotrobot.com)...'
-    },
-    launchPage(loc) {
-      window.open(loc, '_blank')
-    },
     truncate(str){
       if(typeof str === 'undefined') return
-      return str.length > 16 ? str.substring(0,12) + '...' + str.substring(str.length-3) : str
+      return str.length > 16 ? str.substring(0,2) + '...' + str.substring(str.length-3) : str
+    },
+    createDemo(){
+      let sendData = {
+        userName: this.state.loggedinUserName, passhash: this.state.passhash
+      }
+      fetch(this.state.baseURL + '/createDemo.php',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      }).then(res=>res.json()).then(data=>{
+        if(data[0]) window.location.href = this.state.baseURL + '/d/' + this.state.decToAlpha(data[1])
+      })
+    }
+  },
+	mounted(){
+		if(this.curPage > this.totalPages) this.state.jumpToPage(this.totalPages)
+	},
+  computed:{
+    totalPages(){
+      switch(this.state.mode){
+        case 'user': return +this.state.totalUserPages; break
+        case 'default': return +this.state.totalPages; break
+        case 'single': return +this.state.totalPages; break
+      }
+    },
+    curPage(){
+      switch(this.state.mode){
+        case 'user': return +this.state.curUserPage; break
+        case 'default': return +this.state.curPage; break
+        case 'single': return +this.state.curPage; break
+      }
+    },
+    pagenumber(){
+      let num
+      if(this.state.search.string){
+        num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
+      }else{
+        switch(this.state.mode){
+          case 'user':
+            num = 'Page ' + (this.state.curUserPage+1) + ' of ' + this.state.totalUserPages
+          break
+          case 'default':
+            num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
+          break
+          case 'single':
+            num = 'Page ' + (this.state.curPage+1) + ' of ' + this.state.totalPages
+          break
+        }
+      }
+      return num
+    },
+    origin(){
+      return window.location.origin
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 .appName{
   float: right;
   position: relative;
@@ -101,16 +165,21 @@ export default {
   background-position: 10px 50%;
   background-size: 50px 50px;
   height: 50px;
+  z-index: 100;
   border-radius: 10px;
   min-width: 180px;
   
 }
 .appNameText{
   position: absolute;
-  left: 62%;
   top: 50%;
-  width: 100%;
-  transform: translate(-50%,-50%);
+  color: #f80;
+  line-height: .8em;
+  text-align: right;
+  padding-right: 5px;
+  padding-bottom: 2px;
+  right: 0;
+  transform: translate(0,-50%);
 }
 .clear{
   clear: both;
@@ -118,10 +187,11 @@ export default {
 .header{
   position: fixed;
   top: 0;
+  left: 0;
   z-index: 1000;
   height: 60px;
   width: 100%;
-  background: linear-gradient(90deg, #0008, #0348);
+  background: linear-gradient(90deg, #0008, #025c, #0008);
   border-bottom: 1px solid #2ef6;
   font-size: 24px;
   text-align: center;
@@ -154,12 +224,212 @@ export default {
 .username{
   font-size: 1em;
 }
+a{
+  color: #ff0!important;
+  text-decoration: none;
+}
+.uploadModal{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #001d;
+  z-index: 30000;
+  line-height: 1.05em;
+}
+.uploadProgressContainer{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #021d;
+  z-index: 30020;
+  line-height: 1.05em;
+}
+.uploadModalInner{
+  position: absolute;
+  top: calc(50% - 60px);
+  left: 50%;
+  width: 400px;
+  height: 280px;
+  background: #103b;
+  z-index: 30000;
+  box-shadow: 0px 0px 100px 100px #103b;
+  transform: translate(-50%, -50%);
+  border-radius: 10px;
+}
+.dragover{
+  background: #1436;
+}
+.progressBar{
+  width: 80%;
+  height: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+}
+.progressBarInner{
+  background: #0f48;
+  height: 100%;
+}
+.progressBarInnerOutline{
+  border: 1px solid #8fc3;
+  height: 100%;
+}
+.progressText{
+  position: absolute;
+  font-size: 16px;
+  left: 50%;
+  transform: translate(-50%, -90%);
+  text-shadow: 1px 1px 2px #000;
+}
+.commentContainer{
+	background: #2020;
+	padding: 10px;
+	margin-top: 6px;
+}
+.commentsHeader{
+	font-size: 28px;
+	text-align: left;
+	color: #0ff;
+	background: #0000;
+	vertical-align: top;
+}
+.commentText{
+  color: #ccc;
+  text-align: left;
+	min-width: 200px;
+  display: inline-block;
+  font-size: 18px;
+	padding-left: 10px;
+	padding-right: 10px;
+  background: #024;
+  width: calc(100% - 470px);
+  margin-left: 10px;
+}
+.commentInput:focus{
+	outline: none;
+}
+.commentInput{
+	border: none;
+	color: #ef8;
+	text-align: left;
+	vertical-align: top;
+	display: inline-block;
+	font-size: 18px;
+	background: #001c;
+	margin-left: 10px;
+}
+.commentAvatar{
+  position: absolute;
+	margin-left: -51px;
+	width: 500px;
+	height: 500px;
+	max-height:30px;
+	max-width:40px;
+	margin-top: -2px;
+}
+.commentMain{
+  width: 100%;
+	margin-top: 4px;
+	padding-bottom: 6px;
+	border-bottom: 2px solid #48f3;
+  text-align: left;
+}
+.commentUserName{
+	color: #6dc;
+	padding: 0;
+	padding-left: 50px;
+	padding-right: 5px;
+	padding-top: 2px;
+	vertical-align: top;
+}
+.commentDeleteButton{
+	background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+	background-repeat: no-repeat;
+	background-size: 25px 25px;
+	background-position: center center;
+	width: 34px;
+	height: 34px;
+	vertical-align: top;
+	margin-top: -5px;
+	border-radius: 5px;
+	background-color: #f880;
+}
+.commentEditButton{
+  background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
+}
+.newComment{
+	width: calc(100% - 100px)!important;
+	float:left;
+}
+.curPageContainer{
+  position: absolute;
+  display: inline-block;
+  width: 270px;
+  transform: translateX(-50%);
+	line-height: .8em;
+	min-height: 25px;
+  margin-top: 32px;
+	margin-left: 30px;
+  vertical-align: top;
+  padding-top: 0px;
+  font-size: .8em;
+  z-index: 1000;
+}
+.createDemoButton{
+  margin: 0;
+  background: #0f4;
+  width: 110px;
+  display: inline-block;
+  text-align: center;
+	line-height: .8em;
+  min-width: 0;
+  margin-top: 5px;
+  padding: 0;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-left: 65px;
+  position: absolute;
+  font-size: 18px;
+  z-index: 1000;
+}
+.navButton{
+  min-width:0;
+  height: 25px;
+  padding: 0;
+  background: #0f0;
+  margin: 0;
+  margin-left: 2px;
+  margin-right: 2px;
+  width: 25px;
+}
+.disabled{
+  background: #888;
+}
+.bumpLeft{
+  margin-left: -30px;
+}
+.bumpDown{
+  margin-top: 17px!important;
+  margin-left: 0;
+}
 .infoButton{
   position: relative;
   width: 40px;
   height: 40px;
   top: 10px;
-  z-index: 1000;
   margin-right: 5px;
   float: right;
   background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
@@ -168,38 +438,12 @@ export default {
   background-position: center center;
   cursor: pointer;
 }
-a{
-  color: #ff0!important;
-  text-decoration: none;
-}
-.contactMenu{
+.jumpButton{
+  background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);
+  background-size: cover;
   position: absolute;
-  left: 50%;
+  margin-top: 5px;
+  margin-left: 15px;
   z-index: 1000;
-  transform: translate(-50%);
-  margin-top: 8px;
-}
-.socialIcon{
-  height: 28px;
-  margin-bottom: 4px;
-}
-.socialButton{
-  width: 60px!important;
-  cursor: pointer;
-  margin: 5px;
-  padding: 2px;
-  border-radius: 5px;
-  background: #123;
-  border: 1px solid #1ae8;
-  font-weight: 900;
-  color: #204;
-  font-size: 30px;
-  height: 35px;
-  min-width: 40px!important;
-  max-width: 50px;
-  font-family: 'Oxanium';
-}
-.socialButton:focus{
-  outline: none;
 }
 </style>

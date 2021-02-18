@@ -3,7 +3,8 @@
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
-  $comment = mysqli_real_escape_string($link, $data->{'comment'});
+	$item = mysqli_real_escape_string($link, $data->{'item'});
+  $newItemVal = mysqli_real_escape_string($link, $data->{'newItemVal'});
   $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
   $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'";';
   $res = mysqli_query($link, $sql);
@@ -11,19 +12,14 @@
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
-      $sql1=$sql = 'INSERT INTO demoComments (text, demoID, userID) VALUES("'.$comment.'", '.$demoID.', '.$row['id'].')';
+      if($row['admin']){
+        $sql = 'UPDATE items SET '.$item.' = "'.$newItemVal.'" WHERE id = '.$demoID;
+      } else {
+        $sql = 'UPDATE items SET '.$item.' = "'.$newItemVal.'" WHERE id = '.$demoID . ' AND userID = ' . $row['id'];
+      }
       mysqli_query($link, $sql);
       $success = true;
     }
   }
-
-  if($success){
-		$insertID = mysqli_insert_id($link);
-		$sql = 'SELECT date FROM demoComments WHERE id = ' . $insertID;
-		$res = mysqli_query($link, $sql);
-		$row = mysqli_fetch_assoc($res);
-		echo json_encode([$success, $insertID, $row['date'], $sql1]);
-	} else {
-		echo json_encode([$success]);
-	}
+  echo json_encode([$success,$sql]);
 ?>
