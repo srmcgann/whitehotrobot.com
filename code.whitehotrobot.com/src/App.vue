@@ -189,6 +189,7 @@ export default {
         .then(res => res.json())
         .then(data => {
   				if(data) {
+            console.log(data)
 						item.videoIframeURL = data
 					} else {
 						item.videoIframeURL = ''
@@ -417,13 +418,12 @@ export default {
         this.state.demoDataReceived = true
         if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
           data[0].demos = this.state.user.demos
-          this.state.user.demos.map(v=>{
+          data[0].map(v=>{
             this.extractEmbedURL(v)
           })
         }else{
           data[0].demos.map(v=>{
             v.updated = {}
-            this.extractEmbedURL(v)
             for (const [key, value] of Object.entries(v)) {
               v.updated[key]=0
             }            
@@ -437,7 +437,9 @@ export default {
               this.fetchUserData(q.userID)
               return q
             })
+            this.extractEmbedURL(v)
           })
+          this.state.inView = Array(data[0].length).fill().map(v=>false)
         }
         this.state.totalUserPages = data[1]
         if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
@@ -526,13 +528,13 @@ export default {
             for (const [key, value] of Object.entries(v)) {
               v.updated[key]=0
             }
+            this.extractEmbedURL(v)
             v.comments = v.comments.map(q=>{
               q.updated = false
               q.editing = false
               this.fetchUserData(q.userID)
               return q
             })
-            this.extractEmbedURL(v)
             v.videoPlaying = false
             v.play = this.state.autoplay
             v.show = true
@@ -606,6 +608,7 @@ export default {
           })
           this.extractEmbedURL(v)
         })
+        this.state.inView = Array(data[0].length).fill().map(v=>false)
         this.state.landingPage.demos = data[0]
         this.state.totalPages = data[1]
         if(this.state.curPage+1 > this.state.totalPages) this.lastPage()

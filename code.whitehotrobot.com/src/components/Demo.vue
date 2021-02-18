@@ -71,7 +71,7 @@
                 allowfullscreen="true"
               ></iframe>
               <div v-else-if="!demo.videoPlaying" class="sizedThumb">
-                <img :src="demo.videoIframeURL" class="sizedThumbImg" />
+                <img :src="videoIframeURL" class="sizedThumbImg" />
                 <button class="startVidButton" @click="demo.videoPlaying = !demo.videoPlaying">⏵︎</button>
               </div>
               <div v-else>
@@ -575,6 +575,9 @@ export default {
     }
   },
   computed:{
+    videoIframeURL(){
+      return this.demo.videoIframeURL + '?' + (this.state.globalT/4|0)
+    },
     vidThumb(){
       let item = this.demo
 			let link = this.demo.videoLink
