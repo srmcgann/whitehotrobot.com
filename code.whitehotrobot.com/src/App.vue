@@ -417,6 +417,9 @@ export default {
         this.state.demoDataReceived = true
         if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
           data[0].demos = this.state.user.demos
+          this.state.user.demos.map(v=>{
+            this.extractEmbedURL(v)
+          })
         }else{
           data[0].demos.map(v=>{
             v.updated = {}
@@ -994,16 +997,25 @@ select{
 	color: #ff0;
 }
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 12px!important;
 }
 ::-webkit-scrollbar:hover{
   cursor: pointer!important;
 }
 
 ::-webkit-scrollbar-track {
-  background: #124; 
+  background: #133!important; 
 }
 ::-webkit-scrollbar-track:hover {
+  cursor: pointer!important;
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #166!important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #588; 
   cursor: pointer!important;
 }
 a,button{

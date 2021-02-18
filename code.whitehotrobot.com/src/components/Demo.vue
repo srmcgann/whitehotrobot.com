@@ -579,9 +579,9 @@ export default {
       let item = this.demo
 			let link = this.demo.videoLink
 			if(link.substring(link.length-3).toUpperCase() === 'MP4'){
-				this.$nextTick(()=>return item.videoIframeURL)
+				return item.videoIframeURL
 			} else {
-        return this.$nextTick(()=>'//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg')
+        return '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg'
 			}
     },
     filteredComments(){
