@@ -1081,4 +1081,21 @@ textarea:focus{
 .JStextarea{
   color: #acf;
 }
+.showForkHistoryButton{
+  position: absolute;
+  min-width: 0;
+  font-size: 16px;
+  line-height: .9em;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 10px;
+  background: #c94;
+  color: #000;
+  font-weight: 900;
+  height: 53px;
+  margin-top: 234px;
+}
+.slideRight{
+}
 </style>
