@@ -9,18 +9,18 @@
   $start = $maxResultsPerPage * $page;
 
   $sql="SELECT id FROM words WHERE private = 0";
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
   $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
-	$sql = 'SELECT * FROM words WHERE private = 0 ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
-	$res = mysqli_query($link, $sql);
-	$posts = [];
-	for($i = 0; $i < mysqli_num_rows($res); ++$i){
-		$posts[] = mysqli_fetch_assoc($res);
+  $sql = 'SELECT * FROM words WHERE private = 0 ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+  $res = mysqli_query($link, $sql);
+  $posts = [];
+  for($i = 0; $i < mysqli_num_rows($res); ++$i){
+    $posts[] = mysqli_fetch_assoc($res);
   }
   forEach($posts as &$post){
-		$postID = $post['id'];
+    $postID = $post['id'];
     $post['backups'] = getBackups($postID);
     $sql = 'SELECT * FROM wordsComments WHERE postID = ' . $postID;
     $res2 = mysqli_query($link, $sql);
@@ -29,5 +29,5 @@
       $post['comments'][] = mysqli_fetch_assoc($res2);
     }
   }
-	echo json_encode([$posts, $totalPages, $page]);
+  echo json_encode([$posts, $totalPages, $page]);
 ?>

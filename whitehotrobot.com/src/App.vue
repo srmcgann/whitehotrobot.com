@@ -31,7 +31,7 @@ export default {
         playlists: [],
         formattedDate: null,
         playAll: null,
-				incrementViews: null,
+        incrementViews: null,
         displayConsole: false,
         userName: '',
         users: [],
@@ -39,7 +39,7 @@ export default {
         decToAlpha: null,
         openFullscreen: null,
         home: null,
-				codeHome: null,
+        codeHome: null,
         mode: 'default',
         shuffle: false,
         thumbURL: 'https://code.whitehotrobot.com',
@@ -81,9 +81,9 @@ export default {
         elem.msRequestFullscreen()
       }
     },
-		codeHome(){
+    codeHome(){
       window.location.href = this.state.baseDemoURL
-		},
+    },
     home(){
       window.location.href = this.state.baseURL
     },
@@ -92,7 +92,7 @@ export default {
       var l=new Date(d)
       return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear()// + ' • ' + (l.getHours()%12) + ':' + l.getMinutes() + ' ' + (l.getHours()<12?'AM':'PM')
     },
-		incrementViews(id){
+    incrementViews(id){
       let sendData = {demoID: id}
       fetch(this.state.baseURL + '/incrementViews.php',{
         method: 'POST',
@@ -102,8 +102,8 @@ export default {
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
         this.state.videos.filter(v=>+v.id==id)[0].videoViews =  +data[1]
-			})
-		},
+      })
+    },
     alphaToDec(val){
       let pow=0
       let res=0
@@ -272,7 +272,7 @@ export default {
     this.state.decToAlpha = this.decToAlpha
     this.state.home = this.home
     this.state.codeHome = this.codeHome
-		this.state.playAll = this.playAll
+    this.state.playAll = this.playAll
     this.state.formattedDate = this.formattedDate
     this.state.incrementViews = this.incrementViews
     this.state.queueNextVideo = this.queueNextVideo

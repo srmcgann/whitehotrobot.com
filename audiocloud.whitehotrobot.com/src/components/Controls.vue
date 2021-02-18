@@ -65,8 +65,8 @@ export default {
     showHotkeys(){
       alert("hotkeys cheat-sheet...\n\n    [space] : play/pause current track\n    [right-key] : advance to the next song (shuffle applies)\n    [left-key] : restart track if pos > 5%, else prev. track (shuffle applies)\n    [shift+right-key] : advance track by 10s\n    [shift+left-key] : rewind track by 10s\n    [ESC] : show/hide advanced controls section\n    [enter] : jump to current playing track")
     },
-		updateUserPrefs(pref){
-			this.$nextTick(()=>{
+    updateUserPrefs(pref){
+      this.$nextTick(()=>{
         let newval
         switch(pref){
           case 'audiocloudPlayAll': newval = this.state.playall ? 0 : 1; break
@@ -75,24 +75,24 @@ export default {
           case 'audiocloudNumTracksPerPage': newval = this.state.maxResultsPerPage; break
         }
         let sendData = {
-	  			userName: this.state.loggedinUserName,
-				  passhash: this.state.passhash,
-					pref,
-			  	newval
- 	  	 }
+          userName: this.state.loggedinUserName,
+          passhash: this.state.passhash,
+          pref,
+          newval
+       }
        fetch(this.state.baseURL + '/updatePrefs.php',{
          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(sendData),
-		  	})
+        })
         .then(res => res.json())
         .then(data => {
-					if(pref == 'audiocloudNumTracksPerPage') window.location.reload()
+          if(pref == 'audiocloudNumTracksPerPage') window.location.reload()
         })
-		  })
-	  },
+      })
+    },
     doReg(){
       this.state.showRegister = true
       this.state.showLoginPrompt()
@@ -109,15 +109,15 @@ export default {
     }
   },
   computed:{
-		trackPlaying(){
-			let ret = false
-			if(typeof this.state.currentTrack != 'undefined' && typeof this.state.currentTrack == 'function'){
-			  if(this.state.currentTrack()){
-				  ret = !!this.state.currentTrack().length
-				}
-			}
-			return ret
-		},
+    trackPlaying(){
+      let ret = false
+      if(typeof this.state.currentTrack != 'undefined' && typeof this.state.currentTrack == 'function'){
+        if(this.state.currentTrack()){
+          ret = !!this.state.currentTrack().length
+        }
+      }
+      return ret
+    },
     totalPages(){
       switch(this.state.mode){
         case 'u': return +this.state.totalUserPages; break
@@ -238,22 +238,22 @@ export default {
 .curPageContainer{
   display: inline-block;
   width: 270px;
-	line-height: .8em;
-	min-height: 25px;
+  line-height: .8em;
+  min-height: 25px;
   margin-top: 3px;
-	margin-left: -15px;
+  margin-left: -15px;
   vertical-align: top;
   padding-top: 0px;
 }
 .advancedControls{
-	top: 0;
+  top: 0;
   display: inline-block;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
   margin-bottom: 10px;
-	left: 50%;
-	width: 100%;
+  left: 50%;
+  width: 100%;
 }
 .navContainer{
   margin-top: -50px;
@@ -262,7 +262,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 600px!important;
-	height: 100%;
+  height: 100%;
   position: relative;
   z-index: 0;
 }
@@ -271,9 +271,9 @@ export default {
   width: 80px;
   display: inline-block;
   text-align: center;
-	line-height: .8em;
+  line-height: .8em;
   margin-top: 4px;
-	margin-left: 20px;
+  margin-left: 20px;
   min-width: 0;
 }
 .navButton{

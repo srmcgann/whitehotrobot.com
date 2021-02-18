@@ -5,9 +5,9 @@
 
   $sql = 'SELECT * FROM playlists WHERE playlist_name = ' . $playlist_name;
   $res = mysqli_query($link, $sql);
-	if($res){
-		echo json_encode(mysqli_fetch_assoc($res));
-	} else {
-		echo json_encode();
-	}
+  if($res){
+    echo json_encode(mysqli_fetch_assoc($res));
+  } else {
+    echo json_encode();
+  }
 ?>

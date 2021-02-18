@@ -1,6 +1,6 @@
 <template>
   <div class="trackContainer"
-	  :ref="'trackContainer' + track.id"
+    :ref="'trackContainer' + track.id"
     :class="{'singleTrack': state.mode=='track', 'embedTrack': state.mode=='embed'}"
   >
   <div class="embedCode" v-if="showEmbedCode">
@@ -11,7 +11,7 @@
     </div>
   </div>
   <transition name="fadePulse">
-	  <div v-if="showPulse" style="position:absolute; width: 100%; background: #0f0;z-index: -1;margin-left: -10px; margin-top:-10px;border-radius: 10px;" :ref="'pulse' + track.id"></div>
+    <div v-if="showPulse" style="position:absolute; width: 100%; background: #0f0;z-index: -1;margin-left: -10px; margin-top:-10px;border-radius: 10px;" :ref="'pulse' + track.id"></div>
   </transition>
 
     <button v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin" class="deleteTrackButton" @click="deleteTrack(track)">
@@ -180,8 +180,8 @@
             <span class="timestamp" v-html="processedTimestamp(comment.date)" style="float: right;display: inline-block!important;"></span>
             <span  v-if="typeof state.userInfo[comment.userID] != 'undefined'" class="commentUserName" style="font-size: 20px;">
               <div 
-							  :class="{'bumpUp': state.userAgent.toUpperCase().indexOf('FIREFOX')!==-1}"
-							  class="commentAvatar" :style="'background-image:url('+state.getAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
+                :class="{'bumpUp': state.userAgent.toUpperCase().indexOf('FIREFOX')!==-1}"
+                class="commentAvatar" :style="'background-image:url('+state.getAvatar(comment.userID)+');width:50px!important;height:50px!important;background-repeat: no-repeat; background-position: center center; background-size: cover;'"></div>
               <a :href="state.baseURL + '/u/' + state.userInfo[comment.userID].name" target="_blank" style="color:#4dc!important;font-style: oblique;margin-left: 5px;">{{state.userInfo[comment.userID].name}}</a>
             </span><br>
             <div v-if="comment.editing && state.loggedin" style="display:inline-block;width:calc(100% + 30px);">
@@ -258,9 +258,9 @@ export default {
       t: 0,
       loop: false,
       trackAmplitude:[],
-			marquisTimer: null,
+      marquisTimer: null,
       showComments: 2,
-			skipRedraw: false,
+      skipRedraw: false,
       moreCommentsVal: 5,
       pulse: false,
       showEmbedCode: false,
@@ -275,7 +275,7 @@ export default {
       trackdata: [],
       c: null,
       percentLoaded: 0,
-			showPulse: true,
+      showPulse: true,
       duration: 0,
       trackAnalyzed: false,
       bufferLength: null,
@@ -303,27 +303,27 @@ export default {
         if(this.skipRedraw)this.B=[],this.Draw(this.skipRedraw=false)
       }
     },
-		doMarquis(){
+    doMarquis(){
       if(this.track.playing){
         let s = this.track.author + ' - ' + this.track.trackName
         let p = (this.marquisTimer++) % s.length
         document.title = s.substring(p) + '  -  ' + s.substring(0, p)
       }
-		},
+    },
     incrComments(){
       this.showComments += this.moreCommentsVal
     },
-		toggleEditMode(comment){
-			comment.editing = !comment.editing
-			if(comment.editing){
-				this.$nextTick(()=>{
-			    this.$refs['comment' + comment.id].focus()
+    toggleEditMode(comment){
+      comment.editing = !comment.editing
+      if(comment.editing){
+        this.$nextTick(()=>{
+          this.$refs['comment' + comment.id].focus()
           this.$refs['comment' + comment.id].select()
-				})
-			}
-		},
+        })
+      }
+    },
     deleteComment(comment, item){
-			if(confirm('are you SURE you want to delete this comment?!?!?\n\n\nTHIS ACTION IS IRREVERSIBLE!')){
+      if(confirm('are you SURE you want to delete this comment?!?!?\n\n\nTHIS ACTION IS IRREVERSIBLE!')){
         let id = comment.id
         let sendData = {
           userName: this.state.loggedinUserName,
@@ -343,12 +343,12 @@ export default {
             item.comments = item.comments.filter(v=>v.id != id)
           }
         })
-		  }
+      }
     },
-		editComment(comment){
-			let id = comment.id
-			let text = this.$refs['comment' + id].value
-			let sendData = {
+    editComment(comment){
+      let id = comment.id
+      let text = this.$refs['comment' + id].value
+      let sendData = {
         userName: this.state.loggedinUserName,
         comment: text,
         passhash: this.state.passhash,
@@ -371,10 +371,10 @@ export default {
           setTimeout(()=>comment.updated = 0, 1000)
         }
       })
-		},
+    },
     postComment(id){
       let text = this.$refs['newComment' + id].value
-			if(text.length){
+      if(text.length){
         let sendData = {
           userName: this.state.loggedinUserName,
           comment: text,
@@ -391,13 +391,13 @@ export default {
         .then(res => res.json())
         .then(data => {
           if(data[0]){
-		  			let comment = {
-			  			userID: this.state.loggedinUserID,
-				  		text,
-					  	trackID: id,
+            let comment = {
+              userID: this.state.loggedinUserID,
+              text,
+              trackID: id,
               id: data[1],
-  						date: data[2]
-	  				}
+              date: data[2]
+            }
 
             if(this.state.search.string){
               this.state.search.audiocloudTracks.filter(v=>v.id==id)[0].comments.push(comment)
@@ -415,14 +415,14 @@ export default {
               }        
             }
 
-						this.$refs['newComment' + id].value = ''
-			  	}
+            this.$refs['newComment' + id].value = ''
+          }
         })
-			}
+      }
     },
-		processedTimestamp(val){
-			let months=[
-			  'Jan',
+    processedTimestamp(val){
+      let months=[
+        'Jan',
         'Feb',
         'Mar',
         'Apr',
@@ -434,27 +434,27 @@ export default {
         'Oct',
         'Nov',
         'Dec'
-			]
-			/*
-			let days=[
-			  'Sun,',
+      ]
+      /*
+      let days=[
+        'Sun,',
         'Mon,',
         'Tue,',
         'Wed,',
         'Thur,',
         'Fri,',
         'Sat,'
-			]
-			*/
-			let days = Array(7).fill('')
-			let hours = [
-			  12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
-			]
-			let d = new Date(Date.parse(val.replace(/-/g, '/')))
+      ]
+      */
+      let days = Array(7).fill('')
+      let hours = [
+        12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+      ]
+      let d = new Date(Date.parse(val.replace(/-/g, '/')))
       let mn = '' + d.getMinutes()
       if(mn.length == 1) mn = '0' + mn
-			return hours[d.getHours()] + ':' + mn + (d.getHours<12?'AM':'PM') + ' - ' + days[d.getDay()] + months[d.getMonth()] + ' ' + d.getDate() + ' ' + d.getFullYear()
-		},
+      return hours[d.getHours()] + ':' + mn + (d.getHours<12?'AM':'PM') + ' - ' + days[d.getDay()] + months[d.getMonth()] + ' ' + d.getDate() + ' ' + d.getFullYear()
+    },
     deleteTrack(track){
       if(confirm("\n\n\nAre you SURE you want to delete this track??!?!\n\n\n     Track: \"" + track.trackName + "\"\n     created: " + this.formattedDate(track.date) + "\n\n\nThis action is IRREVERSIBLE!!!!")){
         this.track.mp3.pause()
@@ -534,7 +534,7 @@ export default {
     formattedDate(d){
       let M=['January','February','March','April','May','June','July','August','September','October','November','December']
       var l=new Date(d)
-			let mn = '' + l.getMinutes()
+      let mn = '' + l.getMinutes()
       if(mn.length == 1) mn = '0' + mn
       return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear() + ' • ' + ((l.getHours()%12)+1) + ':' + mn + ' ' + (l.getHours()<12?'AM':'PM')
     },
@@ -547,7 +547,7 @@ export default {
       }
     },
     Draw(){
-			if(this.skipRedraw) return
+      if(this.skipRedraw) return
       let t = this.t
       let x = this.x
       let c = this.c
@@ -634,7 +634,7 @@ export default {
       }
       
       this.t += 1/60
-			if(!this.track.playing && this.trackAnalyzed) this.skipRedraw = true
+      if(!this.track.playing && this.trackAnalyzed) this.skipRedraw = true
       requestAnimationFrame(this.Draw)
     },
     formattedCurrentTime(){
@@ -651,7 +651,7 @@ export default {
       if(sec.length == 0) sec = '00'
       if(sec.length == 1) sec = '0' + sec
       let cur = (+hr ? hr + ':' : '') +  mn + ':' + sec
-			let l
+      let l
       hr = (l = this.track.mp3.duration - this.track.mp3.currentTime) / 60 / 60 |0
       mn = (l / 60 / 60 - hr)*60 | 0
       sec = ((l / 60 / 60 - hr)*60 - mn)*60 | 0
@@ -664,8 +664,8 @@ export default {
       if(mn.length == 1) mn = '0' + mn
       if(sec.length == 0) sec = '00'
       if(sec.length == 1) sec = '0' + sec
-			return cur + '  ( -' + (+hr ? hr + ':' : '') +  mn + ':' + sec + ')'
-		},
+      return cur + '  ( -' + (+hr ? hr + ':' : '') +  mn + ':' + sec + ')'
+    },
     stringToUint(string) {
         var string = btoa(unescape(encodeURIComponent(string))),
             charList = string.split(''),
@@ -688,35 +688,35 @@ export default {
     }
   },
   watch:{
-		'track.jump'(val){
-			if(val){
-				let el = this.$refs['trackContainer' + this.track.id]
+    'track.jump'(val){
+      if(val){
+        let el = this.$refs['trackContainer' + this.track.id]
         window.scroll(0, el.offsetTop-80 + (this.state.showControls ? -160 : 0))
         this.showPulse = true
         this.$nextTick(()=>{
           this.$refs['pulse' + this.track.id].style.width = this.$refs['trackContainer' + this.track.id].clientWidth + 'px'
           this.$refs['pulse' + this.track.id].style.height = this.$refs['trackContainer' + this.track.id].clientHeight + 'px'
         })
-				this.$nextTick(()=>{
-	  			this.showPulse = false
-				})
-			}
-		},
+        this.$nextTick(()=>{
+          this.showPulse = false
+        })
+      }
+    },
     'track.playing'(val){
       if(!val){
-		    this.track.mp3.pause()
-			} else {
-				this.$nextTick(()=>{
-					this.track.mp3.play()
+        this.track.mp3.pause()
+      } else {
+        this.$nextTick(()=>{
+          this.track.mp3.play()
           this.state.curPlayId = this.track.id
-					this.$nextTick(()=>{
-						if(this.skipRedraw){
-							this.skipRedraw = false
-  						this.Draw()
-						}
-					})
-				})
-			}
+          this.$nextTick(()=>{
+            if(this.skipRedraw){
+              this.skipRedraw = false
+              this.Draw()
+            }
+          })
+        })
+      }
     }
   },
   beforeUnmount(){
@@ -726,10 +726,10 @@ export default {
     }
   },
   mounted(){
-		this.track.jump = 0
-		setInterval(()=>{
-		  this.doMarquis()
-		}, 300)
+    this.track.jump = 0
+    setInterval(()=>{
+      this.doMarquis()
+    }, 300)
     this.c = this.$refs.canvas
     this.c.addEventListener('click', e=>{
       if(this.trackAnalyzed){
@@ -737,11 +737,11 @@ export default {
         this.track.mp3.currentTime = this.track.mp3.duration * perc
         this.state.pauseVisible()
         if(!this.track.playing){
-					this.track.playing = false
-					this.$nextTick(()=>{
-						this.skipRedraw
+          this.track.playing = false
+          this.$nextTick(()=>{
+            this.skipRedraw
             this.track.playing = true
-					})
+          })
         }
       }
     })
@@ -811,11 +811,11 @@ export default {
     } else {
       this.trackAnalyzed = true
     }
-		if(this.track.playing){
-		  this.$nextTick(()=>{
-		  this.track.mp3.play()
-			})
-		}
+    if(this.track.playing){
+      this.$nextTick(()=>{
+      this.track.mp3.play()
+      })
+    }
     this.Draw()
     }
   }
@@ -968,43 +968,43 @@ input[type=text]{
   background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
 }
 .commentContainer{
-	background: #2020;
-	padding: 10px;
-	margin-top: 6px;
+  background: #2020;
+  padding: 10px;
+  margin-top: 6px;
 }
 .commentsHeader{
-	font-size: 28px;
-	text-align: left;
-	color: #0ff;
-	width: calc(100% - 200px);
-	background: #0000;
-	vertical-align: top;
+  font-size: 28px;
+  text-align: left;
+  color: #0ff;
+  width: calc(100% - 200px);
+  background: #0000;
+  vertical-align: top;
   float: left;
-	margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 .commentText{
   color: #ff8;
   text-align: left;
   display: inline-block;
   font-size: 18px;
-	padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   background: #2466;
   margin-top: 10px;
   width: calc(100% - 120px)!important;
   margin-left: 60px;
 }
 .commentInput:focus{
-	outline: none;
+  outline: none;
 }
 .commentInput{
-	border: none;
-	color: #ef8;
-	text-align: left;
-	vertical-align: top;
-	display: inline-block;
-	font-size: 18px;
-	background: #001c;
+  border: none;
+  color: #ef8;
+  text-align: left;
+  vertical-align: top;
+  display: inline-block;
+  font-size: 18px;
+  background: #001c;
   margin-top: 10px;
   width: calc(100% - 160px)!important;
   margin-right: 10px;
@@ -1012,41 +1012,41 @@ input[type=text]{
 }
 .commentAvatar{
   position: absolute;
-	margin-left: -1px;
+  margin-left: -1px;
   max-height: 50px;
   max-width: 50px;
   width: auto;
   border-radius: 50%;
-	height:50px;
-	top: initial;
-	margin-top: -2px;
+  height:50px;
+  top: initial;
+  margin-top: -2px;
 }
 .commentMain{
   width: 100%;
-	margin-top: 4px;
-	padding-bottom: 6px;
-	border-bottom: 2px solid #48f3;
+  margin-top: 4px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #48f3;
   text-align: left;
 }
 .commentUserName{
-	color: #6dc;
-	padding: 0;
-	padding-left: 50px;
-	padding-right: 5px;
-	padding-top: 2px;
-	vertical-align: top;
+  color: #6dc;
+  padding: 0;
+  padding-left: 50px;
+  padding-right: 5px;
+  padding-top: 2px;
+  vertical-align: top;
 }
 .commentDeleteButton{
-	background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
-	background-repeat: no-repeat;
-	background-size: 25px 25px;
-	background-position: center center;
-	width: 34px;
-	height: 34px!important;
-	vertical-align: top;
-	margin-top: -5px;
-	border-radius: 5px;
-	background-color: #f880;
+  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px!important;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
 }
 .commentEditButton{
   background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
@@ -1061,8 +1061,8 @@ input[type=text]{
   background-color: #f880;
 }
 .newComment{
-	width: calc(100% - 100px)!important;
-	float:left;
+  width: calc(100% - 100px)!important;
+  float:left;
 }
 table{
   margin-left: auto;
@@ -1103,21 +1103,21 @@ table{
   background-color: #0000;
   margin-left: -106px;
   margin-top: 72px;
-	border-radius: 0;
+  border-radius: 0;
   background-image: url(https://lookie.jsbot.net/uploads/6aevA.png);
 }
 .jumpToNextButton{
   background-color: #0000;
   margin-left: -22px;
   margin-top: 72px;
-	border-radius: 0;
+  border-radius: 0;
   background-image: url(https://lookie.jsbot.net/uploads/20SIWe.png);
 }
 .singleTrack{
   position: absolute;
   top: 47%;
-	margin-top: 200px;
-	margin-bottom: 200px;
+  margin-top: 200px;
+  margin-bottom: 200px;
   transform: translate(0, -50%);
 }
 .embedTrack{

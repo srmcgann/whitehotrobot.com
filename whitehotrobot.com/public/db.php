@@ -7,10 +7,10 @@
 
   $local = false;
 
-	if($local){
-		$videodemo_url = 'http://local.code.whitehotrobot.com';
-	} else {
-	  $videodemo_url = 'https://code.whitehotrobot.com';
+  if($local){
+    $videodemo_url = 'http://local.code.whitehotrobot.com';
+  } else {
+    $videodemo_url = 'https://code.whitehotrobot.com';
   }
   $video_db_name = 'videodemos';
   $playlist_db_name = $video_db_name . '';

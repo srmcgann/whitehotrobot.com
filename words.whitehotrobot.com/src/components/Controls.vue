@@ -51,31 +51,31 @@ export default {
     showHotkeys(){
       alert("hotkeys cheat-sheet...\n\n")
     },
-		updateUserPrefs(pref){
-			this.$nextTick(()=>{
+    updateUserPrefs(pref){
+      this.$nextTick(()=>{
         let newval
         switch(pref){
           case 'wordsPostsPerPage': newval = this.state.maxResultsPerPage; break
         }
         let sendData = {
-	  			userName: this.state.loggedinUserName,
-				  passhash: this.state.passhash,
-					pref,
-			  	newval
- 	  	 }
+          userName: this.state.loggedinUserName,
+          passhash: this.state.passhash,
+          pref,
+          newval
+       }
        fetch(this.state.baseURL + '/updatePrefs.php',{
          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(sendData),
-		  	})
+        })
         .then(res => res.json())
         .then(data => {
-					if(pref == 'wordsPostsPerPage') window.location.reload()
+          if(pref == 'wordsPostsPerPage') window.location.reload()
         })
-		  })
-	  },
+      })
+    },
     doReg(){
       this.state.showRegister = true
       this.state.showLoginPrompt()
@@ -212,22 +212,22 @@ export default {
 .curPageContainer{
   display: inline-block;
   width: 270px;
-	line-height: .8em;
-	min-height: 25px;
+  line-height: .8em;
+  min-height: 25px;
   margin-top: 3px;
-	margin-left: -15px;
+  margin-left: -15px;
   vertical-align: top;
   padding-top: 0px;
 }
 .advancedControls{
-	top: 0;
+  top: 0;
   display: inline-block;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
   margin-bottom: 10px;
-	left: 50%;
-	width: 100%;
+  left: 50%;
+  width: 100%;
 }
 .navContainer{
   margin-top: -50px;
@@ -236,7 +236,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 600px!important;
-	height: 100%;
+  height: 100%;
   position: relative;
   z-index: 0;
 }
@@ -245,9 +245,9 @@ export default {
   width: 80px;
   display: inline-block;
   text-align: center;
-	line-height: .8em;
+  line-height: .8em;
   margin-top: 4px;
-	margin-left: 20px;
+  margin-left: 20px;
   min-width: 0;
 }
 .navButton{

@@ -22,17 +22,17 @@
 
   $t_minus = time() - $viewWindow;
   $sql = 'USE ' . $db;
-	mysqli_query($link, $sql);
+  mysqli_query($link, $sql);
   $sql = "DELETE FROM videoViews WHERE time < " . $t_minus;
   mysqli_query($link, $sql);
 
   $go = false;
-	$views = 0;
+  $views = 0;
 
   if($_SERVER['REMOTE_ADDR']){
-		$sql = 'SELECT videoViews FROM items WHERE id = ' . $demoID;
-		$res = mysqli_query($link, $sql);
-		$row = mysqli_fetch_assoc($res);
+    $sql = 'SELECT videoViews FROM items WHERE id = ' . $demoID;
+    $res = mysqli_query($link, $sql);
+    $row = mysqli_fetch_assoc($res);
     $views = $row['videoViews'];
     $decIP = ipToDec($_SERVER['REMOTE_ADDR']);
     $sql='SELECT time FROM videoViews WHERE decIP = ' . $decIP . ' AND demoID = ' . $demoID . ' ORDER BY time DESC';
@@ -51,7 +51,7 @@
       $time = time();
       $sql = 'INSERT INTO videoViews (decIP, demoID, time) VALUES('.$decIP.','.$demoID.','.$time.');';
       mysqli_query($link, $sql);
-			$views++;
+      $views++;
     }
   }
   echo json_encode([$go, $views]);

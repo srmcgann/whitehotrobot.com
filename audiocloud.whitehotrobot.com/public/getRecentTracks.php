@@ -8,18 +8,18 @@
   $start = $maxResultsPerPage * $page;
 
   $sql="SELECT id FROM audiocloudTracks WHERE private = 0";
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
   $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
-	$sql = 'SELECT * FROM audiocloudTracks WHERE private = 0 ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
-	$res = mysqli_query($link, $sql);
-	$tracks = [];
-	for($i = 0; $i < mysqli_num_rows($res); ++$i){
-		$tracks[] = mysqli_fetch_assoc($res);
+  $sql = 'SELECT * FROM audiocloudTracks WHERE private = 0 ORDER BY date DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+  $res = mysqli_query($link, $sql);
+  $tracks = [];
+  for($i = 0; $i < mysqli_num_rows($res); ++$i){
+    $tracks[] = mysqli_fetch_assoc($res);
   }
   forEach($tracks as &$track){
-		$trackID = $track['id'];
+    $trackID = $track['id'];
     $sql = 'SELECT * FROM audiocloudComments WHERE trackID = ' . $trackID;
     $res2 = mysqli_query($link, $sql);
     $track['comments'] = [];
@@ -27,5 +27,5 @@
       $track['comments'][] = mysqli_fetch_assoc($res2);
     }
   }
-	echo json_encode([$tracks, $totalPages, $page]);
+  echo json_encode([$tracks, $totalPages, $page]);
 ?>

@@ -8,15 +8,15 @@
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
     echo json_encode([
-		  $row['enabled'],
-			$row['id'],
-			$row['avatar'],
-			$row['admin'],
-			$row['audiocloudNumTracksPerPage'],
+      $row['enabled'],
+      $row['id'],
+      $row['avatar'],
+      $row['admin'],
+      $row['audiocloudNumTracksPerPage'],
       $row['audiocloudPlayAll'],
       $row['audiocloudShuffle'],
       $row['audiocloudDisco']
-	  ]);
+    ]);
   } else {
     echo json_encode([false,'']);
   }

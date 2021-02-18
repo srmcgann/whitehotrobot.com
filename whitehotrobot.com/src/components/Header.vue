@@ -8,7 +8,7 @@
       <div style="position: relative; margin-top: -13px;">
         <div class="headerTitle">Whitehot Robot - Jukebox</div><br>
         <!--
-				<div v-if="state.mode=='default'">
+        <div v-if="state.mode=='default'">
           default
         </div>
         <div v-else-if="state.mode=='single'">
@@ -20,7 +20,7 @@
         <div v-else-if="state.mode=='playlist'">
           <span class="yellow">playlist:</span> {{state.playlist.name}}
         </div>
-				-->
+        -->
       </div>
     </div>
     <div class="bottomBorder">
@@ -93,7 +93,7 @@ export default {
   color: #8ff;
   font-weight: 900;
   font-style: oblique;
-	font-size: 2.0em;
+  font-size: 2.0em;
   display: inline-block;
 }
 </style>

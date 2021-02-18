@@ -4,20 +4,20 @@
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
 
   $sql = 'USE ' . $db;
-	mysqli_query($link, $sql);
-	$sql = 'SELECT * FROM items WHERE author LIKE "'.$userName.'" ORDER BY id DESC'; 
-	$res = mysqli_query($link, $sql);
-	$videos = [];
-	for($i=0;$i<mysqli_num_rows($res);++$i){
-		$row = mysqli_fetch_assoc($res);
+  mysqli_query($link, $sql);
+  $sql = 'SELECT * FROM items WHERE author LIKE "'.$userName.'" ORDER BY id DESC'; 
+  $res = mysqli_query($link, $sql);
+  $videos = [];
+  for($i=0;$i<mysqli_num_rows($res);++$i){
+    $row = mysqli_fetch_assoc($res);
     unset($row['demoHTML']);
     unset($row['demoCSS']);
     unset($row['demoJS']);
     if($row['videoLink']) $videos[] = $row;
-	}
+  }
   if(sizeof($videos)){
-		echo json_encode($videos);
-	} else {
-		echo json_encode(false);
-	}
+    echo json_encode($videos);
+  } else {
+    echo json_encode(false);
+  }
 ?>

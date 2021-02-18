@@ -36,13 +36,13 @@ export default {
         beginSearch: null,
         curTrack: null,
         curSearchPage: 0,
-				jumpToPage: null,
-				playall: false,
-				userAgent: null,
-				shuffle: false,
-				disco: false,
+        jumpToPage: null,
+        playall: false,
+        userAgent: null,
+        shuffle: false,
+        disco: false,
         userData: [],
-				preloadImages: [],
+        preloadImages: [],
         curUserPage: null,
         incrementViews: null,
         loggedinUserName: '',
@@ -61,12 +61,12 @@ export default {
         loggedin: false,
         totalUserPages: 0,
         totalPages: 0,
-				playPreviousTrack: null,
-				playNextTrack: null,
+        playPreviousTrack: null,
+        playNextTrack: null,
         showUploadModal: false,
-				currentTrack: null,
+        currentTrack: null,
         toggleLogin: null,
-				maxResultsPerPage: 0,
+        maxResultsPerPage: 0,
         showLoginPrompt: null,
         globalT: 0,
         showControls: false,
@@ -90,7 +90,7 @@ export default {
         regusername: '',
         advancePage: null,
         regressPage: null,
-				filteredUserTracks: null,
+        filteredUserTracks: null,
         firstPage: null,
         lastPage: null,
         regpassword: '',
@@ -182,8 +182,8 @@ export default {
       }
       return res
     },
-		fetchUserData(id){
-			if(typeof this.state.userData[id] == 'undefined'){
+    fetchUserData(id){
+      if(typeof this.state.userData[id] == 'undefined'){
         let sendData = {
           userID: id,
           page: this.state.curUserPage,
@@ -206,8 +206,8 @@ export default {
             this.state.userInfo[id].isAdmin = data[0].isAdmin
           }
         })
-			}
-		},
+      }
+    },
     loadLandingPage(){
       let sendData = {
         page: this.state.curPage,
@@ -220,12 +220,12 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-				data[0].map(v=>{
+        data[0].map(v=>{
           v.playing = false
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           this.incrementViews(v.id)
-					this.loadUserData(v.author)
+          this.loadUserData(v.author)
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
@@ -236,10 +236,10 @@ export default {
         this.state.landingPage.audiocloudTracks = data[0]
         this.state.totalPages = data[1]
         if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
-				this.state.loaded = true
-				if(this.state.playall) {
-				  this.playNextTrack()
-				}
+        this.state.loaded = true
+        if(this.state.playall) {
+          this.playNextTrack()
+        }
       })
     },
     loadUserData(name){
@@ -247,7 +247,7 @@ export default {
         name: decodeURIComponent(name),
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash,
-				maxResultsPerPage: this.state.maxResultsPerPage,
+        maxResultsPerPage: this.state.maxResultsPerPage,
         page: this.state.curUserPage
       }
       fetch(this.state.baseURL + '/fetchUserDataByName.php',{
@@ -280,7 +280,7 @@ export default {
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
         this.state.userInfo[this.state.user.id].isAdmin = this.state.user.isAdmin
-				this.state.refreshAvatar = true
+        this.state.refreshAvatar = true
         this.state.loaded = true
         if(this.state.playall && this.state.search.string == '') {
           if(this.state.mode == 'u') this.playNextTrack()
@@ -300,7 +300,7 @@ export default {
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
         data.private = !!(+data.private)
-				this.fetchUserData(data.userID)
+        this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
           q.updated = false
           q.editing = false
@@ -395,10 +395,10 @@ export default {
             this.state.userInfo[this.state.loggedinUserID].avatar = data[2]
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
             if(+data[3]) this.state.isAdmin = true
-						this.state.maxResultsPerPage = +data[4]
+            this.state.maxResultsPerPage = +data[4]
             this.state.playall = !!(+data[5])
             this.state.shuffle = !!(+data[6])
-						this.state.disco = !!(+data[7])
+            this.state.disco = !!(+data[7])
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -501,22 +501,22 @@ export default {
       }else{
         this.state.mode = 'default'
         this.getPages()
-				if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+        if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
       }
     },
-		getPages(){
-			switch(this.state.mode){
-				case 'u':
-				this.loadUserData(this.state.user.name)
-				break
-				case 'track':
-				this.loadTrack()
-				break
-				case 'default':
-				this.loadLandingPage()
-				break
-			}
-		},
+    getPages(){
+      switch(this.state.mode){
+        case 'u':
+        this.loadUserData(this.state.user.name)
+        break
+        case 'track':
+        this.loadTrack()
+        break
+        case 'default':
+        this.loadLandingPage()
+        break
+      }
+    },
     login(){
       let sendData = {userName: this.state.username, password: this.state.password}
       fetch(this.state.baseURL + '/login.php',{
@@ -535,7 +535,7 @@ export default {
           this.state.isAdmin = +data[4]
           this.state.playall = !!(+data[5])
           this.state.shuffle = !!(+data[6])
-					this.state.disco = !!(+data[7])
+          this.state.disco = !!(+data[7])
           this.state.passhash = data[1]
           this.setCookie()
           this.closePrompts()
@@ -549,7 +549,7 @@ export default {
           sendData = {
             userID: this.state.loggedinUserID,
             page: this.state.curUserPage,
-		        maxResultsPerPage: this.state.maxResultsPerPage
+            maxResultsPerPage: this.state.maxResultsPerPage
           }
           fetch(this.state.baseURL + '/fetchUserData.php',{
             method: 'POST',
@@ -644,20 +644,20 @@ export default {
         break
       }
     },
-		jumpToPage(pageNo){
+    jumpToPage(pageNo){
       let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
-			switch(this.state.mode){
-			  case 'u':
-				window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo + search
-				break
-				case 'default':
+      switch(this.state.mode){
+        case 'u':
+        window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo + search
+        break
+        case 'default':
         window.location.href = window.location.origin + '/' + pageNo + search
-				break
-				case 'track':
+        break
+        case 'track':
         window.location.href = window.location.origin + '/track/' + this.decToAlpha(this.state.curTrack) + '/' + pageNo + search
-				break
-			}
-		},
+        break
+      }
+    },
     lastPage(){
       let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
       switch(this.state.mode){
@@ -700,20 +700,20 @@ export default {
         break
       }
     },
-		playNextTrack(){
-			let curplayId
-			let curplayIdx
-			if(this.currentPlayingTracks.length){
-				curplayId = this.currentPlayingTracks[0].id
-				curplayIdx = this.currentPlayingTracks[0].idx
-				this.currentPlayingTracks[0].mp3.currentTime = 0
-				this.currentPlayingTracks[0].playing = false
+    playNextTrack(){
+      let curplayId
+      let curplayIdx
+      if(this.currentPlayingTracks.length){
+        curplayId = this.currentPlayingTracks[0].id
+        curplayIdx = this.currentPlayingTracks[0].idx
+        this.currentPlayingTracks[0].mp3.currentTime = 0
+        this.currentPlayingTracks[0].playing = false
       } else {
-				curplayId = -1
-			}
-			
+        curplayId = -1
+      }
+      
       if(this.state.search.string){
-        if(this.state.search.audiocloudTracks.length) {				
+        if(this.state.search.audiocloudTracks.length) {       
           if(curplayId == -1){
             if(this.state.shuffle){
               let idx
@@ -752,7 +752,7 @@ export default {
       }else{
         switch(this.state.mode){
           case 'u':
-            if(this.filteredUserTracks.length) {				
+            if(this.filteredUserTracks.length) {        
               if(curplayId == -1){
                 if(this.state.shuffle){
                   let idx
@@ -834,8 +834,8 @@ export default {
           break
         }
       }
-		},
-		playPauseCurrentTrack(){
+    },
+    playPauseCurrentTrack(){
       if(!this.state.curPlayId) this.playNextTrack()
       let el
       if(this.state.search.string){
@@ -861,21 +861,21 @@ export default {
           break
         }
       }
-		},
-		playPreviousTrack(){
-			let curplayId
-			let curplayIdx
-			if(this.currentPlayingTracks.length){
-				curplayId = this.currentPlayingTracks[0].id
-				curplayIdx = this.currentPlayingTracks[0].idx
-				this.currentPlayingTracks[0].mp3.currentTime = 0
-				this.currentPlayingTracks[0].playing = false
+    },
+    playPreviousTrack(){
+      let curplayId
+      let curplayIdx
+      if(this.currentPlayingTracks.length){
+        curplayId = this.currentPlayingTracks[0].id
+        curplayIdx = this.currentPlayingTracks[0].idx
+        this.currentPlayingTracks[0].mp3.currentTime = 0
+        this.currentPlayingTracks[0].playing = false
       } else {
-				curplayId = -1
-			}
-			
+        curplayId = -1
+      }
+      
       if(this.state.search.string){
-        if(this.state.search.audiocloudTracks.length) {				
+        if(this.state.search.audiocloudTracks.length) {       
           if(curplayId == -1){
             if(this.state.shuffle){
               let idx
@@ -909,7 +909,7 @@ export default {
       }else{
         switch(this.state.mode){
           case 'u':
-            if(this.filteredUserTracks.length) {				
+            if(this.filteredUserTracks.length) {        
               if(curplayId == -1){
                 if(this.state.shuffle){
                   let idx
@@ -982,7 +982,7 @@ export default {
           break
         }
       }
-		},
+    },
     doSearch(searchString, page1){
       this.state.search.audiocloudTracks = []
       this.state.search.timerHandle = null
@@ -1063,8 +1063,8 @@ export default {
           this.state.search.timer = d
         }, Math.min(1000, d-this.state.search.timer))
       } else {
-				this.state.search.string = this.state.search.string.trim()
-			}
+        this.state.search.string = this.state.search.string.trim()
+      }
     },
     loadHotKeys(){
       window.addEventListener('keydown',(e)=>{
@@ -1121,13 +1121,13 @@ export default {
         }
       })
     },
-		jumpToPlayingTrack(){
-			let l
+    jumpToPlayingTrack(){
+      let l
       if((l=this.state.currentTrack()).length){
-				l[0].jump++
-			}
-		},    
-		currentTrack(){
+        l[0].jump++
+      }
+    },    
+    currentTrack(){
       if(this.state.search.string){
         return this.state.search.audiocloudTracks.filter(v=>v.playing)
       }else{
@@ -1146,10 +1146,10 @@ export default {
           break
         }
       }
-		},
+    },
   },
-	computed:{
-		currentPlayingTracks(){
+  computed:{
+    currentPlayingTracks(){
       if(this.state.search.string){
         this.state.search.audiocloudTracks = this.state.search.audiocloudTracks.map((v, i)=>{v.idx = i; return v})
         if(this.state.search.audiocloudTracks.filter(v=>v.playing).length) this.state.curPlayId = this.state.search.audiocloudTracks.filter(v=>v.playing)[0].id
@@ -1178,7 +1178,7 @@ export default {
           break
         }
       }
-		},
+    },
     filteredUserTracks(){
       if(this.state.user != null && typeof this.state.user.audiocloudTracks !== 'undefined'){
         return this.state.user.audiocloudTracks.filter(v=>!v.private || this.state.loggedinUserName.toUpperCase() == this.state.user.name.toUpperCase() || this.state.isAdmin)
@@ -1186,7 +1186,7 @@ export default {
         return []
       }
     },
-	},
+  },
   watch:{
     'state.search.string'(val){
       if(!val) this.state.search.hits = 0
@@ -1205,9 +1205,9 @@ export default {
     'state.playall'(val){
       if(val){
         if(this.state.loaded) this.playNextTrack()
-			} else {
-				this.state.pauseVisible()
-			}
+      } else {
+        this.state.pauseVisible()
+      }
       document.cookie = 'autoplay=' + this.state.playall + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
     },
     'state.showUploadModal'(val){
@@ -1223,28 +1223,28 @@ export default {
     setInterval(()=>{
       this.state.globalT+=1/60
     },1/60*1000|0)
-		this.state.userAgent = navigator.userAgent
+    this.state.userAgent = navigator.userAgent
     this.state.playPauseCurrentTrack = this.playPauseCurrentTrack
     this.state.toggleShowControls = this.toggleShowControls
     this.state.filteredUserTracks = this.filteredUserTracks
     this.state.jumpToPlayingTrack = this.jumpToPlayingTrack
-		this.state.playPreviousTrack = this.playPreviousTrack
+    this.state.playPreviousTrack = this.playPreviousTrack
     this.state.showUserSettings = this.showUserSettings
     this.state.showLoginPrompt = this.showLoginPrompt
     this.state.incrementViews = this.incrementViews
     this.state.openFullscreen = this.openFullscreen
     this.state.fetchUserData = this.fetchUserData
-		this.state.playNextTrack = this.playNextTrack
+    this.state.playNextTrack = this.playNextTrack
     this.state.closePrompts = this.closePrompts
     this.state.pauseVisible = this.pauseVisible
     this.state.loadUserData = this.loadUserData
     this.state.checkEnabled = this.checkEnabled
     this.state.currentTrack = this.currentTrack
     this.state.advancePage = this.advancePage
-		this.state.beginSearch = this.beginSearch
-		this.state.regressPage = this.regressPage
+    this.state.beginSearch = this.beginSearch
+    this.state.regressPage = this.regressPage
     this.state.toggleLogin = this.toggleLogin
-		this.state.jumpToPage = this.jumpToPage
+    this.state.jumpToPage = this.jumpToPage
     this.state.decToAlpha = this.decToAlpha
     this.state.alphaToDec = this.alphaToDec
     this.state.firstPage = this.firstPage
@@ -1255,15 +1255,15 @@ export default {
     this.state.logout = this.logout
     this.state.login = this.login
     this.checkLogin()
-		let startTime = (new Date()).getTime()
-		setInterval(()=>{
-			if(this.state.disco){
-				let t = ((new Date()).getTime() - startTime)/10+200
-  			document.getElementsByTagName('body')[0].style.backgroundColor = `hsla(${t}, 99%, 3%, 1)`
+    let startTime = (new Date()).getTime()
+    setInterval(()=>{
+      if(this.state.disco){
+        let t = ((new Date()).getTime() - startTime)/10+200
+        document.getElementsByTagName('body')[0].style.backgroundColor = `hsla(${t}, 99%, 3%, 1)`
         if(this.state.mode!=='embed') document.getElementById('header').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, .9), hsla(${t}, 60%, 15%, .8)`
         document.getElementById('footerBar').style.background = `linear-gradient(90deg, hsla(${t}, 99%, 1%, 1), hsla(${t}, 60%, 5%, .7)`
-			}
-		}, 100)
+      }
+    }, 100)
 
     this.preloadImages = [
       'https://lookie.jsbot.net/uploads/2ftyk1.png',
@@ -1277,16 +1277,16 @@ export default {
       'https://lookie.jsbot.net/uploads/14MAyj.png',
       'https://lookie.jsbot.net/uploads/20SIWe.png',
       'https://lookie.jsbot.net/uploads/6aevA.png',
-			'https://lookie.jsbot.net/uploads/1RptlQ.png',
-			'https://lookie.jsbot.net/uploads/v9UDT.png',
-			'https://lookie.jsbot.net/uploads/1tgOjR.png'
-	  ]
-		this.preloadImages.map(v=>{
-			let img = new Image()
+      'https://lookie.jsbot.net/uploads/1RptlQ.png',
+      'https://lookie.jsbot.net/uploads/v9UDT.png',
+      'https://lookie.jsbot.net/uploads/1tgOjR.png'
+    ]
+    this.preloadImages.map(v=>{
+      let img = new Image()
       img.src = v
-			return v
+      return v
     })
-	}
+  }
 }
 </script>
 
@@ -1390,7 +1390,7 @@ option{
 }
 select{
   background: #012;
-	color: #ff0;
+  color: #ff0;
 }
 select:focus{
   outline: none;

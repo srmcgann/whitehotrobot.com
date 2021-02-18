@@ -1,6 +1,6 @@
 <template>
   <div class="header" id="header">
-		<div v-if="showUploadProgress" class="uploadProgressContainer">
+    <div v-if="showUploadProgress" class="uploadProgressContainer">
       <br>uploading {{filesUploading.length}} file{{filesUploading.length > 1 ? 's':''}}...
       <div class="progressBar" v-for="file in filesUploading">
         <div class="progressBarInnerOutline">
@@ -30,9 +30,9 @@
 
     <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
       <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="state.jumpToPlayingTrack()" title="jump to playing track [ctrl+y]"></button>
-		</div>
+    </div>
     <div v-else style="display: inline-block; position: absolute;">
-			<button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="state.jumpToPlayingTrack()" title="jump to playing track"></button>
+      <button v-if="state.mode != 'track'" class="navButton jumpButton" :class="{'disabled': !trackPlaying}" @click="state.jumpToPlayingTrack()" title="jump to playing track"></button>
       <button :class="{'bumpDown': state.mode == 'track'}" @click="startUpload()" class="uploadButton">upload</button>
     </div>
     <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'track' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
@@ -120,8 +120,8 @@ export default {
       a.click()
       a.parentNode.removeChild(a)
     },
-		updateUserPrefs(pref){
-			this.$nextTick(()=>{
+    updateUserPrefs(pref){
+      this.$nextTick(()=>{
         let newval
         switch(pref){
           case 'audiocloudPlayAll': newval = this.state.playall ? 0 : 1; break
@@ -130,24 +130,24 @@ export default {
           case 'audiocloudNumTracksPerPage': newval = this.state.maxResultsPerPage; break
         }
         let sendData = {
-	  			userName: this.state.loggedinUserName,
-				  passhash: this.state.passhash,
-					pref,
-			  	newval
- 	  	 }
+          userName: this.state.loggedinUserName,
+          passhash: this.state.passhash,
+          pref,
+          newval
+       }
        fetch(this.state.baseURL + '/updatePrefs.php',{
          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(sendData),
-		  	})
+        })
         .then(res => res.json())
         .then(data => {
-					if(pref == 'audiocloudNumTracksPerPage') window.location.reload()
+          if(pref == 'audiocloudNumTracksPerPage') window.location.reload()
         })
-		  })
-	  },
+      })
+    },
     startUpload(){
       this.state.showUploadModal=true
     },
@@ -222,19 +222,19 @@ export default {
       file.click()
     }
   },
-	mounted(){
-		if(this.curPage > this.totalPages) this.state.jumpToPage(this.totalPages)
-	},
+  mounted(){
+    if(this.curPage > this.totalPages) this.state.jumpToPage(this.totalPages)
+  },
   computed:{
-		trackPlaying(){
-			let ret = false
-			if(typeof this.state.currentTrack != 'undefined' && typeof this.state.currentTrack == 'function'){
-			  if(this.state.currentTrack()){
-				  ret = !!this.state.currentTrack().length
-				}
-			}
-			return ret
-		},
+    trackPlaying(){
+      let ret = false
+      if(typeof this.state.currentTrack != 'undefined' && typeof this.state.currentTrack == 'function'){
+        if(this.state.currentTrack()){
+          ret = !!this.state.currentTrack().length
+        }
+      }
+      return ret
+    },
     totalPages(){
       switch(this.state.mode){
         case 'u': return +this.state.totalUserPages; break
@@ -408,77 +408,77 @@ a{
   text-shadow: 1px 1px 2px #000;
 }
 .commentContainer{
-	background: #2020;
-	padding: 10px;
-	margin-top: 6px;
+  background: #2020;
+  padding: 10px;
+  margin-top: 6px;
 }
 .commentsHeader{
-	font-size: 28px;
-	text-align: left;
-	color: #0ff;
-	background: #0000;
-	vertical-align: top;
+  font-size: 28px;
+  text-align: left;
+  color: #0ff;
+  background: #0000;
+  vertical-align: top;
 }
 .commentText{
   color: #ccc;
   text-align: left;
-	min-width: 200px;
+  min-width: 200px;
   display: inline-block;
   font-size: 18px;
-	padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   background: #024;
   width: calc(100% - 470px);
   margin-left: 10px;
 }
 .commentInput:focus{
-	outline: none;
+  outline: none;
 }
 .commentInput{
-	border: none;
-	color: #ef8;
-	text-align: left;
-	vertical-align: top;
-	display: inline-block;
-	font-size: 18px;
-	background: #001c;
-	margin-left: 10px;
+  border: none;
+  color: #ef8;
+  text-align: left;
+  vertical-align: top;
+  display: inline-block;
+  font-size: 18px;
+  background: #001c;
+  margin-left: 10px;
 }
 .commentAvatar{
   position: absolute;
-	margin-left: -51px;
-	width: 500px;
-	height: 500px;
-	max-height:30px;
-	max-width:40px;
-	margin-top: -2px;
+  margin-left: -51px;
+  width: 500px;
+  height: 500px;
+  max-height:30px;
+  max-width:40px;
+  margin-top: -2px;
 }
 .commentMain{
   width: 100%;
-	margin-top: 4px;
-	padding-bottom: 6px;
-	border-bottom: 2px solid #48f3;
+  margin-top: 4px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #48f3;
   text-align: left;
 }
 .commentUserName{
-	color: #6dc;
-	padding: 0;
-	padding-left: 50px;
-	padding-right: 5px;
-	padding-top: 2px;
-	vertical-align: top;
+  color: #6dc;
+  padding: 0;
+  padding-left: 50px;
+  padding-right: 5px;
+  padding-top: 2px;
+  vertical-align: top;
 }
 .commentDeleteButton{
-	background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
-	background-repeat: no-repeat;
-	background-size: 25px 25px;
-	background-position: center center;
-	width: 34px;
-	height: 34px;
-	vertical-align: top;
-	margin-top: -5px;
-	border-radius: 5px;
-	background-color: #f880;
+  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
 }
 .commentEditButton{
   background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
@@ -493,18 +493,18 @@ a{
   background-color: #f880;
 }
 .newComment{
-	width: calc(100% - 100px)!important;
-	float:left;
+  width: calc(100% - 100px)!important;
+  float:left;
 }
 .curPageContainer{
   position: absolute;
   display: inline-block;
   width: 270px;
   transform: translateX(-50%);
-	line-height: .8em;
-	min-height: 25px;
+  line-height: .8em;
+  min-height: 25px;
   margin-top: 32px;
-	margin-left: 30px;
+  margin-left: 30px;
   vertical-align: top;
   padding-top: 0px;
   font-size: .8em;
@@ -516,7 +516,7 @@ a{
   width: 80px;
   display: inline-block;
   text-align: center;
-	line-height: .8em;
+  line-height: .8em;
   min-width: 0;
   margin-top: 5px;
   margin-left: 65px;

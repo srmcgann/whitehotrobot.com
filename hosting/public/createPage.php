@@ -158,37 +158,37 @@ Draw()';
   $HTML = mysqli_real_escape_string($link, $HTML);
   $CSS = mysqli_real_escape_string($link, $CSS);
   $JS = mysqli_real_escape_string($link, $JS);
-	$insert_id = -1;
+  $insert_id = -1;
   if($userName && $passhash){
-		$sql='SELECT * FROM users WHERE name LIKE "' . $userName . '" AND passhash = "' .$passhash. '"';
-	  if($res = mysqli_query($link, $sql)){
+    $sql='SELECT * FROM users WHERE name LIKE "' . $userName . '" AND passhash = "' .$passhash. '"';
+    if($res = mysqli_query($link, $sql)){
       $row=mysqli_fetch_assoc($res);
       $escaped_name = escapeUserName($userName, $row['id']);
-		  $userID = $row['id'];
-		  if($row['enabled']){
+      $userID = $row['id'];
+      if($row['enabled']){
         $sql = 'INSERT INTO pages (pageHTML, 
-				                           pageCSS,
-																	 pageJS, 
-																	 title, 
-																	 userID, 
-																	 author, 
-																	 escaped_name,
-																	 favicon)
-				                    VALUES("' . $HTML . '", 
-														       "' . $CSS . '", 
-																	 "' . $JS . '", 
-																	 "' . $title . '", 
-																	 ' . $userID . ', 
-																	 "' . $author . '", 
-																	 "' . $escaped_name . '",
-																	 "' . $favicon . '")';
-			  mysqli_query($link, $sql);
-			  $insert_id = mysqli_insert_id($link);
+                                   pageCSS,
+                                   pageJS, 
+                                   title, 
+                                   userID, 
+                                   author, 
+                                   escaped_name,
+                                   favicon)
+                            VALUES("' . $HTML . '", 
+                                   "' . $CSS . '", 
+                                   "' . $JS . '", 
+                                   "' . $title . '", 
+                                   ' . $userID . ', 
+                                   "' . $author . '", 
+                                   "' . $escaped_name . '",
+                                   "' . $favicon . '")';
+        mysqli_query($link, $sql);
+        $insert_id = mysqli_insert_id($link);
         if($insert_id && !$row['has_hosting']){
           exec('sudo /home/cantelope/hosting/createUser.sh ' . $escaped_name . ' ' . $passhash . ' ' . $insert_id);
         }
-		  }
-	  }
-	}
-	echo json_encode($insert_id);
+      }
+    }
+  }
+  echo json_encode($insert_id);
 ?>

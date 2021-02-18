@@ -352,7 +352,7 @@ export default {
       YTplayer: null,
       videoID: -1,
       consoleBGImg: null,
-			bracketsImg: null
+      bracketsImg: null
     }
   },
   computed:{
@@ -432,7 +432,7 @@ export default {
     },
     getEmbedURL(item, idx){
       if(item.videoLink.indexOf('youtu')!==-1){
-				let l=''
+        let l=''
         if((l=item.videoLink.split('?')).length){
           l=l.filter(v=>v.indexOf('v=')!==-1)
           if(l.length) l=l[l.length-1].split('v=')[1].split('&')[0]
@@ -443,7 +443,7 @@ export default {
         }
         //return l ? 'https://www.youtube.com/embed/' + l + '?autoplay=1': ''
         this.videoID = l ? l : ''
-			} else {
+      } else {
         this.videoID = -1
       }
       if(this.videoID !== -1){
@@ -460,7 +460,7 @@ export default {
         this.state.videos.map(v=>v.playing=false)
         this.videoID = -1
         video.playing = true
-				this.state.incrementViews(video.id)
+        this.state.incrementViews(video.id)
       }
     },
     Draw(){
@@ -479,8 +479,8 @@ export default {
       if(!this.t){
         this.consoleBGImg = new Image()
         this.consoleBGImg.src = 'https://lookie.jsbot.net/uploads/gmMHe.png'
-				this.bracketsImg = new Image()
-				this.bracketsImg.src = 'https://lookie.jsbot.net/uploads/1Tofda.png'
+        this.bracketsImg = new Image()
+        this.bracketsImg.src = 'https://lookie.jsbot.net/uploads/1Tofda.png'
       }
 
       var R=(Rl,Pt,Yw,o)=>{
@@ -493,8 +493,8 @@ export default {
       x.globalAlpha = .25
       x.drawImage(this.consoleBGImg,24,24,464,464)
       x.globalAlpha=.6
-			x.drawImage(this.bracketsImg, 437, 20, 50,70)
-			x.globalAlpha = .14+S(t*4)/16
+      x.drawImage(this.bracketsImg, 437, 20, 50,70)
+      x.globalAlpha = .14+S(t*4)/16
       
       let Rl=-t*2
       let Pt=0
@@ -610,9 +610,9 @@ table{
   width: calc(100% - 120px);
 }
 .mainContent{
-	width: 675px;
-	margin-left: auto;
-	margin-right: auto;
+  width: 675px;
+  margin-left: auto;
+  margin-right: auto;
   position: relative;
   margin-top: 100px;
   text-align: center;
