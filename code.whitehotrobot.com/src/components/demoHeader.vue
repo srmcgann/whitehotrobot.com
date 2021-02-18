@@ -114,7 +114,6 @@
 export default {
   data(){
     return {
-      iteration: 0,
       cols: 0,
       e: [],
       demo: {},

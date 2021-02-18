@@ -326,26 +326,6 @@ export default {
         }
       }
     },
-    update(id){
-      if(this.state.loggedin){
-        let demoHTML = this.$refs['HTML' + id].value
-        let demoCSS = this.$refs['CSS' + id].value
-        let demoJS = this.$refs['JS' + id].value
-        let sendData = {demoHTML, demoCSS, demoJS, demoID: id, userName: this.state.loggedinUserName, passhash: this.state.passhash}
-        fetch(this.state.baseURL + '/updateDemo.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(sendData),
-        })
-        .then(res => res.json())
-        .then(data => {
-          this.iteration++
-        })
-      }
-    },
-    
     vidThumb(item){
 			let link = item.videoLink
 			if(link.substring(link.length-3).toUpperCase() === 'MP4'){
@@ -750,22 +730,6 @@ td{
 }
 .forkHistoryCluster{
   position: absolute;
-}
-.showForkHistoryButton{
-  position: absolute;
-  min-width: 0;
-  font-size: 16px;
-  line-height: .9em;
-  padding: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px;
-  background: #c94;
-  color: #000;
-  font-weight: 900;
-  height: 53px;
-}
-.slideRight{
 }
 .commentContainer{
 	background: #2020;

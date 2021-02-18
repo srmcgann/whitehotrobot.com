@@ -71,7 +71,7 @@
                 allowfullscreen="true"
               ></iframe>
               <div v-else-if="!demo.videoPlaying" class="sizedThumb">
-                <img :src="videoIframeURL" class="sizedThumbImg" />
+                <img :src="demo.videoIframeURL + '?' + iteration" class="sizedThumbImg" />
                 <button class="startVidButton" @click="demo.videoPlaying = !demo.videoPlaying">⏵︎</button>
               </div>
               <div v-else>
@@ -263,6 +263,8 @@ export default {
   },
   data(){
     return {
+      iteration: 0,
+      refreshedVideoIframeURL: false,
       showRevert: false,
       showComments: 3,
       moreCommentsVal: 3,
@@ -363,7 +365,6 @@ export default {
         .then(data => {
           if(data[0]){
             this.updated[item] = 1
-            this.demo.iteration++
             setTimeout(()=>this.updated[item] = 0, 1000)
           } else {
             this.updated[item] = -1
@@ -575,9 +576,6 @@ export default {
     }
   },
   computed:{
-    videoIframeURL(){
-      return this.demo.videoIframeURL + '?' + (this.state.globalT/4|0)
-    },
     vidThumb(){
       let item = this.demo
 			let link = this.demo.videoLink
@@ -602,6 +600,12 @@ export default {
     }
   },
   mounted(){
+    setInterval(()=>{
+      if(!this.refreshedVideoIframeURL){
+        this.refreshedVideoIframeURL = true
+        this.iteration++
+      }
+    })
     //if(this.state.mode == 'single'){
     //  document.getElementsByTagName('html')[0].scroll(0, document.getElementsByTagName('html')[0].clientHeight/3.5)
    // }

@@ -429,7 +429,7 @@ export default {
             v.updated = {}
             for (const [key, value] of Object.entries(v)) {
               v.updated[key]=0
-            }            
+            }
             if(this.state.mode != 'default') this.incrementViews(v.id)
             v.editHTML = false
             v.iteration = 0
