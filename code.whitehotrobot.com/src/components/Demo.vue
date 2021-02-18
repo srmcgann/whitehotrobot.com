@@ -1100,8 +1100,9 @@ textarea:focus{
   color: #000;
   font-weight: 900;
   height: 53px;
-  margin-top: 217px;
+  margin-top: 215px;
 }
 .slideRight{
+  margin-top: 150px;
 }
 </style>
