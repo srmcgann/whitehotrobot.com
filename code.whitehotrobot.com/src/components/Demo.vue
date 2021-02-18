@@ -63,7 +63,7 @@
           <div class="vidThumbContainer">
             <div class="vidThumb" :ref="'vidThumb'+demo.id">
               <iframe
-                v-if="typeof demo.videoIframeURL !== 'undefined' &&demo.videoIframeURL.indexOf('/thumbs/')===-1"
+                v-if="typeof demo.videoIframeURL !== 'undefined' && demo.videoIframeURL.indexOf('/thumbs/')===-1"
                 class="vidThumbImg"
                 :src="demo.videoIframeURL"
                 frameborder="0"

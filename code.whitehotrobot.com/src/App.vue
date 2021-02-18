@@ -30,8 +30,8 @@ export default {
   data(){
     return {
       state: {
-        baseURL: 'http://local.code.whitehotrobot.com',
-				baseDemoURL: 'http://local.demo.whitehotrobot.com',
+        baseURL: 'https://code.whitehotrobot.com',
+				baseDemoURL: 'https://demo.whitehotrobot.com',
 				rootDomain: 'whitehotrobot.com',
         demos: [],
         loggedin: false,
@@ -597,6 +597,7 @@ export default {
           v.allowDownload = !!(+v.allowDownload)
           this.incrementViews(v.id)
 					this.loadUserData(v.author)
+          v.videoPlaying = false
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
