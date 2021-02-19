@@ -237,7 +237,7 @@ export default{
 
 <style>
 .LoginPrompt{
-  position: absolute;
+  position: fixed;
   width: 100vw;
   height: 100vh;
   z-index: 10000;

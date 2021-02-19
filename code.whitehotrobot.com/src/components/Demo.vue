@@ -283,7 +283,7 @@ export default {
   },
   methods:{
     maybeClose(e){
-      if(e.target.id == 'fho' + this.demo.id) this.demo.showForkHistory = false
+      if(e.target.id == 'fho' + this.demo.id) this.state.toggleShowForkHistory(this.demo)
     },
     forkDemo(demoID){
       if(this.state.loggedin){

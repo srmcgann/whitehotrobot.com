@@ -406,13 +406,15 @@ export default {
       })
     },
     toggleShowForkHistory(item){
-      if(item.showForkHistory){
-        item.showForkHistory = false
-        document.getElementsByTagName('html')[0].style.overflow = 'auto';
-      } else {
-        item.showForkHistory = true
-        document.getElementsByTagName('html')[0].style.overflow = 'hidden';
-      }
+      this.$nextTick(()=>{
+        if(item.showForkHistory){
+          item.showForkHistory = false
+          document.getElementsByTagName('html')[0].style.overflow = 'auto';
+        } else {
+          item.showForkHistory = true
+          document.getElementsByTagName('html')[0].style.overflow = 'hidden';
+        }
+      })
     },
     loadUserData(name){
       let sendData = {
