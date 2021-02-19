@@ -38,7 +38,7 @@
                 <br><br>
             </div>
 
-            <button v-if="JSON.parse(demo.forkHistory).length > 1" @click="toggleShowForkHistory(demo)"
+            <button v-if="JSON.parse(demo.forkHistory).length > 1" @click="state.toggleShowForkHistory(demo)"
               style="margin-top: -25px; margin-bottom: 60px; background: #c94;color: #000; font-size: 1.5em;padding: 0px;padding-bottom: 5px;"
             >close</button><br><br>
 
