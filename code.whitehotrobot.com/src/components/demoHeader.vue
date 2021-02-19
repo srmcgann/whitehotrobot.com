@@ -77,14 +77,19 @@
             class="shareLink"
           ></a>
         </td></tr>
-        <tr v-if="!forkhistoryview && state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID">
+        <tr v-if="!forkhistoryview">
           <td></td>
           <td style="text-align: left;">
-          <button @click="state.toggleShowForkHistory(demo)"
-            class="showForkHistoryButton"
-          >show fork history</button>
-            <button class="revertButton" v-html="showRevert ? 'close':'revert changes'" @click="showRevert = !showRevert" title="roll back changes to backed up versions, if available"></button>
-            <div v-if="showRevert" class="revertMenu">
+            <button @click="state.toggleShowForkHistory(demo)"
+              class="showForkHistoryButton"
+            >show fork history</button>
+            <button v-if="(state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID)"
+              class="revertButton"
+              v-html="showRevert ? 'close':'revert changes'"
+              @click="showRevert = !showRevert"
+              title="roll back changes to backed up versions, if available"
+            ></button>
+            <div v-if="(state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID) && showRevert" class="revertMenu">
               <div style="font-size: 18px;color: #ccc; background: #012;padding: 5px; margin-bottom: 10px;">snapshots</div>
               <div v-if="!demo.backups.length" style="color:#ace; font-size: 14px;text-align: left;padding: 10px;">
                 no backups yet...<br><br>
@@ -308,7 +313,7 @@ td{
 .revertMenu{
   position: absolute;
   width: 200px;
-  margin-top:0px;
+  margin-top: 5px;
   border: 1px solid #2468;
   margin-left: 130px;
   background: #135e;
@@ -332,7 +337,7 @@ td{
   padding: 5px;
   min-width: initial;
   margin: 0;
-  margin-right: 10px;
+  margin-left: 10px;
   padding-left: 5px;
   padding-right: 5px;
   padding-bottom: 5px;
