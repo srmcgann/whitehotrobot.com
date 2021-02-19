@@ -11,11 +11,13 @@
       <div v-if="state.mode === 'default' || (state.mode === 'user' && demo.author.toUpperCase() === state.viewAuthor.toUpperCase()) || (state.mode ==='single' && demo.id === state.viewDemo)">
         <div v-if="typeof demo.forkHistory !== 'undefined' && demo.forkHistory.length" class="forkHistoryCluster">
           <div
+            :id="'fho'+demo.id"
             class="forkHistoryOverlay"
+            @click="maybeClose($event)"
             style="width:100vw; min-height: 100%; background:#012e; color:#fff; position:fixed; display:none; top:0px; left:0;bottom:0;right:0;margin:0;z-index:10000;overflow:auto;"
             :class="{'display': demo.showForkHistory}"
           >
-            <button @click="toggleShowForkHistory(demo)"
+            <button @click="state.toggleShowForkHistory(demo)"
               style="margin-top: 40px; background: #c94;color: #000; font-size: 1.5em;padding: 0px;padding-bottom: 5px;"
             >close</button><br><br>
 
@@ -41,10 +43,6 @@
             >close</button><br><br>
 
           </div>
-          <button @click="toggleShowForkHistory(demo)"
-            :class="{'slideRight': demo.userID !== state.loggedinUserID}"
-            class="showForkHistoryButton"
-          >show<br>fork<br>history</button>
         </div>
         <div class="demoTitle">
           <a :href="'/u/' + demo.author">
@@ -284,14 +282,8 @@ export default {
     }
   },
   methods:{
-    toggleShowForkHistory(item){
-      if(item.showForkHistory){
-        item.showForkHistory = false
-        document.getElementsByTagName('html')[0].style.overflow = 'auto';
-      } else {
-        item.showForkHistory = true
-        document.getElementsByTagName('html')[0].style.overflow = 'hidden';
-      }
+    maybeClose(e){
+      if(e.target.id == 'fho' + this.demo.id) this.demo.showForkHistory = false
     },
     forkDemo(demoID){
       if(this.state.loggedin){
@@ -1086,23 +1078,5 @@ textarea:focus{
 }
 .JStextarea{
   color: #acf;
-}
-.showForkHistoryButton{
-  position: absolute;
-  min-width: 0;
-  font-size: 16px;
-  line-height: .9em;
-  padding: 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-  padding-bottom: 10px;
-  background: #c94;
-  color: #000;
-  font-weight: 900;
-  height: 53px;
-  margin-top: 215px;
-}
-.slideRight{
-  margin-top: 150px;
 }
 </style>

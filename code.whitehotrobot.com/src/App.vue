@@ -39,6 +39,7 @@ export default {
         globalT: 0,
         showLoginPrompt: null,
 				userAgent: null,
+        toggleShowForkHistory: null,
         closePrompts: null,
         loginPromptVisible: false,
         username: '',
@@ -404,6 +405,15 @@ export default {
         }
       })
     },
+    toggleShowForkHistory(item){
+      if(item.showForkHistory){
+        item.showForkHistory = false
+        document.getElementsByTagName('html')[0].style.overflow = 'auto';
+      } else {
+        item.showForkHistory = true
+        document.getElementsByTagName('html')[0].style.overflow = 'hidden';
+      }
+    },
     loadUserData(name){
       let sendData = {
         name: decodeURIComponent(name),
@@ -423,6 +433,9 @@ export default {
         if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
           this.state.user.demos.map(v=>{
             v.updated = {}
+            v.private = !!(v.private)
+            v.iteration = 0
+            v.allowDownload = !!(v.allowDownload)
             for (const [key, value] of Object.entries(data[0].demos)) {
               v.updated[key]=0
             }
@@ -538,6 +551,7 @@ export default {
               v.updated[key]=0
             }
             v.iteration = 0
+            v.private = !!v.private
             this.extractEmbedURL(v)
             v.comments = v.comments.map(q=>{
               q.updated = false
@@ -791,6 +805,20 @@ export default {
           body: JSON.stringify(sendData),
         }).then(res => res.json()).then(data=>{
           demo.updated[item] = 1
+          if(item == 'private'){
+            switch(this.state.mode){
+              case 'single':
+                console.log(this.state.demos.filter(v=>v.id==demo.id)[0])
+                this.state.demos.filter(v=>v.id == demo.id)[0][item] = !!newItemVal
+              break
+              case 'default':
+                this.state.landingPage.demos.filter(v=>v.id == demo.id)[0][item] = !!newItemVal
+              break
+              case 'user':
+                this.state.user.demos.filter(v=>v.id == demo.id)[0][item] = !!newItemVal
+              break
+            }
+          }
           if(item=='videoLink'){
             this.state.extractEmbedURL(demo)
             demo.videoPlaying = false
@@ -888,6 +916,7 @@ export default {
 		this.state.userAgent = navigator.userAgent
     this.state.toggleLogin = this.toggleLogin
     this.state.showLoginPrompt = this.showLoginPrompt
+    this.state.toggleShowForkHistory = this.toggleShowForkHistory
     this.state.toggleShowControls = this.toggleShowControls
     this.state.loadDemoFromBackup = this.loadDemoFromBackup
     this.state.showUserSettings = this.showUserSettings
@@ -1032,5 +1061,75 @@ a{
   background: linear-gradient(90deg, #0000, #4dd8, #0000);
   margin-top: .3em;
   margin-bottom: .3em;
+}
+/* Customize the label (the checkboxLabel) */
+.checkboxLabel {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: -2px;
+  margin-left: 30px;
+  margin-top: 3px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkboxLabel input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border: 1px solid #2468;
+  background-color: #123;
+}
+
+/* On mouse-over, add a grey background color */
+.checkboxLabel:hover input ~ .checkmark {
+  background-color: #234;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkboxLabel input:checked ~ .checkmark {
+  background-color: #086;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkboxLabel input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkboxLabel .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 </style>

@@ -6,13 +6,15 @@
         <div v-if="state.showControls">
           <div class="navContainer">
             <div v-if="state.mode !== 'singlez'" class="advancedControls">
-              <div style="position: absolute; z-index:-1!important;background: #246;width: 505px;height: 70px;opacity: .5;margin-top: -10px;margin-left: 60px;border-radius: 5px;"></div>
+              <div style="position: absolute; z-index:-1!important;background: #246;width: 550px;height: 70px;opacity: .5;margin-top: -10px;margin-left: 60px;border-radius: 5px;"></div>
               <input id="searchInput" type="text" spellcheck="false" ref="searchInput" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="textInput searchInput" style="display: inline-block;float: left;margin-bottom: 25px;margin-left: 75px;margin-top: 15px;position: relative!important: z-index:10000!important;">
-              <label for="allWords" style="float: left;margin-left: 0px;margin-bottom:0px;display: inline-block;margin-left: 20px;">
+              <label for="allWords" class="checkboxLabel" style="float: left;margin-left: 0px;margin-bottom:0px;display: inline-block;margin-left: 20px;margin-top: -2px;">
                 <input type="checkbox" :disabled="state.search.exact" :checked="state.search.allWords || state.search.exact" id="allWords" v-model="state.search.allWords" @input="state.beginSearch(1)">require all words
+                <span class="checkmark"></span>
               </label><br>
-              <label for="exact" style="float:left;display: inline-block;margin: 0;margin-left: 20px;">
+              <label for="exact" class="checkboxLabel" style="float:left;display: inline-block;margin: 0;margin-top: 3px;margin-left: 20px;">
                 <input type="checkbox" id="exact" v-model="state.search.exact" @input="state.beginSearch(1)">exact phrase
+                <span class="checkmark"></span>
               </label>
               <div style="clear: both;"></div>
               <div v-if="state.search.hits" style="position: absolute;left: 50%;margin-left: -100px;margin-top: -80px;">

@@ -171,7 +171,6 @@ export default{
         })
         .then(res => res.json())
         .then(data => {
-          console.log(data)
           if(data[0]){
             this.state.loggedin = true
             this.state.loggedinUserName = this.state.regusername

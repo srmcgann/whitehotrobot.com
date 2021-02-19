@@ -16,7 +16,7 @@
               @click="$event.target.select()"
               v-model="demo.title"
               class="input demoInput"
-              :class="{'success':demo.updated.title==1,'failure':demo.updated.title==-1}"
+              :class="{'success':typeof demo.updated != 'undefined' && demo.updated.title==1,'failure':typeof demo.updated != 'undefined' && demo.updated.title==-1}"
               @input="state.updateDemoItem(demo, 'title')"
             >
           </div>
@@ -36,7 +36,7 @@
               @click="$event.target.select()"
               v-model="demo.videoLink"
               class="input demoInput"
-              :class="{'success':demo.updated.videoLink==1,'failure':demo.updated.videoLink==-1}"
+              :class="{'success':typeof demo.updated != 'undefined' && demo.updated.videoLink==1,'failure':typeof demo.updated != 'undefined' && demo.updated.videoLink==-1}"
               @input="state.updateDemoItem(demo, 'videoLink')"
             >
           </td>
@@ -45,15 +45,10 @@
           <td class="leftCell"><i>views</i></td>
           <td class="rightCell">
             {{demo.views-1}}
-              <label :for="'privateCheckBox' + demo.id" v-if="state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID" title="omit this post from the home page">
-              <input
-                :id="'privateCheckBox' + demo.id"
-                style="margin-left: 30px;"
-                @input="state.updateDemoItem(demo, 'private')"
-                type="checkbox"
-                v-model="demo.private"
-              >
-              private
+              <label v-if="state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID" :for="'privateCheckbox' + demo.id" :key="'cblabel'+demo.id" class="checkboxLabel" style="margin-bottom:0px;display: inline-block;margin-left: 100px;" title="omit this post from the home page">
+                <input type="checkbox" :key="'cbkey'+demo.id" :id="'privateCheckbox' + demo.id" v-model="demo.private" @input="state.updateDemoItem(demo, 'private')">
+                <span class="checkmark"></span>
+                <span style="font-size: .93em;margin-top:0px;display: block;">private</span>
               </label>
           </td>
         </tr>
@@ -85,7 +80,10 @@
         <tr v-if="!forkhistoryview && state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID">
           <td></td>
           <td style="text-align: left;">
-            <button class="revertButton" v-html="showRevert ? 'close':'revert'" @click="showRevert = !showRevert" title="roll back changes to backed up versions, if available"></button>
+          <button @click="state.toggleShowForkHistory(demo)"
+            class="showForkHistoryButton"
+          >show fork history</button>
+            <button class="revertButton" v-html="showRevert ? 'close':'revert changes'" @click="showRevert = !showRevert" title="roll back changes to backed up versions, if available"></button>
             <div v-if="showRevert" class="revertMenu">
               <div style="font-size: 18px;color: #ccc; background: #012;padding: 5px; margin-bottom: 10px;">snapshots</div>
               <div v-if="!demo.backups.length" style="color:#ace; font-size: 14px;text-align: left;padding: 10px;">
@@ -162,9 +160,6 @@ export default {
     }
   },
   computed:{
-    filteredDemos(){
-      return this.state.demos.filter(v=>v.show)
-    },
     origin(){
       return window.location.origin
     }
@@ -310,19 +305,12 @@ td{
 .display{
   display: block!important;
 }
-.revertButton{
-  display: inline-block;
-  font-size: 18px;
-  background: #804;
-  width: initial;
-  min-width: initial;
-  color: #fcc;
-}
 .revertMenu{
   position: absolute;
   width: 200px;
-  margin-top:-10px;
-  margin-left: 10px;
+  margin-top:0px;
+  border: 1px solid #2468;
+  margin-left: 130px;
   background: #135e;
   z-index: 100;
   text-align: center;
@@ -335,5 +323,26 @@ td{
   text-shadow: 1px 1px 1px #004;
   margin:0;
   margin-bottom: 10px;
+}
+.revertButton, .showForkHistoryButton{
+  position: relative;
+  font-size: 16px;
+  line-height: .9em;
+  font-size: .8em;
+  padding: 5px;
+  min-width: initial;
+  margin: 0;
+  margin-right: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+}
+.showForkHistoryButton{
+  background: #c94;
+  color: #000;
+}
+.revertButton{
+  background: #804;
+  color: #fcc;
 }
 </style>
