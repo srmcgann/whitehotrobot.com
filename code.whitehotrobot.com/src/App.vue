@@ -1134,4 +1134,7 @@ a{
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+video:focus{
+  outline: none;
+}
 </style>
