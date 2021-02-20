@@ -807,10 +807,11 @@ export default {
           body: JSON.stringify(sendData),
         }).then(res => res.json()).then(data=>{
           demo.updated[item] = 1
-          if(item == 'private'){
+          if(this.state.search.string){
+            this.state.search.demos.filter(v=>v.id==demo.id)[0][item] = !!newItemVal
+          }else if(item == 'private'){
             switch(this.state.mode){
               case 'single':
-                console.log(this.state.demos.filter(v=>v.id==demo.id)[0])
                 this.state.demos.filter(v=>v.id == demo.id)[0][item] = !!newItemVal
               break
               case 'default':
