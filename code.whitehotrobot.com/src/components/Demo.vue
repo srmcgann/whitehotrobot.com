@@ -7,7 +7,7 @@
         D:<br>
         <button @click="state.goHome()">home page</button>
     </div>
-    <div v-else class="demoItem">
+    <div v-else class="demoItem" :ref="'demoItem' + demo.id">
       <div v-if="state.mode === 'default' || (state.mode === 'user' && demo.author.toUpperCase() === state.viewAuthor.toUpperCase()) || (state.mode ==='single' && demo.id === state.viewDemo)">
         <div v-if="typeof demo.forkHistory !== 'undefined' && demo.forkHistory.length" class="forkHistoryCluster">
           <div
@@ -104,19 +104,23 @@
             <button
               v-if="state.loggedin"
               class="forkDemoButton"
+              :ref="'forkDemoButton' + demo.id"
               @click="forkDemo(demo.id)"
              >fork demo</button>
             <button
               class="fullScreenButton"
               @click="fullScreen(demo.id)"
               :disabled="!demo.play"
-              :class="{'disabledButton':!demo.play}"
+              :ref="'fullscreenButton' + demo.id"
+              :class="{'disabledButton':!demo.play,'bumpRight': state.loggedin == false}"
              >full-screen</button>
             <button
               v-if="state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID"
               class="deleteDemoButton"
+              :ref="'deleteDemoButton' + demo.id"
               @click="deleteDemo(demo)"
-             >delete demo</button>
+              title="delete demo"
+             ></button>
              
             <iframe
               :src="state.inView[idx] && demo.play ? state.baseDemoURL + '/?demoID=' + demo.id + '&v=' + iframeIteration : ''"
@@ -578,6 +582,29 @@ export default {
             uintArray.push(charList[i].charCodeAt(0));
         }
         return new Uint16Array(uintArray);
+    },
+    positionButtons(){
+      let container = this.$refs['demoItem' + this.demo.id]
+      if(typeof container != 'undefined' && container != null){
+        let rect = container.getBoundingClientRect()
+        let el
+        el = this.$refs['deleteDemoButton' + this.demo.id]
+        if(typeof el != 'undefined' && el != null){
+          el.style.display = 'block'
+          el.style.top = (container.offsetTop + 180) + 'px'
+          el.style.left = (rect.right - 80) + 'px'
+        }
+        el = this.$refs['forkDemoButton' + this.demo.id]
+        if(typeof el != 'undefined' && el != null){
+          el.style.display = 'block'
+          el.style.left = (rect.left + rect.width / 2) + 'px'
+        }
+        el = this.$refs['fullscreenButton' + this.demo.id]
+        if(typeof el != 'undefined' && el != null){
+          el.style.display = 'block'
+          el.style.left = (rect.left + rect.width / 2) + 'px'
+        }
+      }
     }
   },
   computed:{
@@ -605,10 +632,11 @@ export default {
     }
   },
   mounted(){
+    this.$nextTick(()=>this.positionButtons())
     setInterval(()=>{
       if(!this.refreshedVideoIframeURL){
-        //this.refreshedVideoIframeURL = true
         this.iteration++
+        this.positionButtons()
       }
     }, 1000)
     //if(this.state.mode == 'single'){
@@ -626,8 +654,6 @@ export default {
 .demoTitle{
   text-align: left;
   width: 100%;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
   font-size: 18px;
   color: #fff;
   text-align: center;
@@ -705,7 +731,6 @@ export default {
   padding: 2px;
   padding-bottom: 4px;
   padding-left: 5px;
-  margin-left: 10px;
   padding-right: 5px;
   width: 80px;
   min-width: 100px;
@@ -714,7 +739,8 @@ export default {
   background: #2a8;
   position: absolute;
   margin-top: -35px;
-  transform: translateX(-50%);
+  display: none;
+  margin-left: 114px;
 }
 .success{
   background: #264!important;
@@ -824,20 +850,6 @@ input[type=text]{
 	border-radius: 5px;
 	background-color: #f880;
 }
-.deletePostButton{
-  position: relative;
-  margin-top: 0px;
-  margin-right: 0px;
-  float: right;
-  background-color: #300a;
-  width: 50px;
-  min-width: initial;
-  height: 50px;
-  background-position: center center;
-  background-size: 45px 45px;
-  background-repeat: no-repeat;
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
-}
 .commentEditButton{
   background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
   background-repeat: no-repeat;
@@ -901,6 +913,9 @@ table{
 .singleDemo{
   top: 0px;
   margin-bottom: 100px;
+}
+.bumpRight{
+  margin-left: 20px!important;
 }
 .bumpUp{
   margin-top: -25px;
@@ -1147,5 +1162,38 @@ textarea:focus{
 }
 .JStextarea{
   color: #acf;
+}
+.deleteDemoButton{
+  position: absolute;
+  background-color: #300a;
+  width: 55px;
+  min-width: initial;
+  height: 55px;
+  display: none;
+  background-position: center center;
+  background-size: 45px 45px;
+  background-repeat: no-repeat;
+  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+}
+.fullScreenButton{
+  margin: 0;
+  margin-left: 36px;
+  padding: 2px;
+  padding-bottom: 4px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 130px;
+  min-width: 100px;
+  border-radius: 10px;
+  color: #ff2a;
+  background: #416;
+  position: absolute;
+  margin-top: -35px;
+  display: none;
+  margin-left: -28px;
+}
+.disabledButton{
+  color: #888;
+  background: #333;
 }
 </style>

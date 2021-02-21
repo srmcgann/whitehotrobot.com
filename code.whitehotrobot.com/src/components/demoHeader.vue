@@ -261,8 +261,6 @@ td{
 .demoTitle{
   text-align: left;
   width: 100%;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
   font-size: 18px;
   color: #fff;
   text-align: center;

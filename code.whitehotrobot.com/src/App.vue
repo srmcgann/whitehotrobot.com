@@ -860,7 +860,8 @@ export default {
           this.checkAutoplayPref()
           this.checkExactSearchPref()
           this.checkShowControlsPref()
-          this.getPages()
+          //this.getPages()
+          window.location.reload()
         }else{
           this.state.loggedin = false
           this.state.invalidLoginAttempt = true
@@ -889,6 +890,7 @@ export default {
       this.state.loggedin = false
       this.state.isAdmin = false
       this.state.loggedinUserID = this.state.loggedinUserName = ''
+      window.location.reload()
     },
     checkLogin(){
       let l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinuser')
@@ -960,6 +962,7 @@ html{
   color: #8fc;
   min-height: 100%;
   min-width: 475px;
+  background: #000;
   scroll-behavior: smooth;
 }
 body{
@@ -969,7 +972,7 @@ body{
   background: linear-gradient(45deg, #001, #011);
   font-family: Play;
   color: #8fc;
-  min-height: 100%;
+  min-height: 100vh;
   min-width: 475px;
 }
 .input{

@@ -336,7 +336,12 @@ export default {
     },
   },
   mounted(){
-    setInterval(()=>this.sync(this.e), 150)
+    setInterval(()=>{
+      this.sync(this.e)
+    }, 150)
+    setInterval(()=>{
+      this.startStopDemos()
+    },1000)
     this.$nextTick(()=>this.applySplitters())
     document.body.addEventListener('mousemove', e=>{
       this.sync(this.e = e)
@@ -572,15 +577,6 @@ td{
   color: #aef;
   background: #000;
 }
-.demoTitle{
-  text-align: left;
-  width: 100%;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  font-size: 18px;
-  color: #fff;
-  text-align: center;
-}
 .avatarContainer{
   display: inline-block;
   min-width: 130px;
@@ -628,54 +624,6 @@ td{
 }
 .no-select:focus {
   outline: none!important;
-}
-.forkDemoButton{
-  margin: 0;
-  padding: 2px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  margin-left: 10px;
-  padding-right: 5px;
-  width: 80px;
-  min-width: 100px;
-  border-radius: 10px;
-  color: #243;
-  background: #2a8;
-  position: absolute;
-  margin-top: -35px;
-  transform: translateX(-50%);
-}
-.fullScreenButton{
-  margin: 0;
-  margin-left: -115px;
-  padding: 2px;
-  padding-bottom: 4px;
-  padding-left: 15px;
-  padding-right: 15px;
-  width: 130px;
-  min-width: 100px;
-  border-radius: 10px;
-  color: #ff2a;
-  background: #416;
-  position: absolute;
-  margin-top: -35px;
-  transform: translateX(-50%);
-}
-.deleteDemoButton{
-  margin: 0;
-  padding: 2px;
-  padding-bottom: 4px;
-  padding-left: 5px;
-  margin-left: -255px;
-  padding-right: 5px;
-  width: 130px;
-  min-width: 100px;
-  border-radius: 10px;
-  color: #fbaa;
-  background: #512;
-  position: absolute;
-  margin-top: -35px;
-  transform: translateX(-50%);
 }
 .e404{
   position: absolute;
