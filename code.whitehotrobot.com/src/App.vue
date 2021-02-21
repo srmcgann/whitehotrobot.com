@@ -553,7 +553,7 @@ export default {
               v.updated[key]=0
             }
             v.iteration = 0
-            v.private = !!v.private
+            v.private = !!(+v.private)
             this.extractEmbedURL(v)
             v.comments = v.comments.map(q=>{
               q.updated = false
