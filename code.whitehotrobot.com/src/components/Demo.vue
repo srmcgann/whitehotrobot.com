@@ -70,7 +70,11 @@
               ></iframe>
               <div v-else-if="!demo.videoPlaying" class="sizedThumb">
                 <img :src="demo.videoIframeURL + '?' + iteration" class="sizedThumbImg" />
-                <button class="startVidButton" @click="demo.videoPlaying = !demo.videoPlaying">⏵︎</button>
+                <button
+                  class="startVidButton"
+                  @click="demo.videoPlaying = !demo.videoPlaying"
+                  :class="{'pauseButtonActive': demo.videoPlaying, 'playButtonActive': !demo.videoPlaying}"
+                ></button>
               </div>
               <div v-else>
                 <video
@@ -86,10 +90,17 @@
 
           <div class="demoIframeContainer">
             <button
+              class="playPauseButton"
+              :class="{'pauseButtonActive': demo.play, 'playButtonActive': !demo.play}"
+              @click="playPause(demo.id)"
+            ></button>
+            <!--
+            <button
               @click="playPause(demo.id)"
               class="playPauseButton"
               v-html="demo.play ? '❚❚' : '⏵︎'"
             ></button>
+            -->
             <button
               v-if="state.loggedin"
               class="forkDemoButton"
@@ -985,20 +996,78 @@ textarea:focus{
   border: 1px solid #2466;
   min-width:400px;
 }
-.startVidButton{
-  margin-top:0;
-	position: absolute;
-	top: 50%;
-  left: 50%;
-	font-size: 32px;
-	min-width: 0;
-	padding: 15px;
-  transform: translate(-50%,-50%);
-	background: #4c6;
+.playPauseButton{
+  position: absolute;
+  font-size: 32px;
+  min-width: 0;
+  padding: 15px;
+  background-size: 70px 70px;
+  background-position: 15px center;
+  background-repeat: no-repeat;
+  margin-left: -1vw;
+  margin-top: 10vw;
   min-height: 0;
-	height: auto;
-	height: 50px;
-	line-height: .5em;
+  width: 80px;
+  height: 80px;
+  line-height: .5em;
+  border-radius: 50%;
+  opacity: .9;
+  z-index: 1000;
+  transition: margin-left .5s, margin-top .5s, width .5s, height .5s, background-size .5s, background-position .5s;
+}
+.pauseButtonActive{
+  background-image: url(https://lookie.jsbot.net/uploads/1SNLck.png);
+  background-position: center center;
+  background-size: 80px 80px;
+  transform: scale(.5);
+  margin-top: -10px;
+  margin-left: -150px;
+}
+.pauseButtonDisabled{
+  background-image: url(https://lookie.jsbot.net/uploads/zAYeB.png);
+}
+.playButtonDisabled{
+  background-image: url(https://lookie.jsbot.net/uploads/FU3vq.png);
+}
+.playButtonActive{
+  background-image: url(https://lookie.jsbot.net/uploads/D360h.png);
+  background-color: #164a;
+}
+.startVidButton{
+  position: absolute;
+  font-size: 32px;
+  min-width: 0;
+  padding: 15px;
+  background-size: 70px 70px;
+  background-position: 15px center;
+  background-repeat: no-repeat;
+  margin-left: -1vw;
+  margin-top: -1vw;
+  min-height: 0;
+  width: 80px;
+  height: 80px;
+  line-height: .5em;
+  border-radius: 50%;
+  opacity: .9;
+  z-index: 1000;
+}
+.pauseVidButtonActive{
+  background-image: url(https://lookie.jsbot.net/uploads/1SNLck.png);
+  background-position: center center;
+  background-size: 80px 80px;
+  transform: scale(.5);
+  margin-top: -10px;
+  margin-left: -150px;
+}
+.pauseVidButtonDisabled{
+  background-image: url(https://lookie.jsbot.net/uploads/zAYeB.png);
+}
+.playVidButtonDisabled{
+  background-image: url(https://lookie.jsbot.net/uploads/FU3vq.png);
+}
+.playVidButtonActive{
+  background-image: url(https://lookie.jsbot.net/uploads/D360h.png);
+  background-color: #164c;
 }
 .startVidbutton:focus{
   outline: none;
