@@ -807,7 +807,7 @@ export default {
           body: JSON.stringify(sendData),
         }).then(res => res.json()).then(data=>{
           demo.updated[item] = 1
-          if(this.state.search.string){
+          if(this.state.search.string && item == 'private'){
             this.state.search.demos.filter(v=>v.id==demo.id)[0][item] = !!newItemVal
           }else if(item == 'private'){
             switch(this.state.mode){
