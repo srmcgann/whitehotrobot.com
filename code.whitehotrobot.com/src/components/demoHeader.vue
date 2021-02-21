@@ -80,7 +80,7 @@
         <tr v-if="!forkhistoryview">
           <td></td>
           <td style="text-align: left;">
-            <button @click="state.toggleShowForkHistory(demo)"
+            <button v-if="demo.forkHistory.length" @click="state.toggleShowForkHistory(demo)"
               class="showForkHistoryButton"
             >show fork history</button>
             <button v-if="(state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID)"
