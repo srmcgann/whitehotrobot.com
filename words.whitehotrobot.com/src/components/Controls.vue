@@ -8,11 +8,15 @@
             <div v-if="state.mode !== 'post'" class="advancedControls">
               <div style="position: absolute; z-index:-1!important;background: #246;width: 505px;height: 70px;opacity: .5;margin-top: -10px;margin-left: 60px;border-radius: 5px;"></div>
               <input id="searchInput" type="text" spellcheck="false" ref="searchInput" v-model="state.search.string" @input="state.beginSearch(1)" placeholder="search" class="textInput searchInput" style="display: inline-block;float: left;margin-bottom: 25px;margin-left: 75px;margin-top: 15px;position: relative!important: z-index:10000!important;">
-              <label for="allWords" style="float: left;margin-left: 0px;margin-bottom:0px;display: inline-block;margin-left: 20px;">
-                <input type="checkbox" :disabled="state.search.exact" :checked="state.search.allWords || state.search.exact" id="allWords" v-model="state.search.allWords" @input="state.beginSearch(1)">require all words
-              </label><br>
-              <label for="exact" style="float:left;display: inline-block;margin: 0;margin-left: 20px;">
-                <input type="checkbox" id="exact" v-model="state.search.exact" @input="state.beginSearch(1)">exact phrase
+              <label for="allWords" key="allwordslabel" class="checkboxLabel" style="float: left;padding: 0;margin:0;margin-left: 40px;padding-top: 5px;margin-bottom:0px;display: inline-block;">
+                <input type="checkbox" :disabled="state.search.exact" :checked="state.search.allWords || state.search.exact" id="allWords" v-model="state.search.allWords" @input="state.beginSearch(1)">
+                <span class="checkmark" style="margin-left: -30px;"></span>
+                <span style="font-size:.8em;margin-top:0px;display:block;color:#ff8;padding:0;">require all words</span>
+              </label>
+              <label for="exact" key="exactlabel" class="checkboxLabel" style="float: left;margin-left: 40px;text-align: left;;">
+                <input type="checkbox" id="exact" v-model="state.search.exact" @input="state.beginSearch(1)">
+                <span class="checkmark" style="margin-left: -30px;"></span>
+                <span style="font-size:.8em;margin-top:0px;display:block;color:#ff8;padding:0;margin-left:-35px;">exact</span>
               </label>
               <div style="clear: both;"></div>
               <div v-if="state.search.hits" style="position: absolute;left: 50%;margin-left: -100px;margin-top: -80px;">
@@ -51,31 +55,31 @@ export default {
     showHotkeys(){
       alert("hotkeys cheat-sheet...\n\n")
     },
-    updateUserPrefs(pref){
-      this.$nextTick(()=>{
+		updateUserPrefs(pref){
+			this.$nextTick(()=>{
         let newval
         switch(pref){
           case 'wordsPostsPerPage': newval = this.state.maxResultsPerPage; break
         }
         let sendData = {
-          userName: this.state.loggedinUserName,
-          passhash: this.state.passhash,
-          pref,
-          newval
-       }
+	  			userName: this.state.loggedinUserName,
+				  passhash: this.state.passhash,
+					pref,
+			  	newval
+ 	  	 }
        fetch(this.state.baseURL + '/updatePrefs.php',{
          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(sendData),
-        })
+		  	})
         .then(res => res.json())
         .then(data => {
-          if(pref == 'wordsPostsPerPage') window.location.reload()
+					if(pref == 'wordsPostsPerPage') window.location.reload()
         })
-      })
-    },
+		  })
+	  },
     doReg(){
       this.state.showRegister = true
       this.state.showLoginPrompt()
@@ -212,22 +216,22 @@ export default {
 .curPageContainer{
   display: inline-block;
   width: 270px;
-  line-height: .8em;
-  min-height: 25px;
+	line-height: .8em;
+	min-height: 25px;
   margin-top: 3px;
-  margin-left: -15px;
+	margin-left: -15px;
   vertical-align: top;
   padding-top: 0px;
 }
 .advancedControls{
-  top: 0;
+	top: 0;
   display: inline-block;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
   margin-bottom: 10px;
-  left: 50%;
-  width: 100%;
+	left: 50%;
+	width: 100%;
 }
 .navContainer{
   margin-top: -50px;
@@ -236,7 +240,7 @@ export default {
   margin-left: auto;
   margin-right: auto;
   width: 600px!important;
-  height: 100%;
+	height: 100%;
   position: relative;
   z-index: 0;
 }
@@ -245,9 +249,9 @@ export default {
   width: 80px;
   display: inline-block;
   text-align: center;
-  line-height: .8em;
+	line-height: .8em;
   margin-top: 4px;
-  margin-left: 20px;
+	margin-left: 20px;
   min-width: 0;
 }
 .navButton{

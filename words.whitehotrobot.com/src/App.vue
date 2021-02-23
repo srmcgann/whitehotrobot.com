@@ -33,10 +33,10 @@ export default {
         curPlayId: 0,
         beginSearch: null,
         curSearchPage: 0,
-        jumpToPage: null,
-        userAgent: null,
+				jumpToPage: null,
+				userAgent: null,
         userData: [],
-        preloadImages: [],
+				preloadImages: [],
         curUserPage: null,
         incrementViews: null,
         loggedinUserName: '',
@@ -59,7 +59,7 @@ export default {
         loadPostFromBackup: null,
         showUploadModal: false,
         toggleLogin: null,
-        maxResultsPerPage: 0,
+				maxResultsPerPage: 0,
         showLoginPrompt: null,
         globalT: 0,
         showControls: false,
@@ -83,7 +83,7 @@ export default {
         regusername: '',
         advancePage: null,
         regressPage: null,
-        filteredUserPosts: null,
+				filteredUserPosts: null,
         firstPage: null,
         lastPage: null,
         regpassword: '',
@@ -156,8 +156,8 @@ export default {
       }
       return res
     },
-    fetchUserData(id){
-      if(typeof this.state.userData[id] == 'undefined'){
+		fetchUserData(id){
+			if(typeof this.state.userData[id] == 'undefined'){
         let sendData = {
           userID: id,
           page: this.state.curUserPage,
@@ -180,8 +180,8 @@ export default {
             this.state.userInfo[id].isAdmin = data[0].isAdmin
           }
         })
-      }
-    },
+			}
+		},
     loadLandingPage(){
       let sendData = {
         page: this.state.curPage,
@@ -194,12 +194,12 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data[0].map(v=>{
+				data[0].map(v=>{
           v.editHTML = false
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           this.incrementViews(v.id)
-          this.loadUserData(v.author)
+					this.loadUserData(v.author)
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
@@ -210,7 +210,7 @@ export default {
         this.state.landingPage.posts = data[0]
         this.state.totalPages = data[1]
         if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
-        this.state.loaded = true
+				this.state.loaded = true
       })
     },
     loadUserData(name){
@@ -218,7 +218,7 @@ export default {
         name: decodeURIComponent(name),
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash,
-        maxResultsPerPage: this.state.maxResultsPerPage,
+				maxResultsPerPage: this.state.maxResultsPerPage,
         page: this.state.curUserPage
       }
       fetch(this.state.baseURL + '/fetchUserDataByName.php',{
@@ -251,7 +251,7 @@ export default {
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
         this.state.userInfo[this.state.user.id].isAdmin = this.state.user.isAdmin
-        this.state.refreshAvatar = true
+				this.state.refreshAvatar = true
         this.state.loaded = true
       })
     },
@@ -271,7 +271,7 @@ export default {
       }).then(res=>res.json()).then(data=>{
         data.private = !!(+data.private)
         data.editHTML = false
-        this.fetchUserData(data.userID)
+				this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
           q.updated = false
           q.editing = false
@@ -333,7 +333,7 @@ export default {
       }).then(res=>res.json()).then(data=>{
         data.private = !!(+data.private)
         data.editHTML = false
-        this.fetchUserData(data.userID)
+				this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
           q.updated = false
           q.editing = false
@@ -426,7 +426,7 @@ export default {
             this.state.userInfo[this.state.loggedinUserID].avatar = data[2]
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
             if(+data[3]) this.state.isAdmin = true
-            this.state.maxResultsPerPage = +data[4]
+						this.state.maxResultsPerPage = +data[4]
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -502,22 +502,22 @@ export default {
       }else{
         this.state.mode = 'default'
         this.getPages()
-        if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+				if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
       }
     },
-    getPages(){
-      switch(this.state.mode){
-        case 'u':
-        this.loadUserData(this.state.user.name)
-        break
-        case 'post':
-        this.loadPost()
-        break
-        case 'default':
-        this.loadLandingPage()
-        break
-      }
-    },
+		getPages(){
+			switch(this.state.mode){
+				case 'u':
+				this.loadUserData(this.state.user.name)
+				break
+				case 'post':
+				this.loadPost()
+				break
+				case 'default':
+				this.loadLandingPage()
+				break
+			}
+		},
     login(){
       let sendData = {userName: this.state.username, password: this.state.password}
       fetch(this.state.baseURL + '/login.php',{
@@ -547,7 +547,7 @@ export default {
           sendData = {
             userID: this.state.loggedinUserID,
             page: this.state.curUserPage,
-            maxResultsPerPage: this.state.maxResultsPerPage
+		        maxResultsPerPage: this.state.maxResultsPerPage
           }
           fetch(this.state.baseURL + '/fetchUserData.php',{
             method: 'POST',
@@ -641,20 +641,20 @@ export default {
         break
       }
     },
-    jumpToPage(pageNo){
+		jumpToPage(pageNo){
       let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
-      switch(this.state.mode){
-        case 'u':
-        window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo + search
-        break
-        case 'default':
+			switch(this.state.mode){
+			  case 'u':
+				window.location.href = window.location.origin + '/u/' + this.user.name + '/' + pageNo + search
+				break
+				case 'default':
         window.location.href = window.location.origin + '/' + pageNo + search
-        break
-        case 'post':
+				break
+				case 'post':
         window.location.href = window.location.origin + '/post/' + this.decToAlpha(this.state.curPost) + '/' + pageNo + search
-        break
-      }
-    },
+				break
+			}
+		},
     lastPage(){
       let search = this.state.search.string ? ('/' + (this.state.search.string)) : ''
       switch(this.state.mode){
@@ -770,8 +770,8 @@ export default {
           this.state.search.timer = d
         }, Math.min(1000, d-this.state.search.timer))
       } else {
-        this.state.search.string = this.state.search.string.trim()
-      }
+				this.state.search.string = this.state.search.string.trim()
+			}
     },
     loadHotKeys(){
       window.addEventListener('click',e=>{
@@ -796,7 +796,7 @@ export default {
       })
     },
   },
-  computed:{
+	computed:{
   },
   watch:{
     'state.search.string'(val){
@@ -821,7 +821,7 @@ export default {
     setInterval(()=>{
       this.state.globalT+=1/60
     },1/60*1000|0)
-    this.state.userAgent = navigator.userAgent
+		this.state.userAgent = navigator.userAgent
     this.state.toggleShowControls = this.toggleShowControls
     this.state.loadPostFromBackup = this.loadPostFromBackup
     this.state.filteredUserPosts = this.filteredUserPosts
@@ -836,10 +836,10 @@ export default {
     this.state.loadUserData = this.loadUserData
     this.state.checkEnabled = this.checkEnabled
     this.state.advancePage = this.advancePage
-    this.state.beginSearch = this.beginSearch
-    this.state.regressPage = this.regressPage
+		this.state.beginSearch = this.beginSearch
+		this.state.regressPage = this.regressPage
     this.state.toggleLogin = this.toggleLogin
-    this.state.jumpToPage = this.jumpToPage
+		this.state.jumpToPage = this.jumpToPage
     this.state.decToAlpha = this.decToAlpha
     this.state.alphaToDec = this.alphaToDec
     this.state.firstPage = this.firstPage
@@ -863,16 +863,16 @@ export default {
       'https://lookie.jsbot.net/uploads/14MAyj.png',
       'https://lookie.jsbot.net/uploads/20SIWe.png',
       'https://lookie.jsbot.net/uploads/6aevA.png',
-      'https://lookie.jsbot.net/uploads/1RptlQ.png',
-      'https://lookie.jsbot.net/uploads/v9UDT.png',
-      'https://lookie.jsbot.net/uploads/1tgOjR.png'
-    ]
-    this.preloadImages.map(v=>{
-      let img = new Image()
+			'https://lookie.jsbot.net/uploads/1RptlQ.png',
+			'https://lookie.jsbot.net/uploads/v9UDT.png',
+			'https://lookie.jsbot.net/uploads/1tgOjR.png'
+	  ]
+		this.preloadImages.map(v=>{
+			let img = new Image()
       img.src = v
-      return v
+			return v
     })
-  }
+	}
 }
 </script>
 
@@ -977,7 +977,7 @@ option{
 }
 select{
   background: #012;
-  color: #ff0;
+	color: #ff0;
 }
 select:focus{
   outline: none;
@@ -1006,5 +1006,75 @@ button:focus{
 ::-webkit-scrollbar-thumb:hover {
   background: #588; 
   cursor: pointer!important;
+}
+/* Customize the label (the checkboxLabel) */
+.checkboxLabel {
+  display: inline-block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: -2px;
+  margin-left: 30px;
+  margin-top: 3px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkboxLabel input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border: 1px solid #2468;
+  background-color: #123;
+}
+
+/* On mouse-over, add a grey background color */
+.checkboxLabel:hover input ~ .checkmark {
+  background-color: #234;
+}
+
+/* When the checkbox is checked, add a blue background */
+.checkboxLabel input:checked ~ .checkmark {
+  background-color: #086;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.checkboxLabel input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.checkboxLabel .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
 }
 </style>
