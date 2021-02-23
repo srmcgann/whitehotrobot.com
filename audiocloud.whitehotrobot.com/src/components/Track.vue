@@ -116,24 +116,20 @@
     <table>
       <tr v-if="state.loggedinUserName.toUpperCase() == track.author.toUpperCase() || state.isAdmin">
         <td class="tdLeft">
-          <div class="trackElem">
-            <input
-              @input="updateTrackItem(track.id, 'private')" type="checkbox" v-model="track.private"
-            >
-          </div>
         </td>
         <td class="tdRight" style="padding-right: 30px;">
-          private
+          <label :for="'privateCheckbox' + track.id" :key="'cblabel'+track.id" class="checkboxLabel" style="padding-top: 5px;margin-bottom:0px;display: inline-block;margin-left: 100px;" title="omit this post from the home page">
+            <input type="checkbox" :key="'cbkey'+track.id" :id="'privateCheckbox' + track.id" v-model="track.private" @input="updateTrackItem(track.id, 'private')">
+            <span class="checkmark"></span>
+            <span style="font-size:.8em;margin-top:0px;display:block;color:#ff8;">private</span>
+          </label>
         </td>
         <td class="tdLeft">
-          <div class="trackElem">
-            <input
-              @input="updateTrackItem(track.id, 'allowDownload')" type="checkbox" v-model="track.allowDownload"
-            >
-          </div>
-        </td>
-        <td class="tdRight" style="padding-right: 30px;">
-          allow public download
+          <label :for="'allowdlCheckbox' + track.id" :key="'cblabel'+track.id" class="checkboxLabel" style="padding-top: 3px;margin-bottom:0px;display: inline-block;margin-left: 10px;" title="allow public download">
+            <input type="checkbox" :key="'cbkeydl'+track.id" :id="'allowdlCheckbox' + track.id" v-model="track.allowDownload" @input="updateTrackItem(track.id, 'allowDownload')">
+            <span class="checkmark"></span>
+            <span style="font-size:.8em;margin-top:0px;display:block;color:#ff8;">allow public download</span>
+          </label>
         </td>
       </tr>
     </table>
