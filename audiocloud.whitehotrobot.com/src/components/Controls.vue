@@ -24,25 +24,20 @@
               ({{state.search.hits}} hits)
               </div>
               <label for="playall" class="checkboxLabel" style="margin:0; padding:0; margin-left: 25px; padding-left: 32px;">
-                <input type="checkbox" id="playall" v-model="state.playall" @input="updateUserPrefs('audiocloudPlaAll')">
+                <input type="checkbox" id="playall" v-model="state.playall" @input="updateUserPrefs('audiocloudPlayAll')">
                 <span class="checkmark" style="margin-top:-5px;"></span>
                 <span style="font-size:.8em;margin-top:0px;display:block;color:#ff8;padding:0;">play all</span>
               </label>
               <label for="shuffle" class="checkboxLabel" style="display: inline-block; margin: 0; padding:0; margin-left: 50px;">
-                <input type="checkbox" id="shuffle" v-model="state.shuffle" @input="updateUserPrefs('shuffle')">
+                <input type="checkbox" id="shuffle" v-model="state.shuffle" @input="updateUserPrefs('audiocloudShuffle')">
                 <span class="checkmark" style="margin-left: -30px;margin-top:-5px;"></span>
                 <span style="font-size:.8em;margin-top:0px;display:block;color:#ff8;padding:0;">shuffle</span>
               </label>
               <label for="disco" class="checkboxLabel" style="display: inline-block; margin: 0; margin-left: 24px;padding-left:32px; ">
-                <input type="checkbox" id="disco" v-model="state.disco" @input="updateUserPrefs('disco')">
+                <input type="checkbox" id="disco" v-model="state.disco" @input="updateUserPrefs('audiocloudDisco')">
                 <span class="checkmark" style="margin-left: 0px;margin-top:-5px;"></span>
                 <span style="font-size:.8em;margin-top:0px;display:block;color:#ff8;padding:0;">disco</span>
               </label>
-              <!--
-              <label for="disco" style="margin-left: 20px;">
-                <input id="disco" @input="updateUserPrefs('audiocloudDisco')" type="checkbox" v-model="state.disco">disco
-              </label>
-              -->
               <select v-if="state.loggedin && state.mode != 'track'" style="font-size: 18px;margin-left: 20px;vertical-align: top;margin-top: -4px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage"  @change="updateUserPrefs('audiocloudNumTracksPerPage')">
                 <option value="1">1</option>
                 <option value="2">2</option>
