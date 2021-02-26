@@ -29,15 +29,15 @@
   if(sizeof($tokens)){
     
     $confirmed = false;
-    if($loggedinUserName){
-      $sql = 'SELECT * FROM users WHERE name LIKE "' . $loggedinUserName . '" AND passhash = "' .  $passhash . '"';
-      if($res = mysqli_query($link, $sql)){
-        $row = mysqli_fetch_assoc($res);
-        $loggedinUserData = $row;
+		if($loggedinUserName){
+  		$sql = 'SELECT * FROM users WHERE name LIKE "' . $loggedinUserName . '" AND passhash = "' .  $passhash . '"';
+		  if($res = mysqli_query($link, $sql)){
+  		  $row = mysqli_fetch_assoc($res);
+	  	  $loggedinUserData = $row;
         $confirmed = true;
-        if($row['admin']) $admin = true;
-      }
-    }
+				if($row['admin']) $admin = true;
+	  	}
+		}
 
     if($loggedinUserName && $confirmed){
       $sql = 'SELECT * FROM items WHERE (private = 0 || userID = '.$loggedinUserData['id'].') AND ((title LIKE "%' . $tokens[0] . '%"';
@@ -106,21 +106,21 @@
   }
   
   $sql;
-  $res = mysqli_query($link, $sql);
+	$res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
   $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
 
 
   $sql1 = $sql .= ' ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
-  $res = mysqli_query($link, $sql);
+	$res = mysqli_query($link, $sql);
   
-  $demos = [];
-  for($i = 0; $i < mysqli_num_rows($res); ++$i){
-    $demos[] = mysqli_fetch_assoc($res);
+	$demos = [];
+	for($i = 0; $i < mysqli_num_rows($res); ++$i){
+		$demos[] = mysqli_fetch_assoc($res);
   }
 
   forEach($demos as &$demo){
-    $demoID = $demo['id'];
+		$demoID = $demo['id'];
     $sql = 'SELECT * FROM demoComments WHERE demoID = ' . $demoID;
     $res = mysqli_query($link, $sql);
     $demo['comments'] = [];
@@ -134,6 +134,6 @@
   }
  
   
-  echo json_encode([$demos, $totalPages, $page, $totalRecords, $sql1]);
+	echo json_encode([$demos, $totalPages, $page, $totalRecords, $sql1]);
 ?>
 

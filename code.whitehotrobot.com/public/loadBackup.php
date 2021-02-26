@@ -6,9 +6,9 @@
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $database = mysqli_real_escape_string($link, $data->{'database'});
-  $sql = 'SELECT * FROM users WHERE name LIKE "' . $userName . '" AND passhash = "'.$passhash.'"';
-  $res = mysqli_query($link, $sql);
-  if(mysqli_num_rows($res)){
+	$sql = 'SELECT * FROM users WHERE name LIKE "' . $userName . '" AND passhash = "'.$passhash.'"';
+	$res = mysqli_query($link, $sql);
+	if(mysqli_num_rows($res)){
     $sql = 'USE ' . $database . ';';
     mysqli_query($link, $sql);
     $sql='SELECT * FROM items WHERE id = ' . $demoID;
@@ -24,7 +24,7 @@
     }
     $ret['backups'] = getBackups($ret['id']);
     echo json_encode($ret);
-  } else {
+	} else {
     echo json_encode([]);
   }
 ?>

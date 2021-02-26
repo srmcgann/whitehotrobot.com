@@ -118,6 +118,7 @@
                 <td class="rightTD">
                   <div
                     class="videoThumbContainer"
+                    :class="{'playing': video.playing,'notPlaying': !video.playing}"
                   >
                     <img
                       v-if="!video.playing"
@@ -204,6 +205,7 @@
                 <td class="rightTD">
                   <div
                     class="videoThumbContainer"
+                    :class="{'playing': video.playing,'notPlaying': !video.playing}"
                   >
                     <img
                       v-if="!video.playing"
@@ -290,6 +292,7 @@
                 <td class="rightTD">
                   <div
                     class="videoThumbContainer"
+                    :class="{'playing': video.playing,'notPlaying': !video.playing}"
                   >
                     <img
                       v-if="!video.playing"
@@ -585,10 +588,19 @@ export default {
 .videoThumbContainer{
   margin-left: auto;
   margin-right: auto;
+  overflow: hidden;
+  transition: border-radius 1s;
   display: inline-block;
   vertical-align: top;
   text-align: center;
   margin: 0;
+  border: 2px solid #3ff3;
+}
+.notPlaying{
+  border-radius: 50%;
+}
+.playing{
+  border-radius: 0;
 }
 .e404{
   padding-top: 100px;
@@ -601,7 +613,6 @@ export default {
 .videoThumb{
   cursor: pointer;
   max-width: 350px;
-  border-radius: 50%;
 }
 table{
   border-collapse: collapse;

@@ -8,5 +8,5 @@ mkdir /var/www/html/code.whitehotrobot.com/dist_public/thumbs
 cp /var/www/html/code.whitehotrobot.com/thumbs/. /var/www/html/code.whitehotrobot.com/dist/thumbs -r
 cp /var/www/html/code.whitehotrobot.com/thumbs/. /var/www/html/code.whitehotrobot.com/dist_public/thumbs -r
 chmod 775 /var/www/html/code.whitehotrobot.com/dist_public/thumbs -R
-chown smcgann:www-data /var/www/html/code.whitehotrobot.com/dist_public/thumbs -R
+chown cantelope:www-data /var/www/html/code.whitehotrobot.com/dist_public/thumbs -R
 php /var/www/html/code.whitehotrobot.com/public/rebuildThumbs.php

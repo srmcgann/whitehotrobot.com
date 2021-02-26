@@ -23,7 +23,7 @@
         <img src="../assets/facebook.png" class="socialIcon">
       </button>
       -->
-      <button @click="launchEmail()" class="socialButton" title="contact">
+      <button @click="launchEmail()" class="socialButton" title="whitehot robot email">
         <img src="../assets/email.png" class="socialIcon">
       </button>
       <!--
@@ -79,7 +79,7 @@ export default {
     },
     */
     launchEmail () {
-      location.href = 'mailto:whitehotrobot@gmail.com?subject=I%20come%20from%20the%20Internet!&body=I%20have%20a%20comment%20or%20concern%20about%20the%20website(code.whitehotrobot.com)...'
+      location.href = 'https://mail.whitehotrobot.com'
     },
     launchPage(loc) {
       window.open(loc, '_blank')

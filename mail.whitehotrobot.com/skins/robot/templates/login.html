@@ -1,0 +1,83 @@
+<roundcube:object name="doctype" value="html5" />
+<html>
+<head>
+<title><roundcube:object name="pagetitle" /></title>
+<meta name="Robots" content="noindex,nofollow" />
+<roundcube:include file="/includes/links.html" />
+  <style>
+    hr{
+      border: none;
+      border-bottom: 1px solid #4688;
+    }
+    .regButton{
+      position: relative;
+      left: 50%;
+      font-size: 1.2em;
+      transform: translate(calc(-50% + 0px));
+    }
+  </style>
+</head>
+<script>
+  launchRegister = () =>{
+    window.open('/register', '_self')
+  }
+</script>
+<body>
+
+<h1 class="voice"><roundcube:object name="productname" /> <roundcube:label name="login" /></h1>
+
+<div id="login-form">
+<div class="box-inner" role="main">
+<roundcube:object name="logo" src="/images/roundcube_logo.png" id="logo" />
+
+<roundcube:form name="form" method="post">
+<roundcube:object name="loginform" form="form" size="40" submit=true />
+</form>
+<br><hr><br><br>
+<div style="font-size: 3em;text-align: center;font-family: courier;color: #8fe8;font-weight: 900;line-height: .8em;">
+  whitehot robot email<br>
+  <span style="font-size: .7em">communication for the masses!</span>
+</div>
+  <br>
+  <input type="submit" class="button mainaction regButton" onclick="launchRegister()" value="sign up"><br>
+  <br>
+<div style="font-size: 1.5em;text-align: center;color: #8fe8;">
+  always free
+</div>
+</div>
+
+<div class="box-bottom" role="complementary">
+	<roundcube:object name="message" id="message" />
+	<noscript>
+		<p class="noscriptwarning"><roundcube:label name="noscriptwarning" /></p>
+	</noscript>
+</div>
+
+<div id="bottomline" role="contentinfo">
+	<roundcube:object name="productname" /> <roundcube:object name="version" condition="config:display_version" />
+	<roundcube:if condition="config:support_url" />
+		&nbsp;&#9679;&nbsp; <a href="<roundcube:var name='config:support_url' />" target="_blank" class="support-link"><roundcube:label name="support" /></a>
+	<roundcube:endif />
+	<roundcube:container name="loginfooter" id="bottomline" />
+</div>
+</div>
+
+<roundcube:include file="/includes/footer.html" />
+
+<roundcube:object name="preloader" images="
+  /images/ajaxloader.gif
+  /images/ajaxloader_dark.gif
+  /images/buttons.png
+  /images/addcontact.png
+  /images/filetypes.png
+  /images/listicons.png
+  /images/messages.png
+  /images/messages_dark.png
+  /images/quota.png
+  /images/selector.png
+  /images/splitter.png
+  /images/watermark.jpg
+" />
+
+</body>
+</html>

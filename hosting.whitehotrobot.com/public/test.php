@@ -11,5 +11,5 @@
     }
     return $ret==""?"0":$ret;
   }
-  echo "\n".decToAlpha($argv[1])."\n";
+	echo "\n".decToAlpha($argv[1])."\n";
 ?>

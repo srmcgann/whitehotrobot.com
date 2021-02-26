@@ -1,0 +1,154 @@
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:99
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:498
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:499
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:500
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:501
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:502
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_utils::https_check($port = *uninitialized*, $use_https = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:502
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_utils.php:567
+[27-Dec-2020 21:32:38 UTC] PHP   9. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_session::factory($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:524
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session.php:66
+[27-Dec-2020 21:32:38 UTC] PHP   9. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_session::factory($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:524
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_session_db->__construct($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session.php:73
+[27-Dec-2020 21:32:38 UTC] PHP   9. rcube_session_db->__construct($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session_db.php:41
+[27-Dec-2020 21:32:38 UTC] PHP  10. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session.php:91
+[27-Dec-2020 21:32:38 UTC] PHP  11. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_session::factory($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:524
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_session_db->__construct($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session.php:73
+[27-Dec-2020 21:32:38 UTC] PHP   9. rcube_session_db->__construct($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session_db.php:41
+[27-Dec-2020 21:32:38 UTC] PHP  10. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session.php:94
+[27-Dec-2020 21:32:38 UTC] PHP  11. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:104
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->session_init() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:473
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_session::factory($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:524
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_session_db->__construct($config = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session.php:73
+[27-Dec-2020 21:32:38 UTC] PHP   9. rcube_db_mysql->table_name($table = *uninitialized*, $quoted = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_session_db.php:47
+[27-Dec-2020 21:32:38 UTC] PHP  10. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_db.php:1076
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->set_user($user = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:107
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcmail->set_user($user = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:174
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_config->set_user_prefs($prefs = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:1441
+[27-Dec-2020 21:32:38 UTC] PHP   8. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:442
+[27-Dec-2020 21:32:38 UTC] PHP   9. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. {main}() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. require_once() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/bin/updatecss.sh:23
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcmail::get_instance($mode = *uninitialized*, $env = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/clisetup.php:31
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcmail->startup() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:79
+[27-Dec-2020 21:32:38 UTC] PHP   5. rcmail->set_user($user = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:107
+[27-Dec-2020 21:32:38 UTC] PHP   6. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:176
+[27-Dec-2020 21:32:38 UTC] PHP   7. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. rcmail->shutdown() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. rcmail->shutdown() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:871
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube.php:1017
+[27-Dec-2020 21:32:38 UTC] PHP   4. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. rcmail->shutdown() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:879
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404
+[27-Dec-2020 21:32:38 UTC] PHP Warning:  count(): Parameter must be an array or an object that implements Countable in /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_plugin_api.php on line 454
+[27-Dec-2020 21:32:38 UTC] PHP Stack trace:
+[27-Dec-2020 21:32:38 UTC] PHP   1. rcmail->shutdown() /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:0
+[27-Dec-2020 21:32:38 UTC] PHP   2. rcube_config->get($name = *uninitialized*, $def = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/include/rcmail.php:879
+[27-Dec-2020 21:32:38 UTC] PHP   3. rcube_plugin_api->exec_hook($hook = *uninitialized*, $args = *uninitialized*) /usr/local/www/roundcube/releases/1.2.x/roundcubemail-git/program/lib/Roundcube/rcube_config.php:404

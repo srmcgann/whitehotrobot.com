@@ -5,7 +5,7 @@
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $newURL = mysqli_real_escape_string($link, $data->{'newURL'});
   $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
-  file_get_contents('vidThumb.php?id=' . $demoID);
+	file_get_contents('vidThumb.php?id=' . $demoID);
   $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'";';
   $res = mysqli_query($link, $sql);
   $success = false;

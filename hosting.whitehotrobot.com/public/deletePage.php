@@ -9,10 +9,10 @@
     $sql='SELECT * FROM users WHERE name LIKE "' . $userName . '" AND passhash = "' .$passhash. '"';
     if($res = mysqli_query($link, $sql)){
       $row=mysqli_fetch_assoc($res);
-      $sql='DELETE FROM pages WHERE id = ' . $pageID . ' AND userID = ' . $row['id'];
+			$sql='DELETE FROM pages WHERE id = ' . $pageID . ' AND userID = ' . $row['id'];
       mysqli_query($link, $sql);
-      $ret = true;
-    }
-  }
-  echo json_encode($ret);
+			$ret = true;
+		}
+	}
+	echo json_encode($ret);
 ?>

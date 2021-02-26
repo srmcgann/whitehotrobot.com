@@ -3,7 +3,7 @@
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
-  $item = mysqli_real_escape_string($link, $data->{'item'});
+	$item = mysqli_real_escape_string($link, $data->{'item'});
   $newItemVal = mysqli_real_escape_string($link, $data->{'newItemVal'});
   $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
   $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'";';

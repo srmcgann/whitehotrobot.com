@@ -39,7 +39,7 @@ export default {
         inView: [],
         loaded: false,
         launchUserPage: null,
-        createButtonEnabled: true,
+				createButtonEnabled: true,
         user: null,
         userShowcase: [],
         startStopPages: false,
@@ -92,7 +92,7 @@ export default {
       .then(res => res.json())
       .then(data => {
         data.show = true
-        this.state.createButtonEnabled = true
+				this.state.createButtonEnabled = true
         document.getElementsByTagName('HTML')[0].style.overflowY = 'visible'
         if(userpage) {
           this.state.user.pages = [data, ...this.state.user.pages]
@@ -133,10 +133,10 @@ export default {
     },
     createPage(){
       let sendData = {userName: this.state.loggedinUserName, passhash: this.state.passhash}
-      this.state.createButtonEnabled = false
+			this.state.createButtonEnabled = false
       document.getElementsByTagName('HTML')[0].style.overflowY = 'hidden'
       this.$nextTick(()=>{
-        fetch(this.state.baseURL + '/createPage.php',{
+				fetch(this.state.baseURL + '/createPage.php',{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ export default {
             this.getSingle(data, true)
           }
         })
-      })
+			})
     },
     decToAlpha(n){
       let alphabet='0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -322,14 +322,14 @@ export default {
         switch(vars[0]){
           case 'browse':
             this.state.mode = 'browse'
-            this.state.viewAuthor = null
+						this.state.viewAuthor = null
             this.getUserShowcase()
             this.state.showUserPages = false
             break;
           case 'u':
             this.state.mode = 'u'
             this.loadUserData(decodeURIComponent(vars[1]).replaceAll(' ', '_'))
-            this.state.viewAuthor = vars[1]
+						this.state.viewAuthor = vars[1]
             this.state.showUserPages = true
           break
           default:

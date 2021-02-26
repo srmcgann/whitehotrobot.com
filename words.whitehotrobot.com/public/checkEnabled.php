@@ -8,12 +8,12 @@
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
     echo json_encode([
-      $row['enabled'],
-      $row['id'],
-      $row['avatar'],
-      $row['admin'],
-      $row['wordsPostsPerPage']
-    ]);
+		  $row['enabled'],
+			$row['id'],
+			$row['avatar'],
+			$row['admin'],
+			$row['wordsPostsPerPage']
+	  ]);
   } else {
     echo json_encode([false,'']);
   }

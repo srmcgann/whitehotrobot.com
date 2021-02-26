@@ -34,19 +34,19 @@
       $sql = 'SELECT * FROM items WHERE id = ' . $demoID;
       $res = mysqli_query($link, $sql);
       if(mysqli_num_rows($res)){
-  $demo = mysqli_fetch_assoc($res);
+	$demo = mysqli_fetch_assoc($res);
         $title=mysqli_real_escape_string($link, $demo['title']);
         $videoLink=mysqli_real_escape_string($link, $demo['videoLink']);
         $demoHTML=mysqli_real_escape_string($link, $demo['demoHTML']);
         $demoCSS=mysqli_real_escape_string($link, $demo['demoCSS']);
-  $demoJS=mysqli_real_escape_string($link, $demo['demoJS']);
+	$demoJS=mysqli_real_escape_string($link, $demo['demoJS']);
 
-  $forkHistory=[$demo['id']];
-  $a=json_decode($demo['forkHistory']);
-  foreach($a as $id){
-    if(demoExists($id)){
+	$forkHistory=[$demo['id']];
+	$a=json_decode($demo['forkHistory']);
+	foreach($a as $id){
+	  if(demoExists($id)){
             array_push($forkHistory, $id);
-    }else{
+	  }else{
             array_push($forkHistory, -1);
           }
         }

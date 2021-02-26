@@ -4,7 +4,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
   devServer: {
-    host: 'local.words.whitehotrobot.com',
+    host: 'words.whitehotrobot.com',
 	  port:8080,
     publicPath: '/',
   },
