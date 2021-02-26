@@ -140,7 +140,7 @@ $CONF['database_tables'] = array (
     'vacation' => 'vacation',
     'vacation_notification' => 'vacation_notification',
     'quota' => 'quota',
-	'quota2' => 'quota2',
+  'quota2' => 'quota2',
 );
 
 // Site Admin

@@ -18,6 +18,6 @@
       mysqli_query($link, $sql);
       $success = true;
     }
-	}
+  }
   echo json_encode([$success]);
 ?>

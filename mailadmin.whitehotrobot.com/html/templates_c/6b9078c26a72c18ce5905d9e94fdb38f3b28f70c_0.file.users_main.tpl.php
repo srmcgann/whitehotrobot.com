@@ -24,34 +24,34 @@ function content_603876e8e841a2_00948757 (Smarty_Internal_Template $_smarty_tpl)
 ?><div id="main_menu">
 <table>
 <?php if ($_smarty_tpl->tpl_vars['CONF']->value['vacation'] === 'YES') {?>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="vacation.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMenu_vacation'];?>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="vacation.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMenu_vacation'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['tummVacationtext']->value;?>
+    <td><?php echo $_smarty_tpl->tpl_vars['tummVacationtext']->value;?>
 </td>
-	</tr>
+  </tr>
 <?php }
 if ($_smarty_tpl->tpl_vars['CONF']->value['edit_alias'] === 'YES') {?>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="edit-alias.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMenu_edit_alias'];?>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="edit-alias.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMenu_edit_alias'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMain_edit_alias'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMain_edit_alias'];?>
 </td>
-	</tr>
+  </tr>
 <?php }?>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="password.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['change_password'];?>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="password.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['change_password'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMain_password'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMain_password'];?>
 </td>
-	</tr>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_logout');?>
+  </tr>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_logout');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_logout'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_logout'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_logout'];?>
 </td>
-	</tr>
+  </tr>
 </table>
 </div>
 <?php }

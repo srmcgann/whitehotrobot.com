@@ -26,8 +26,8 @@ function content_603551c987bcf2_53903601 (Smarty_Internal_Template $_smarty_tpl)
 <input class="flat" type="hidden" name="token" value="<?php echo rawurlencode($_SESSION['PFA_token']);?>
 " />
 <table id="login_table" cellspacing="10">
-	<tr>
-		<th colspan="2">
+  <tr>
+    <th colspan="2">
 <?php if ($_smarty_tpl->tpl_vars['logintype']->value == 'admin') {
 echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_welcome'];?>
 
@@ -35,39 +35,39 @@ echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_welcome'];?>
 echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersLogin_welcome'];?>
 
 <?php }?>
-	</th>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_username'];?>
+  </th>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_username'];?>
 :</label></td>
-		<td><input class="flat" type="text" name="fUsername" /></td>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['password'];?>
+    <td><input class="flat" type="text" name="fUsername" /></td>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['password'];?>
 :</label></td>
-		<td><input class="flat" type="password" name="fPassword" />
+    <td><input class="flat" type="password" name="fPassword" />
 <?php if ($_smarty_tpl->tpl_vars['forgotten_password_reset']->value) {?>
-	<br/><a href="password-recover.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersLogin_password_recover'];?>
+  <br/><a href="password-recover.php"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersLogin_password_recover'];?>
 </a>
 <?php }?>
-		</td>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_language'];?>
+    </td>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_language'];?>
 :</label></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['language_selector']->value;?>
+    <td><?php echo $_smarty_tpl->tpl_vars['language_selector']->value;?>
 </td>
-	</tr>
-	<tr>
-		<td class="label">&nbsp;</td>
-		<td><input class="button" type="submit" name="submit" value="<?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_button'];?>
+  </tr>
+  <tr>
+    <td class="label">&nbsp;</td>
+    <td><input class="button" type="submit" name="submit" value="<?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_button'];?>
 " /></td>
-	</tr>
+  </tr>
 <?php if ($_smarty_tpl->tpl_vars['logintype']->value == 'admin') {?>
-	<tr>
-		<td colspan="2"><a href="users/"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_login_users'];?>
+  <tr>
+    <td colspan="2"><a href="users/"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pLogin_login_users'];?>
 </a></td>
-	</tr>
+  </tr>
 <?php }?>
 </table>
 </form>
@@ -75,7 +75,7 @@ echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersLogin_welcome'];?>
 <?php echo '<script'; ?>
  type="text/javascript">
 <!--
-	document.frmLogin.fUsername.focus();
+  document.frmLogin.fUsername.focus();
 // -->
 <?php echo '</script'; ?>
 >

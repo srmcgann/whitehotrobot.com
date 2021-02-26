@@ -25,57 +25,57 @@ function content_603551d39ffe35_48805055 (Smarty_Internal_Template $_smarty_tpl)
  -->
 <div id="main_menu">
 <table>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_list_domain');?>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_list_domain');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_overview'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_overview'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_overview'];?>
 </td>
-	</tr>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_create_alias');?>
+  </tr>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_create_alias');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['add_alias'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_create_alias'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_create_alias'];?>
 </td>
-	</tr>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_create_mailbox');?>
+  </tr>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_create_mailbox');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['add_mailbox'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_create_mailbox'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_create_mailbox'];?>
 </td>
-	</tr>
+  </tr>
 <?php if ($_smarty_tpl->tpl_vars['CONF']->value['sendmail'] === 'YES') {?>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_sendmail');?>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_sendmail');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_sendmail'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_sendmail'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_sendmail'];?>
 </td>
-	</tr>
+  </tr>
 <?php }?>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_password');?>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_password');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_password'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_password'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_password'];?>
 </td>
-	</tr>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_viewlog');?>
+  </tr>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_viewlog');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_viewlog'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_viewlog'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_viewlog'];?>
 </td>
-	</tr>
-	<tr>
-		<td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_logout');?>
+  </tr>
+  <tr>
+    <td nowrap="nowrap"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_logout');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_logout'];?>
 </a></td>
-		<td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_logout'];?>
+    <td><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMain_logout'];?>
 </td>
-	</tr>
+  </tr>
 </table>
 </div>
 <?php }

@@ -23,23 +23,23 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
 function content_603876e8e7ab76_20157626 (Smarty_Internal_Template $_smarty_tpl) {
 ?><div id="menu">
 <ul>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_main');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_main');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_main'];?>
 </a></li>
 <?php if ($_smarty_tpl->tpl_vars['CONF']->value['vacation'] === 'YES') {?>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_vacation');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_vacation');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMenu_vacation'];?>
 </a></li>
 <?php }
 if ($_smarty_tpl->tpl_vars['CONF']->value['edit_alias'] === 'YES') {?>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_edit_alias');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_edit_alias');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pUsersMenu_edit_alias'];?>
 </a></li>
 <?php }?>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_password');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_password');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['change_password'];?>
 </a></li>
-	<li class="logout"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_logout');?>
+  <li class="logout"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_user_logout');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_logout'];?>
 </a></li>
 </ul>

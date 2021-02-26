@@ -27,53 +27,53 @@ $_smarty_tpl->_checkPlugins(array(0=>array('file'=>'/var/www/mailadmin.whitehotr
 <input class="flat" type="hidden" name="token" value="<?php echo rawurlencode($_SESSION['PFA_token']);?>
 " />
 <table>
-	<tr>
-		<th colspan="2"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pBroadcast_title'];?>
+  <tr>
+    <th colspan="2"><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pBroadcast_title'];?>
 </th>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['from'];?>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['from'];?>
 :</label></td>
-		<td><em><?php echo $_smarty_tpl->tpl_vars['smtp_from_email']->value;?>
+    <td><em><?php echo $_smarty_tpl->tpl_vars['smtp_from_email']->value;?>
 </em></td>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pBroadcast_name'];?>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pBroadcast_name'];?>
 :</label></td>
-		<td><input class="flat" size="43" type="text" name="name"/></td>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['subject'];?>
+    <td><input class="flat" size="43" type="text" name="name"/></td>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['subject'];?>
 :</label></td>
-		<td><input class="flat" size="43" type="text" name="subject"/></td>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['message'];?>
+    <td><input class="flat" size="43" type="text" name="subject"/></td>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['message'];?>
 :</label></td>
-		<td><textarea class="flat" cols="40" rows="6" name="message"></textarea></td>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['broadcast_mailboxes_only'];?>
+    <td><textarea class="flat" cols="40" rows="6" name="message"></textarea></td>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['broadcast_mailboxes_only'];?>
 </label></td>
-		<td><input type="checkbox" value="1" name="mailboxes_only"/></td>
-	</tr>
-	<tr>
-		<td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['broadcast_to_domains'];?>
+    <td><input type="checkbox" value="1" name="mailboxes_only"/></td>
+  </tr>
+  <tr>
+    <td class="label"><label><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['broadcast_to_domains'];?>
 </label></td>
-		<td>
-			<select multiple="multiple" name="domains[]">
-				<?php echo smarty_function_html_options(array('output'=>$_smarty_tpl->tpl_vars['allowed_domains']->value,'values'=>$_smarty_tpl->tpl_vars['allowed_domains']->value,'selected'=>$_smarty_tpl->tpl_vars['allowed_domains']->value),$_smarty_tpl);?>
+    <td>
+      <select multiple="multiple" name="domains[]">
+        <?php echo smarty_function_html_options(array('output'=>$_smarty_tpl->tpl_vars['allowed_domains']->value,'values'=>$_smarty_tpl->tpl_vars['allowed_domains']->value,'selected'=>$_smarty_tpl->tpl_vars['allowed_domains']->value),$_smarty_tpl);?>
 
-			</select>
-		</td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td>
-		<input class="button" type="submit" name="submit" value="<?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pSendmail_button'];?>
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+    <input class="button" type="submit" name="submit" value="<?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pSendmail_button'];?>
 " />
-		</td>
-	</tr>
+    </td>
+  </tr>
 </table>
 </form>
 </div>

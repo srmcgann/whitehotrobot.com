@@ -73,23 +73,23 @@ $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
 <table border=0 id='admin_table'><!-- TODO: 'admin_table' needed because of CSS for table header -->
 
 <?php if ($_smarty_tpl->tpl_vars['msg']->value['list_header']) {?>
-	<?php $_smarty_tpl->_assignInScope('colcount', 2);?>
+  <?php $_smarty_tpl->_assignInScope('colcount', 2);?>
     <?php
 $_from = $_smarty_tpl->smarty->ext->_foreach->init($_smarty_tpl, $_smarty_tpl->tpl_vars['struct']->value, 'field', false, 'key');
 if ($_from !== null) {
 foreach ($_from as $_smarty_tpl->tpl_vars['key']->value => $_smarty_tpl->tpl_vars['field']->value) {
 ?>
-        <?php if ($_smarty_tpl->tpl_vars['field']->value['display_in_list'] == 1 && $_smarty_tpl->tpl_vars['field']->value['label']) {?>			<?php $_smarty_tpl->_assignInScope('colcount', $_smarty_tpl->tpl_vars['colcount']->value+1);?>
+        <?php if ($_smarty_tpl->tpl_vars['field']->value['display_in_list'] == 1 && $_smarty_tpl->tpl_vars['field']->value['label']) {?>      <?php $_smarty_tpl->_assignInScope('colcount', $_smarty_tpl->tpl_vars['colcount']->value+1);?>
         <?php }?>
     <?php
 }
 }
 $_smarty_tpl->smarty->ext->_foreach->restore($_smarty_tpl, 1);?>
-	<tr>
-		<th colspan="<?php echo $_smarty_tpl->tpl_vars['colcount']->value;?>
+  <tr>
+    <th colspan="<?php echo $_smarty_tpl->tpl_vars['colcount']->value;?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value[$_smarty_tpl->tpl_vars['msg']->value['list_header']];?>
 </th>
-	</tr>
+  </tr>
 <?php }?>
 
 <tr class="header">

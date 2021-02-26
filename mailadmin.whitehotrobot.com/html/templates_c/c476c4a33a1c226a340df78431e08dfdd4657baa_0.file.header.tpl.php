@@ -27,33 +27,33 @@ function content_603551c9862fe4_78909791 (Smarty_Internal_Template $_smarty_tpl)
 <html lang="<?php if (isset($_SESSION['lang'])) {
 echo $_SESSION['lang'];
 }?>">
-	<head>
+  <head>
         <meta charset="utf-8">
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>Postfix Admin - <?php echo $_SERVER['HTTP_HOST'];?>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Postfix Admin - <?php echo $_SERVER['HTTP_HOST'];?>
 </title>
-		<link rel="shortcut icon" href="images/favicon.ico">
-		<link rel="stylesheet" type="text/css" href="<?php echo $_smarty_tpl->tpl_vars['CONF']->value['theme_css'];?>
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="<?php echo $_smarty_tpl->tpl_vars['CONF']->value['theme_css'];?>
 " />
 <?php if ($_smarty_tpl->tpl_vars['CONF']->value['theme_custom_css']) {?>
-		<link rel="stylesheet" type="text/css" href="<?php echo $_smarty_tpl->tpl_vars['CONF']->value['theme_custom_css'];?>
+    <link rel="stylesheet" type="text/css" href="<?php echo $_smarty_tpl->tpl_vars['CONF']->value['theme_custom_css'];?>
 " />
 <?php }?>
-	</head>
-	<body class="lang-<?php if (isset($_SESSION['lang'])) {
+  </head>
+  <body class="lang-<?php if (isset($_SESSION['lang'])) {
 echo $_SESSION['lang'];
 }?> page-<?php echo $_smarty_tpl->tpl_vars['smarty_template']->value;?>
  <?php if (isset($_smarty_tpl->tpl_vars['table']->value)) {?>page-<?php echo $_smarty_tpl->tpl_vars['smarty_template']->value;?>
 -<?php echo $_smarty_tpl->tpl_vars['table']->value;
 }?>">
-		<div id="container">
-		<div id="login_header">
-		<a href='main.php'><img id="login_header_logo" src="<?php echo $_smarty_tpl->tpl_vars['CONF']->value['theme_logo'];?>
+    <div id="container">
+    <div id="login_header">
+    <a href='main.php'><img id="login_header_logo" src="<?php echo $_smarty_tpl->tpl_vars['CONF']->value['theme_logo'];?>
 " alt="Logo" /></a>
 <?php if ($_smarty_tpl->tpl_vars['CONF']->value['show_header_text'] === 'YES' && $_smarty_tpl->tpl_vars['CONF']->value['header_text']) {?>
-		<h2><?php echo $_smarty_tpl->tpl_vars['CONF']->value['header_text'];?>
+    <h2><?php echo $_smarty_tpl->tpl_vars['CONF']->value['header_text'];?>
 </h2>
 <?php }?>
-		</div>
+    </div>
 <?php }
 }

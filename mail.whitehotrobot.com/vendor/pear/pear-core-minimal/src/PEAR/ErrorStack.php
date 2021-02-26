@@ -546,18 +546,18 @@ class PEAR_ErrorStack {
         }
         if (is_callable($callback)) {
             switch(call_user_func($callback, $err)){
-            	case PEAR_ERRORSTACK_IGNORE: 
-            		return $err;
-        		break;
-            	case PEAR_ERRORSTACK_PUSH: 
-            		$log = false;
-        		break;
-            	case PEAR_ERRORSTACK_LOG: 
-            		$push = false;
-        		break;
-            	case PEAR_ERRORSTACK_DIE: 
-            		$die = true;
-        		break;
+              case PEAR_ERRORSTACK_IGNORE: 
+                return $err;
+            break;
+              case PEAR_ERRORSTACK_PUSH: 
+                $log = false;
+            break;
+              case PEAR_ERRORSTACK_LOG: 
+                $push = false;
+            break;
+              case PEAR_ERRORSTACK_DIE: 
+                $die = true;
+            break;
                 // anything else returned has the same effect as pushandlog
             }
         }
@@ -851,7 +851,7 @@ class PEAR_ErrorStack {
                          'line' => $filebacktrace['line']);
             // rearrange for eval'd code or create function errors
             if (strpos($filebacktrace['file'], '(') && 
-            	  preg_match(';^(.*?)\((\d+)\) : (.*?)\\z;', $filebacktrace['file'],
+                preg_match(';^(.*?)\((\d+)\) : (.*?)\\z;', $filebacktrace['file'],
                   $matches)) {
                 $ret['file'] = $matches[1];
                 $ret['line'] = $matches[2] + 0;

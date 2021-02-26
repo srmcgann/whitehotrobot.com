@@ -19,10 +19,10 @@ $CONF['smtp_port'] = '25';
 $CONF['encrypt'] = 'md5crypt';
 
 $CONF['default_aliases'] = [
-	'abuse' => 'admin@whitehotrobot.com',
-	'hostmaster' => 'admin@whitehotrobot.com',
-	'postmaster' => 'admin@whitehotrobot.com',
-	'webmaster' => 'admin@whitehotrobot.com'
+  'abuse' => 'admin@whitehotrobot.com',
+  'hostmaster' => 'admin@whitehotrobot.com',
+  'postmaster' => 'admin@whitehotrobot.com',
+  'webmaster' => 'admin@whitehotrobot.com'
 ];
 
 $CONF['show_footer_text'] = 'YES';

@@ -23,13 +23,13 @@ $color_stops = explode(';', preg_replace('/[^a-f0-9,;%]/i', '', $_GET['c']));
 $gradient_coords = !empty($_GET['h']) ? 'x1="0%" y1="0%" x2="100%" y2="0%"' : 'x1="0%" y1="0%" x2="0%" y2="100%"';
 $last = count($color_stops) - 1;
 foreach ($color_stops as $i => $stop) {
-	list($color, $offset) = explode(',', $stop);
-	if ($offset)
-		$offset = intval($offset);
-	else
-		$offset = $i == $last ? 100 : 0;
+  list($color, $offset) = explode(',', $stop);
+  if ($offset)
+    $offset = intval($offset);
+  else
+    $offset = $i == $last ? 100 : 0;
 
-	$svg_stops .= '<stop offset="' . $offset . '%" stop-color="#' . $color . '" stop-opacity="1"/>';
+  $svg_stops .= '<stop offset="' . $offset . '%" stop-color="#' . $color . '" stop-opacity="1"/>';
 }
 
 ?>

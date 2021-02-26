@@ -23,7 +23,7 @@ if ($_smarty_tpl->_decodeProperties($_smarty_tpl, array (
 function content_603551d39f3810_40069556 (Smarty_Internal_Template $_smarty_tpl) {
 ?><!-- <?php echo basename($_smarty_tpl->source->filepath);?>
  -->
-<?php if (!empty($_GET) && !empty($_GET['domain'])) {?>	<?php $_smarty_tpl->_assignInScope('url_domain', $_GET['domain']);
+<?php if (!empty($_GET) && !empty($_GET['domain'])) {?> <?php $_smarty_tpl->_assignInScope('url_domain', $_GET['domain']);
 ob_start();
 echo rawurlencode($_smarty_tpl->tpl_vars['url_domain']->value);
 $_prefixVariable1=ob_get_clean();
@@ -40,7 +40,7 @@ $_smarty_tpl->_assignInScope('url_domain', "&amp;domain=".$_prefixVariable1);
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pAdminMenu_create_admin'];?>
 </a></li></ul></li>
 <?php } else { ?>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_main');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_main');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_main'];?>
 </a></li>
 <?php }?>
@@ -83,20 +83,20 @@ if ($_smarty_tpl->tpl_vars['CONF']->value['sendmail'] === 'YES') {?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pAdminMenu_broadcast_message'];?>
 </a></li><?php }?></ul></li>
 <?php }?>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_password');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_password');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_password'];?>
 </a></li>
 <?php if ($_smarty_tpl->tpl_vars['authentication_has_role']->value['global_admin'] && $_smarty_tpl->tpl_vars['CONF']->value['database_type'] !== 'pgsql' && $_smarty_tpl->tpl_vars['CONF']->value['backup'] === 'YES') {?>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_backup');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_backup');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pAdminMenu_backup'];?>
 </a></li>
 <?php }
 if ($_smarty_tpl->tpl_vars['CONF']->value['logging'] === 'YES') {?>
-	<li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_viewlog');?>
+  <li><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_viewlog');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_viewlog'];?>
 </a></li>
 <?php }?>
-	<li class="logout"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_logout');?>
+  <li class="logout"><a target="_top" href="<?php echo $_smarty_tpl->smarty->ext->configLoad->_getConfigVariable($_smarty_tpl, 'url_logout');?>
 "><?php echo $_smarty_tpl->tpl_vars['PALANG']->value['pMenu_logout'];?>
 </a></li>
 </ul>
@@ -107,21 +107,21 @@ if ($_smarty_tpl->tpl_vars['CONF']->value['logging'] === 'YES') {?>
 // <![CDATA[
 sfHover = function()
 {
-	var sfEls = document.getElementById("menu").getElementsByTagName("LI");
-	for (var i=0; i<sfEls.length; i++)
-	{
-		sfEls[i].onmouseover=function()
-		{
-			this.className+=" sfhover";
-		}
-		sfEls[i].onmouseout=function()
-		{
-			this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
-		}
-	}
+  var sfEls = document.getElementById("menu").getElementsByTagName("LI");
+  for (var i=0; i<sfEls.length; i++)
+  {
+    sfEls[i].onmouseover=function()
+    {
+      this.className+=" sfhover";
+    }
+    sfEls[i].onmouseout=function()
+    {
+      this.className=this.className.replace(new RegExp(" sfhover\\b"), "");
+    }
+  }
 }
 if (window.attachEvent)
-	window.attachEvent("onload", sfHover);
+  window.attachEvent("onload", sfHover);
 // ]]>
 <?php echo '</script'; ?>
 >
