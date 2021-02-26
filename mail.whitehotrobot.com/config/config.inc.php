@@ -62,6 +62,7 @@ $config['support_url'] = 'mailto:admin@whitehotrobot.com?subject=support plox (f
 // an array can be used to specify different logos for specific template files, '*' for default logo
 // for example array("*" => "/images/roundcube_logo.png", "messageprint" => "/images/roundcube_logo_print.png")
 $config['skin_logo'] = 'https://lookie.jsbot.net/uploads/UllBW.png';
+#$config['skin_logo'] = [ '[favicon]' => 'https://lookie.jsbot.net/uploads/tBgps.png', ];
 
 // This key is used for encrypting purposes, like storing of imap password
 // in the session. For historical reasons it's called DES_key, but it's used

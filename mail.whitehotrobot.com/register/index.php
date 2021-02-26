@@ -10,7 +10,7 @@
     <meta property="og:title" content="whitehot robot email - communication for the masses"/>
     <meta property="og:descro[topm" content="whitehot robot email - communication for the masses"/>
     <meta property="og:image" content="https://lookie.jsbot.net/uploads/1HVS37.png"/>
-    <link rel="icon" href="https://lookie.jsbot.net/uploads/1HVS37.png">
+    <link rel="icon" href="https://lookie.jsbot.net/uploads/tBgps.png">
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
       body,html{
