@@ -70,7 +70,7 @@
       .supplemental{
         display: inline-block;
         line-height: .9em;
-        color: #688;
+        color: #8cc;
       }
       hr{
         border: none;
@@ -113,11 +113,11 @@
       }
       .leftTD{
         text-align: right;
-        padding-top: 10px;
+        padding-top: 12px;
       }
       .rightTD{
         text-align: left;
-        padding-top: 10px;
+        padding-top: 12px;
       }
       .inputTable{
         width: 100%;
@@ -146,7 +146,16 @@
         <div class="logo">
         </div>
       </a>
-      <br><span style="font-size: 2em;">registration form</span>
+      <br>
+      <span style="color: #4fc6;font-size:1.75em;font-style:oblique;">
+        communication for the masses
+      </span>
+      <br><span style="font-size: 2em;color: #0f6;font-weight: 900;transform: scalex(1.8);display: inline-block;">REGISTRATION</span>
+      <br>
+      <span style="color: #4fc6;font-size:1.2em;font-style:oblique;">
+      always free
+      <br>
+      </span>
       <hr><br>
       <input id="username" style="position: absolute;opacity: 0;" type="text" name="fakeusernameremembered" tabindex="-1">
       <input id="password" style="position: absolute; opacity: 0;" type="password" name="fakepasswordremembered" tabindex="-1">
@@ -156,7 +165,7 @@
             <input type="url" placeholder="your full name" class="regInput" oninput="validate(1)" id="name" autocomplete="off" value="" autofocus>
           </td>
           <td class="rightTD">
-            <span class="supplemental">
+            <span class="supplemental" style="margin-left: 10px;">
               Your full name you want to show to recipients
             </span>
           </td>
@@ -167,7 +176,7 @@
             <input id="username2" style="position: absolute;opacity: 0;" type="text" name="fakeusernameremembered9" tabindex="-1">
           </td>
           <td class="rightTD">
-            <span class="supplemental">
+            <span class="supplemental" style="color: #1f8;font-size: 1.1em;">
               @whitehotrobot.com
             </span>
           </td>
@@ -210,7 +219,7 @@
             <input type="url" placeholder="recovery email (optional)" class="regInput" id="otherEmail" autocomplete="off" value="" autofocus>
           </td>
           <td class="rightTD">
-            <span class="supplemental">
+            <span class="supplemental" style="margin-left: 10px;">
               In case you forget your password...
             </span>
           </td>

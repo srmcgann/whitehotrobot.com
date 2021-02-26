@@ -44,7 +44,7 @@ export default {
   },
   methods: {
     launchEmail () {
-      location.href = 'https://email.whitehotrobot.com'
+      location.href = 'https://mail.whitehotrobot.com'
     },
     launchPage (loc) {
       window.open(loc, '_blank')
