@@ -2,7 +2,7 @@
   <div class="main" :class="{'footerPadding': state.mode=='post'}">
     <div v-if="state.search.string==''">
       <div v-if="state.mode=='post'" class="postDiv" :class="{'highTop':state.showControls}">
-        <div v-if="state.posts.length" class="flex">
+        <div v-if="state.posts.length && typeof state.posts[0].id != 'undefined'" class="flex">
           <Post v-for="post in state.posts" :key="post.id" :post="post" :state="state"/>
         </div>
         <div v-else-if="state.loaded" style="font-size: 1.5em;">
