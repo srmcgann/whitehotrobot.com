@@ -15,7 +15,7 @@
       @import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
       body,html{
         margin: 0;
-        background: linear-gradient(-45deg, #100, #010, #103);
+        background: linear-gradient(-45deg, #201, #023);
         color: #ffc;
         font-family: 'Play';
         height: 100vh;
@@ -48,9 +48,9 @@
         transform: translate(-50%,-50%);
         top: 45%;
         padding: 50px;
-        box-shadow: 0px 0px 150px 150px #0585;
+        box-shadow: 0px 0px 150px 150px #3065;
         border-radius: 50%;
-        background: #0585;
+        background: #3065;
         text-align: center;
         font-size: 16px;
       }
@@ -80,7 +80,7 @@
       }
       button{
         border: none;
-        color: #aaa;
+        color: #888;
         background: #333;
         font-size: 24px;
         font-family: 'Play';
@@ -152,9 +152,9 @@
       </span>
       <br><span style="font-size: 2em;color: #0f6;font-weight: 900;transform: scalex(1.8);display: inline-block;">REGISTRATION</span>
       <br>
-      <span style="color: #4fc6;font-size:1.2em;font-style:oblique;">
-      always free
-      <br>
+      <span style="color: #4fca;font-size:1.2em;font-style:oblique;">
+        always free
+        <br>
       </span>
       <hr><br>
       <input id="username" style="position: absolute;opacity: 0;" type="text" name="fakeusernameremembered" tabindex="-1">
@@ -328,7 +328,7 @@
         let btn = document.querySelector('#submit')
         btn.style.background = '#333'
         btn.disabled = true
-        btn.style.color = '#aaa'
+        btn.style.color = '#888'
         btn.style.cursor = 'initial'
         if(m==1){
           pass2 = false
