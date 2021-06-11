@@ -1,0 +1,80 @@
+@font-face {
+  font-family: '04b08';
+    src:  url('assets/font/04b08.ttf.woff') format('woff'),
+    url('assets/font/04b08.ttf.svg#04b08') format('svg'),
+    url('assets/font/04b08.ttf.eot'),
+    url('assets/font/04b08.eot?#iefix') format('embedded-opentype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+html,body{
+	overflow:hidden;
+  height:100vh;
+  background: #020202; /* Old browsers */
+  background: -moz-linear-gradient(top, #020202 0%, #1b1759 100%); /* FF3.6-15 */
+  background: -webkit-linear-gradient(top, #020202 0%,#1b1759 100%); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(to bottom, #020202 0%,#1b1759 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#020202', endColorstr='#1b1759',GradientType=0 ); /* IE6-9 */
+}
+
+#canvas {
+  display: block;
+  /*position: fixed;*/
+
+  width: 157.15vh;
+  height: 94%;
+  margin:	0 auto;
+	padding: 10px
+  border:1px solid #123;
+  border-radius:25px;
+  image-rendering: optimizeSpeed;
+  image-rendering: pixelated;
+}
+
+/*:-webkit-full-screen  {*/
+/*  width: 2140px;*/
+/*  height: 1280px;*/
+/*}*/
+
+/*#instructions{*/
+/*  position:absolute;*/
+/*  font-family:courier,arial,tahoma;*/
+/*  top:0;*/
+/*  margin-top:5vh;*/
+/*  width:14vw;*/
+/*  color:#aec;*/
+/*  font-size:1.25vw;*/
+/*  margin-left:1vw;*/
+/*  text-align: left;*/
+/*  border-radius:10px;*/
+/*}*/
+
+.caption{
+  padding-left:1vw;
+}
+
+.footer{
+	width:100%;
+	margin: 0 auto;
+}
+.label{
+  color:#888;
+	font-size:1.5vw;
+	font-family: '04b08';
+	text-align: center;
+	padding: 10px;
+}
+
+#logo{
+  width:14vw;
+}
+
+hr{
+  border:1px solid rgba(100,100,100,.5);
+}
+
+a{
+  text-decoration:none;
+  color:#68f;
+}
