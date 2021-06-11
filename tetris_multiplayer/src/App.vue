@@ -21,7 +21,7 @@ export default {
         author: false,
         receivedGameData: {},
         playerName: '',
-				singlePlayerMode: false,
+        singlePlayerMode: false,
         alive: true,
         highScore: 0,
         lastNameUpdateTimer: 0,
@@ -125,14 +125,14 @@ export default {
               this.state.playerNumber = 'A'
             } else {
               if(vars[1]){
-								this.state.stage = 2
-							}
+                this.state.stage = 2
+              }
             }
           break;
-				}
+        }
       } else {
-			  if(vars[0] == 'game') this.state.singlePlayerMode = true 
-			}
+        if(vars[0] == 'game') this.state.singlePlayerMode = true 
+      }
     },
     setBG(val){
       let bgimg

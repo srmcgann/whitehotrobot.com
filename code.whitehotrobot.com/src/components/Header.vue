@@ -1,7 +1,7 @@
 <template>
   <div class="header" id="header">
     <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
-		</div>
+    </div>
     <div v-else style="display: inline-block; position: absolute;">
       <button :class="{'bumpDown': state.mode == 'single'}" @click="createDemo()" class="createDemoButton">create demo</button>
     </div>
@@ -109,9 +109,9 @@ export default {
       })
     }
   },
-	mounted(){
-		if(this.curPage > this.totalPages) this.state.jumpToPage(this.totalPages)
-	},
+  mounted(){
+    if(this.curPage > this.totalPages) this.state.jumpToPage(this.totalPages)
+  },
   computed:{
     totalPages(){
       switch(this.state.mode){
@@ -286,77 +286,77 @@ a{
   text-shadow: 1px 1px 2px #000;
 }
 .commentContainer{
-	background: #2020;
-	padding: 10px;
-	margin-top: 6px;
+  background: #2020;
+  padding: 10px;
+  margin-top: 6px;
 }
 .commentsHeader{
-	font-size: 28px;
-	text-align: left;
-	color: #0ff;
-	background: #0000;
-	vertical-align: top;
+  font-size: 28px;
+  text-align: left;
+  color: #0ff;
+  background: #0000;
+  vertical-align: top;
 }
 .commentText{
   color: #ccc;
   text-align: left;
-	min-width: 200px;
+  min-width: 200px;
   display: inline-block;
   font-size: 18px;
-	padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   background: #024;
   width: calc(100% - 470px);
   margin-left: 10px;
 }
 .commentInput:focus{
-	outline: none;
+  outline: none;
 }
 .commentInput{
-	border: none;
-	color: #ef8;
-	text-align: left;
-	vertical-align: top;
-	display: inline-block;
-	font-size: 18px;
-	background: #001c;
-	margin-left: 10px;
+  border: none;
+  color: #ef8;
+  text-align: left;
+  vertical-align: top;
+  display: inline-block;
+  font-size: 18px;
+  background: #001c;
+  margin-left: 10px;
 }
 .commentAvatar{
   position: absolute;
-	margin-left: -51px;
-	width: 500px;
-	height: 500px;
-	max-height:30px;
-	max-width:40px;
-	margin-top: -2px;
+  margin-left: -51px;
+  width: 500px;
+  height: 500px;
+  max-height:30px;
+  max-width:40px;
+  margin-top: -2px;
 }
 .commentMain{
   width: 100%;
-	margin-top: 4px;
-	padding-bottom: 6px;
-	border-bottom: 2px solid #48f3;
+  margin-top: 4px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #48f3;
   text-align: left;
 }
 .commentUserName{
-	color: #6dc;
-	padding: 0;
-	padding-left: 50px;
-	padding-right: 5px;
-	padding-top: 2px;
-	vertical-align: top;
+  color: #6dc;
+  padding: 0;
+  padding-left: 50px;
+  padding-right: 5px;
+  padding-top: 2px;
+  vertical-align: top;
 }
 .commentDeleteButton{
-	background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
-	background-repeat: no-repeat;
-	background-size: 25px 25px;
-	background-position: center center;
-	width: 34px;
-	height: 34px;
-	vertical-align: top;
-	margin-top: -5px;
-	border-radius: 5px;
-	background-color: #f880;
+  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
 }
 .commentEditButton{
   background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
@@ -371,18 +371,18 @@ a{
   background-color: #f880;
 }
 .newComment{
-	width: calc(100% - 100px)!important;
-	float:left;
+  width: calc(100% - 100px)!important;
+  float:left;
 }
 .curPageContainer{
   position: absolute;
   display: inline-block;
   width: 270px;
   transform: translateX(-50%);
-	line-height: .8em;
-	min-height: 25px;
+  line-height: .8em;
+  min-height: 25px;
   margin-top: 32px;
-	margin-left: 30px;
+  margin-left: 30px;
   vertical-align: top;
   padding-top: 0px;
   font-size: .8em;
@@ -394,7 +394,7 @@ a{
   width: 110px;
   display: inline-block;
   text-align: center;
-	line-height: .8em;
+  line-height: .8em;
   min-width: 0;
   margin-top: 5px;
   padding: 0;

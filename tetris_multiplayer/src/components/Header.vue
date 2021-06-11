@@ -122,7 +122,7 @@ canvas{
   color: #fff8;
   position: absolute;
   min-width: 450px;
-	left: 50%;
+  left: 50%;
   top: 15px;
   transform: translatex(-50%) scalex(2.0);
   font-style: oblique;
