@@ -114,7 +114,8 @@
           <a href="https://whitehotrobot.com" target="_blank">jukebox (playlists & compiled videos)</a><br>
           <a href="https://code.whitehotrobot.com" target="_blank">demos / code with videos</a><br>
           <a href="https://audiocloud.whitehotrobot.com" target="_blank">audiocloud (music library)</a><br>
-          <a href="https://mail.whitehotrobot.com" target="_blank">free email - communication for the masses!</a><br>
+          <a href="https://games.whitehotrobot.com" target="_blank">free browser games by the user-community</a><br>
+          <a href="https://email.whitehotrobot.com" target="_blank">free email - communication for the masses!</a><br>
           <a href="https://hosting.whitehotrobot.com" target="_blank">static page hosting with code playground</a><br>
           <a href="https://words.whitehotrobot.com" target="_blank">blog / literature</a><br>
         </div>

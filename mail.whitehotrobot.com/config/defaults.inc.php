@@ -659,7 +659,7 @@ $config['plugins'] = array('password');
 
  $config['password_username_format'] = '%u';
 
- $config['password_db_dsn'] = 'mysql://mail:<password>@localhost/mail';
+ $config['password_db_dsn'] = '';
 
  $config['password_query'] = 'UPDATE mailbox SET password=%c WHERE username=%u';
 

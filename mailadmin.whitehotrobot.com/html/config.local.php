@@ -7,7 +7,7 @@ $CONF['postfix_admin_url'] = 'https://mailadmin.whitehotrobot.com';
 $CONF['database_type'] = 'mysqli';
 $CONF['database_host'] = 'localhost';
 $CONF['database_user'] = 'mail';
-$CONF['database_password'] = '';
+$CONF['database_password'] = 'Chrome57253!*';
 $CONF['database_name'] = 'mail';
 $CONF['setup_password'] = '37b49d9f179bb2187ea96134c7822d82:219c2a6f043b1a5949b33b6663ba21d02174660c';
 

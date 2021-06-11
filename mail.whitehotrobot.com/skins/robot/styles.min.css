@@ -731,7 +731,6 @@ a.iconlink.upload {
 /*** basic page layout ***/
 
 #header {
-	overflow: hidden; /* Chrome bug #1488851 */
 }
 
 #topline {

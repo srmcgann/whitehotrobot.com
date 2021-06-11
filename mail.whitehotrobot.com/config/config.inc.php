@@ -88,7 +88,7 @@ $config['product_name'] = 'Whitehot Robot Webmail';
 // PLUGINS
 // ----------------------------------
 // List of active plugins (in plugins/ directory)
-$config['plugins'] = array('attachment_reminder', 'markasjunk', 'password', 'zipdownload');
+$config['plugins'] = array('attachment_reminder', 'markasjunk', 'password', 'zipdownload', 'vacation', 'responses');
 
 // Make use of the built-in spell checker. It is based on GoogieSpell.
 $config['enable_spellcheck'] = false;

@@ -255,7 +255,7 @@ export default {
       loop: false,
       trackAmplitude:[],
       marquisTimer: null,
-      showComments: 2,
+      showComments: 3,
       skipRedraw: false,
       moreCommentsVal: 5,
       pulse: false,
@@ -674,7 +674,7 @@ export default {
   },
   computed:{
     embedCodeText(){
-      return '<iframe style="transform:scale(.75);width:640px;height:360px;border:none;vertical-align:top;" src="'+this.state.baseURL+'/embed/'+this.state.decToAlpha(this.track.id)+'"></iframe>'
+      return '<iframe style="transform:scale(.75);width:640px;height:400px;border:none;vertical-align:top;" src="'+this.state.baseURL+'/embed/'+this.state.decToAlpha(this.track.id)+'"></iframe>'
     },
     filteredComments(){
       return this.track.comments.filter((v,i)=>i<this.showComments)
@@ -1118,12 +1118,13 @@ table{
 }
 .embedTrack{
   position: absolute;
+  overflow: hidden;
   top: 0;
   left: 0;
   margin: 0;
   width: 100%;
   background: #012;
-  height: calc(100% - 65px);
+  height: calc(100% - 15px);
 }
 .bumpUp{
   margin-top: -25px;

@@ -434,6 +434,7 @@ export default {
         switch(vars[0]){
           case 'embed':
             this.state.mode = 'embed'
+            document.getElementsByTagName('html')[0].style.overflow = 'hidden'
             this.state.curPage = (+vars[1])-1
             this.$nextTick(()=>this.loadTrack(this.alphaToDec(vars[1])))
             break
