@@ -1,0 +1,67 @@
+html,body{
+	margin:0px;
+	width:100%;
+	height:100%;
+	overflow:hidden;
+}
+
+body{
+	font-family:arial, tahoma;
+	background:#000 url(bg.jpg);
+	background-size:100% 100%;
+	color:#fff;
+}
+#canvas{
+	width:100%;
+	height:100%;
+}
+@font-face {
+    font-family: 'Square721';
+	src: url('//cantelope.org/puyopuyo/TT0246M_.TTF') format('truetype'),
+		 url('//cantelope.org/puyopuyo/TT0246M_.otf') format('opentype'),
+		 url('//cantelope.org/puyopuyo/TT0246M_.woff') format('woff');
+}
+#loadingOuter{
+	position:absolute;
+	left:50%;
+	height:100%;
+}
+#loading{
+	position:relative;
+	left:-50%;
+	top:35%;
+	font-family:Square721,courier new;
+	font-size:4em;
+	border-radius:10px;
+	padding-left:50px;
+	padding-right:50px;
+	padding-top:10px;
+	padding-bottom:10px;
+	color:#0f4;
+	background:#112;
+	border:5px solid #0f4;
+}
+#pauseButton{
+	position:absolute;
+	background:#333;
+	color:#0f4;
+	font-family: Square721, courier new;
+	border-radius:5px;
+	font-size:2em;
+	display:none;
+	width:250px;
+	left:50%;
+	bottom:10px;
+	margin-left:-125px;
+}
+#pauseScreen{
+	position:absolute;
+	background: rgba(20,20,20,.85);
+	font-family: Square721, courier new;
+	font-size:5em;
+	color: rgba(0,255,128,.85);
+	width:100%;
+	text-align:center;
+	display:none;
+	height:100%;
+}

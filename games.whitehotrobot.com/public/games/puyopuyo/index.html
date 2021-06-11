@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="description" content="Play Puyo Puyo Online">
+		<meta name="keywords" content="HTML5,canvas,JavaScript,puyopuyo">
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<link rel="icon" href="puyoD.png">
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="loadingOuter">
+			<div id="loading">LOADING...</div>
+		</div>
+		<div id="pauseScreen"><br><br><br>PAUSED</div>
+		<canvas id="canvas"></canvas>
+		<button id="pauseButton" onclick="togglePause()">START GAME</button>
+		<script src="game.js"></script>
+	</body>
+</html>
