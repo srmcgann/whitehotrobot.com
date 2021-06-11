@@ -12,6 +12,9 @@
         <img src="../assets/web.png" class="socialIcon">
       </button>
       -->
+      <button @click="launchPage('https://games.whitehotrobot.com')" class="socialButton" title="community browser games https://games.whitehotrobot.com">
+        <img src="../assets/games.png" class="socialIcon">
+      </button>
       <button @click="launchPage('https://words.whitehotrobot.com')" class="socialButton" title="blog / literature https://words.whitehotrobot.com">
         <img src="https://lookie.jsbot.net/uploads/1oHzZO.png" class="socialIcon">
       </button>
@@ -79,7 +82,7 @@ export default {
     },
     */
     launchEmail () {
-      location.href = 'https://mail.whitehotrobot.com'
+      location.href = 'https://email.whitehotrobot.com'
     },
     launchPage(loc) {
       window.open(loc, '_blank')
