@@ -31,14 +31,14 @@ export default {
     return {
       state: {
         baseURL: 'https://code.whitehotrobot.com',
-        baseDemoURL: 'https://demo.whitehotrobot.com',
-        rootDomain: 'whitehotrobot.com',
+				baseDemoURL: 'https://demo.whitehotrobot.com',
+				rootDomain: 'whitehotrobot.com',
         demos: [],
         loggedin: false,
         toggleLogin: null,
         globalT: 0,
         showLoginPrompt: null,
-        userAgent: null,
+				userAgent: null,
         toggleShowForkHistory: null,
         closePrompts: null,
         loginPromptVisible: false,
@@ -46,7 +46,7 @@ export default {
         password: '',
         passhash: '',
         userInfo: [],
-        userData: [],
+				userData: [],
         updateDemoItem: null,
         regusername: '',
         loadUserData: null,
@@ -77,7 +77,7 @@ export default {
         goHome: null,
         //viewDemo: '',
         rawDemoID: '',
-        fetchUserData: null,
+				fetchUserData: null,
         error404: false,
         extractEmbedURL: null,
         openFullscreen: null,
@@ -88,7 +88,7 @@ export default {
         curPage: 0,
         beginSearch: null,
         curSearchPage: 0,
-        totalPages: 0,
+				totalPages: 0,
         jumpToPage: null,
         curUserPage: null,
         search: {
@@ -103,7 +103,7 @@ export default {
         },
         showControlsToggleTimer: 0,
         loadDemoFromBackup: null,
-        maxResultsPerPage: 0,
+				maxResultsPerPage: 0,
         advancePage: null,
         regressPage: null,
         firstPage: null,
@@ -116,8 +116,8 @@ export default {
     }
   },
   methods:{
-    fetchUserData(id){
-      if(1||typeof this.state.userData[id] == 'undefined'){
+		fetchUserData(id){
+			if(1||typeof this.state.userData[id] == 'undefined'){
         let sendData = {userID: id}
         fetch(this.state.baseURL + '/fetchUserData.php',{
           method: 'POST',
@@ -136,8 +136,8 @@ export default {
             this.state.userInfo[id].isAdmin = data.isAdmin
           }
         })
-      }
-    },
+			}
+		},
     loadHotKeys(){
       window.addEventListener('click',e=>{
         let close = true
@@ -172,7 +172,7 @@ export default {
       if(typeof item.id == 'undefined' ) return
       if(item.videoLink.indexOf('youtu')!==-1){
         fetch(this.state.baseURL + '/vidThumb.php?id=' + item.id)
-        let l=''
+				let l=''
         if((l=item.videoLink.split('?')).length){
           l=l.filter(v=>v.indexOf('v=')!==-1)
           if(l.length) l=l[l.length-1].split('v=')[1].split('&')[0]
@@ -182,7 +182,7 @@ export default {
           l=l[l.length-1]
         }
         item.videoIframeURL = l ? 'https://www.youtube.com/embed/' + l : ''
-      } else if(item.videoLink.substring(item.videoLink.length-3).toUpperCase() === 'MP4') {
+			} else if(item.videoLink.substring(item.videoLink.length-3).toUpperCase() === 'MP4') {
         let sendData = {demoID: item.id}
         fetch(this.state.baseURL + '/vidThumb.php',{
           method: 'POST',
@@ -193,13 +193,13 @@ export default {
         })
         .then(res => res.json())
         .then(data => {
-          if(data) {
-            item.videoIframeURL = data
-          } else {
-            item.videoIframeURL = ''
-          }
+  				if(data) {
+						item.videoIframeURL = data
+					} else {
+						item.videoIframeURL = ''
+					}
         })
-      } else {
+			} else {
         item.videoIframeURL = ''
       }
     },
@@ -318,8 +318,8 @@ export default {
           this.state.search.timer = d
         }, Math.min(1000, d-this.state.search.timer))
       } else {
-        this.state.search.string = this.state.search.string.trim()
-      }
+				this.state.search.string = this.state.search.string.trim()
+			}
     },
     getMode(){
       let vars = window.location.pathname.split('/').filter(v=>v)
@@ -381,7 +381,7 @@ export default {
       }else{
         this.state.mode = 'default'
         this.getPages()
-        if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
+				if(window.location.href !== window.location.origin + '/') window.location.href = window.location.origin
       }
     },
     incrementViews(id){
@@ -421,7 +421,7 @@ export default {
         name: decodeURIComponent(name),
         loggedinUserName: this.state.loggedinUserName,
         passhash: this.state.passhash,
-        maxResultsPerPage: this.state.maxResultsPerPage,
+				maxResultsPerPage: this.state.maxResultsPerPage,
         page: this.state.curUserPage
       }
       fetch(this.state.baseURL + '/fetchUserDataByName.php',{
@@ -472,7 +472,7 @@ export default {
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
         this.state.userInfo[this.state.user.id].isAdmin = this.state.user.isAdmin
-        this.state.refreshAvatar = true
+				this.state.refreshAvatar = true
         this.state.loaded = true
       })
     },
@@ -574,20 +574,20 @@ export default {
         }
       })
     },
-    getPages(){
+		getPages(){
       if(this.state.search.string != '') this.beginSearch()
-      switch(this.state.mode){
-        case 'user':
+			switch(this.state.mode){
+				case 'user':
         this.loadUserData(this.state.user.name)
-        break
-        case 'single':
-        this.loadDemo()
-        break
-        case 'default':
-        this.loadLandingPage()
-        break
-      }
-    },
+				break
+				case 'single':
+				this.loadDemo()
+				break
+				case 'default':
+				this.loadLandingPage()
+				break
+			}
+		},
     loadLandingPage(){
       let sendData = {
         page: this.state.curPage,
@@ -601,7 +601,7 @@ export default {
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
         this.state.demoDataReceived = true
-        data[0].map(v=>{
+				data[0].map(v=>{
           v.updated = {}
           for (const [key, value] of Object.entries(v)) {
             v.updated[key]=0
@@ -609,7 +609,7 @@ export default {
           v.private = !!(+v.private)
           v.allowDownload = !!(+v.allowDownload)
           this.incrementViews(v.id)
-          this.loadUserData(v.author)
+					this.loadUserData(v.author)
           v.videoPlaying = false
           v.iteration = 0
           v.comments = v.comments.map(q=>{
@@ -624,7 +624,7 @@ export default {
         this.state.landingPage.demos = data[0]
         this.state.totalPages = data[1]
         if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
-        this.state.loaded = true
+				this.state.loaded = true
       })
     },
     decToAlpha(n){
@@ -703,7 +703,7 @@ export default {
             this.state.userInfo[this.state.loggedinUserID].avatar = data[2]
             this.state.userInfo[this.state.loggedinUserID].isAdmin = +data[3]
             if(+data[3]) this.state.isAdmin = true
-            this.state.maxResultsPerPage = +data[4]
+						this.state.maxResultsPerPage = +data[4]
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -768,7 +768,7 @@ export default {
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
         data.private = !!(+data.private)
-        this.fetchUserData(data.userID)
+				this.fetchUserData(data.userID)
         data.comments = data.comments.map(q=>{
           q.updated = false
           q.editing = false
@@ -918,7 +918,7 @@ export default {
     setInterval(()=>{
       this.state.globalT+=1/60
     },1/60*1000|0)
-    this.state.userAgent = navigator.userAgent
+		this.state.userAgent = navigator.userAgent
     this.state.toggleLogin = this.toggleLogin
     this.state.showLoginPrompt = this.showLoginPrompt
     this.state.toggleShowForkHistory = this.toggleShowForkHistory
@@ -1030,7 +1030,7 @@ option{
 }
 select{
   background: #012;
-  color: #ff0;
+	color: #ff0;
 }
 ::-webkit-scrollbar {
   width: 12px!important;
