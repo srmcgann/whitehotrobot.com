@@ -304,20 +304,20 @@ export default {
       let demoID = demo.id
       if(this.state.search.string){
         this.state.search.demos.map(v=>v.play=false)
-        this.state.search.demos.filter(v=>v.id!=demoID)[0].videoPlaying = false
+        this.state.search.demos.map(v=>{if(v.id!=demoID)v.videoPlaying = false})
       }else{
         switch(this.state.mode){
           case 'user':
             this.state.user.demos.map(v=>v.play = false)
-            this.state.user.demos.filter(v=>v.id!=demoID)[0].videoPlaying = false
+            this.state.user.demos.map(v=>{if(v.id!=demoID)v.videoPlaying = false})
           break
           case 'single':
             this.state.demos.map(v=>v.play = false)
-            this.state.demos.filter(v=>v.id!=demoID)[0].videoPlaying = false
+            this.state.demos.map(v=>{if(v.id!=demoID)v.videoPlaying = false})
           break
           case 'default':
             this.state.landingPage.demos.map(v=>v.play = false)
-            this.state.landingPage.demos.filter(v=>v.id!=demoID)[0].videoPlaying = false
+            this.state.landingPage.demos.map(v=>{if(v.id!=demoID)v.videoPlaying = false})
           break
         }
       }      
@@ -350,23 +350,23 @@ export default {
     },
     playPause(demoID){
       if(this.state.search.string){
-       this.state.search.demos.filter(v=>v.id!=demoID)[0].play = false
+       this.state.search.demos.map(v=>{if(v.id!=demoID)v.play = false})
        this.state.search.demos.map(v=>v.videoPlaying = false)
        this.state.search.demos.filter(v=>v.id==demoID)[0].play = !this.state.search.demos.filter(v=>v.id==demoID)[0].play
       }else{
         switch(this.state.mode){
           case 'user':
-            this.state.user.demos.filter(v=>v.id!=demoID)[0].play = false
+            this.state.user.demos.map(v=>{if(v.id!=demoID)v.play = false})
             this.state.user.demos.map(v=>v.videoPlaying = false)
             this.state.user.demos.filter(v=>v.id==demoID)[0].play = !this.state.user.demos.filter(v=>v.id==demoID)[0].play
           break
           case 'single':
-            this.state.demos.filter(v=>v.id!=demoID)[0].play = false
+            this.state.demos.map(v=>{if(v.id!=demoID)v.play = false})
             this.state.demos.map(v=>v.videoPlaying = false)
             this.state.demos.filter(v=>v.id==demoID)[0].play = !this.state.demos.filter(v=>v.id==demoID)[0].play
           break
           case 'default':
-            this.state.landingPage.demos.filter(v=>v.id!=demoID)[0].play = false
+            this.state.landingPage.demos.map(v=>{if(v.id!=demoID)v.play = false})
             this.state.landingPage.demos.map(v=>v.videoPlaying = false)
             this.state.landingPage.demos.filter(v=>v.id==demoID)[0].play = !this.state.landingPage.demos.filter(v=>v.id==demoID)[0].play
           break
