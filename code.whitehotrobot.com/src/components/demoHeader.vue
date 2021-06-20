@@ -197,7 +197,7 @@ export default {
 .demoHeader{
   display: inline-block;
   margin-left: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 a{
   color: #8fc;

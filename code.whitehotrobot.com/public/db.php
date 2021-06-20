@@ -11,7 +11,7 @@
     $demoSandbox='local.demo.whitehotrobot.com';
     $baseAssetsURL = 'http://local.assets.whitehotrobot.com';
   }else{
-    $baseURL='words.whitehotrobot.com';
+    $baseURL='code.whitehotrobot.com';
     $demoSandbox='demo.whitehotrobot.com';
     $baseAssetsURL = 'https://assets.whitehotrobot.com';
   }

@@ -121,6 +121,13 @@
               @click="deleteDemo(demo)"
               title="delete demo"
              ></button>
+            <br>
+            <button
+              class="fullPageButton"
+              @click="fullPage(demo.id)"
+              :ref="'fullPageButton' + demo.id"
+              :class="{'bumpRight': state.loggedin == false}"
+             >full-page</button>
              
             <iframe
               :src="state.inView[idx] && demo.play ? state.baseDemoURL + '/?demoID=' + demo.id + '&v=' + iframeIteration : ''"
@@ -347,6 +354,9 @@ export default {
     },
     fullScreen(id){
       this.state.openFullscreen(this.$refs['iframe'+id])
+    },
+    fullPage(id){
+      window.open(this.state.baseURL + '/full/' + this.state.decToAlpha(id),'_blank')
     },
     playPause(demoID){
       if(this.state.search.string){
@@ -635,6 +645,11 @@ export default {
           el.style.display = 'block'
           el.style.left = (rect.left + rect.width / 2) + 'px'
         }
+        el = this.$refs['fullPageButton' + this.demo.id]
+        if(typeof el != 'undefined' && el != null){
+          el.style.display = 'block'
+          el.style.left = (rect.left + rect.width / 2) + 'px'
+        }
       }
     }
   },
@@ -769,7 +784,7 @@ export default {
   color: #243;
   background: #2a8;
   position: absolute;
-  margin-top: -35px;
+  margin-top: -62px;
   display: none;
   margin-left: 114px;
 }
@@ -1206,6 +1221,23 @@ textarea:focus{
   background-repeat: no-repeat;
   background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
 }
+.fullPageButton{
+  margin: 0;
+  margin-left: 36px;
+  padding: 2px;
+  padding-bottom: 4px;
+  padding-left: 15px;
+  padding-right: 15px;
+  width: 130px;
+  min-width: 100px;
+  border-radius: 10px;
+  color: #ff2a;
+  background: #416;
+  position: absolute;
+  margin-top: -51px;
+  display: none;
+  margin-left: -28px;
+}
 .fullScreenButton{
   margin: 0;
   margin-left: 36px;
@@ -1219,7 +1251,7 @@ textarea:focus{
   color: #ff2a;
   background: #416;
   position: absolute;
-  margin-top: -35px;
+  margin-top: -62px;
   display: none;
   margin-left: -28px;
 }
