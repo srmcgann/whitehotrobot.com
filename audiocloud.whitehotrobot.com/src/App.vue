@@ -290,6 +290,8 @@ export default {
     loadTrack(trackID){
       this.state.curTrack = trackID
       let sendData = {
+        userName: this.state.loggedinUserName,
+        passhash: this.state.passhash,
         trackID
       }
       fetch(this.state.baseURL + '/fetchTrack.php',{
@@ -299,18 +301,22 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data.private = !!(+data.private)
-        this.fetchUserData(data.userID)
-        data.comments = data.comments.map(q=>{
-          q.updated = false
-          q.editing = false
-          this.fetchUserData(q.userID)
-          return q
-        })
-        data.allowDownload = !!(+data.allowDownload)
-        this.incrementViews(data.id)
+        if(data){
+          data.private = !!(+data.private)
+          this.fetchUserData(data.userID)
+          data.comments = data.comments.map(q=>{
+            q.updated = false
+            q.editing = false
+            this.fetchUserData(q.userID)
+            return q
+          })
+          data.allowDownload = !!(+data.allowDownload)
+          this.incrementViews(data.id)
+          this.state.tracks = [data]
+        } else {
+          this.state.tracks = []
+        }
         this.state.loaded = true
-        this.state.tracks = [data]
       })
     },
     getQueryVar(url, variable) {

@@ -22,9 +22,6 @@
     $go = true;
   }
   if($go){
-    $sql='SELECT * FROM items WHERE id = ' . $demoID;
-    $res = mysqli_query($link, $sql);
-    $row=mysqli_fetch_assoc($res);
     $ret = $row;
     $ret['backups'] = getBackups($ret['id']);
 

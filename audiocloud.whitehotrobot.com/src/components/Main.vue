@@ -1,7 +1,7 @@
 <template>
   <div class="main" :class="{'footerPadding': state.mode=='track'}">
     <div v-if="state.search.string==''">
-      <div v-if="state.mode=='track' || state.mode=='embed'" class="trackDiv" :class="{'highTop':state.showControls}">
+      <div v-if="(state.mode=='track' || state.mode=='embed') && state.tracks.length && state.tracks[0] != null && typeof state.tracks[0].id != 'undefined'" class="trackDiv" :class="{'highTop':state.showControls}">
         <div v-if="state.tracks.length" class="flex">
           <Track v-for="track in state.tracks" :key="track.id" :track="track" :state="state"/>
         </div>
@@ -9,6 +9,10 @@
           <br><br><br><br><br>OOPS!
           <br><br><br>this track could not be found!
         </div>
+      </div>
+      <div v-else-if="state.loaded" style="font-size: 1.5em;">
+        <br><br><br><br><br>OOPS!
+        <br><br><br>this track could not be found!
       </div>
       <div v-if="state.mode=='default'" class="trackDiv" :class="{'highTop':state.showControls}">
         <div v-if="filteredLandingPageTracks.length" class="flex">
