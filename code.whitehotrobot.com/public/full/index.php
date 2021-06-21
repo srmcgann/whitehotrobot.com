@@ -16,7 +16,8 @@
 
   if(isset($_GET['i'])){
     $HTML=$CSS=$JS='';
-    $demoid = alphaToDec(mysqli_real_escape_string($link, $_GET['i']));
+    $demoslug = mysqli_real_escape_string($link, $_GET['i']);
+    $demoid = alphaToDec($demoslug);
     $sql = 'SELECT * FROM items WHERE id = ' . $demoid;
     if($res = mysqli_query($link, $sql)){
       $row = mysqli_fetch_assoc($res);
@@ -26,11 +27,12 @@
       $title = $row['title'];
       $userID = $row['userID'];
       $sql = 'SELECT * FROM users WHERE id = ' . $userID;
-      $res2 = mysqli_query($link, $sql);
-      if($row2 = mysqli_fetch_assoc($res)){
-        $avatar = $row['avatar'];
+      if($res2 = mysqli_query($link, $sql)){
+        $row2 = mysqli_fetch_assoc($res2);
+        $favicon = $row2['avatar'];
+      } else {
+        $favicon = 'https://lookie.jsbot.net/uploads/1HVS37.png';
       }
-      $favicon = $avatar || 'https://lookie.jsbot.net/uploads/1HVS37.png';
     } else {
       echo '404';
       die();
@@ -67,19 +69,21 @@
     </style>
   </head>
   <body>
-    <script>
-      fetch('/incrementViews.php?id=' + "<?=$pageID?>");
-      goHome = () => {
-        let a = document.createElement('a')
-        a.setAttribute('href', 'https://hosting.whitehotrobot.com')
-        a.setAttribute('target', '_blank')
-        a.click()
-      }
-    </script>
     <button class="homeLink" onclick="goHome()">
       free hosting<br>home page
     </button>
     <?=$HTML?>
+    <script>
+      let sendData = {demoID: <?=$demoid?>}
+      let url = '<?=$baseProtocol?>://<?=$baseURL?>/incrementViews.php'
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(sendData),
+      })
+    </script>
     <script><?=$JS?></script>
   </body>
 </html>

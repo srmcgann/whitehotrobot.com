@@ -8,10 +8,12 @@
   $local = false;
   if($local){
     $baseURL='local.code.whitehotrobot.com';
+    $baseProtocol = 'http';
     $demoSandbox='local.demo.whitehotrobot.com';
     $baseAssetsURL = 'http://local.assets.whitehotrobot.com';
   }else{
     $baseURL='code.whitehotrobot.com';
+    $baseProtocol = 'https';
     $demoSandbox='demo.whitehotrobot.com';
     $baseAssetsURL = 'https://assets.whitehotrobot.com';
   }
