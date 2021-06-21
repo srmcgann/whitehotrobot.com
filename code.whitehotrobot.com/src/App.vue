@@ -535,6 +535,8 @@ export default {
     loadDemo(demoID){
       this.state.curDemo = demoID
       let sendData = {
+        userName: this.state.loggedinUserName,
+        passhash: this.state.passhash,
         demoID
       }
       fetch(this.state.baseURL + '/fetchDemo.php',{

@@ -322,6 +322,8 @@ export default {
     loadPost(postID){
       this.state.curPost = postID
       let sendData = {
+        userName: this.state.loggedinUserName,
+        passhash: this.state.passhash,
         postID
       }
       fetch(this.state.baseURL + '/fetchPost.php',{
@@ -331,17 +333,19 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        data.private = !!(+data.private)
-        data.editHTML = false
-        this.fetchUserData(data.userID)
-        data.comments = data.comments.map(q=>{
-          q.updated = false
-          q.editing = false
-          this.fetchUserData(q.userID)
-          return q
-        })
-        data.allowDownload = !!(+data.allowDownload)
-        this.incrementViews(data.id)
+        if(data) {
+          data.private = !!(+data.private)
+          data.editHTML = false
+          this.fetchUserData(data.userID)
+          data.comments = data.comments.map(q=>{
+            q.updated = false
+            q.editing = false
+            this.fetchUserData(q.userID)
+            return q
+          })
+          data.allowDownload = !!(+data.allowDownload)
+          this.incrementViews(data.id)
+        }
         this.state.loaded = true
         this.state.posts = [data]
       })
