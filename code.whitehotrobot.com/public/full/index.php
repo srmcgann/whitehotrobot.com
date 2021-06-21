@@ -21,17 +21,23 @@
     $sql = 'SELECT * FROM items WHERE id = ' . $demoid;
     if($res = mysqli_query($link, $sql)){
       $row = mysqli_fetch_assoc($res);
-      $HTML = $row['demoHTML'];
-      $CSS = $row['demoCSS'];
-      $JS = $row['demoJS'];
-      $title = $row['title'];
       $userID = $row['userID'];
-      $sql = 'SELECT * FROM users WHERE id = ' . $userID;
-      if($res2 = mysqli_query($link, $sql)){
-        $row2 = mysqli_fetch_assoc($res2);
-        $favicon = $row2['avatar'];
+      $sql2 = 'SELECT * FROM users WHERE id = ' . $userID;
+      $res2 = mysqli_query($link, $sql2);
+      $row2 = mysqli_fetch_assoc($res2);
+      if(!$row['private'] || ($res2 && ((isset($_COOKIE['token']) && $_COOKIE['token'] == $row2['passhash']) || (isset($_COOKIE['token']) && $row2['admin'])))){
+        $HTML = $row['demoHTML'];
+        $CSS = $row['demoCSS'];
+        $JS = $row['demoJS'];
+        $title = $row['title'];
+        if($res2){
+          $favicon = $row2['avatar'];
+        } else {
+          $favicon = 'https://lookie.jsbot.net/uploads/1HVS37.png';
+        }
       } else {
-        $favicon = 'https://lookie.jsbot.net/uploads/1HVS37.png';
+        echo '404';
+        die();
       }
     } else {
       echo '404';
@@ -52,26 +58,26 @@
       <?=$CSS?>
 
       .homeLink{
-        z-index: 10000;
-        position: fixed;
-        background: #2466;
-        cursor: pointer;
-        font-size: 12px;
-        color: #fff8;
-        top: 5px;
-        right: 5px;
-        border-radius: 3px;
-        border: 1px solid #4688;
-      }
-      .homeLink:focus{
-        outline: none;
-      }
+				z-index: 10000;
+				position: fixed;
+				background: #2466;
+				cursor: pointer;
+				font-size: 12px;
+				color: #fff8;
+				top: 5px;
+				right: 5px;
+				border-radius: 3px;
+				border: 1px solid #4688;
+			}
+			.homeLink:focus{
+				outline: none;
+			}
     </style>
   </head>
   <body>
-    <button class="homeLink" onclick="goHome()">
-      free hosting<br>home page
-    </button>
+		<button class="homeLink" onclick="goHome()">
+		  free hosting<br>home page
+		</button>
     <?=$HTML?>
     <script>
       let sendData = {demoID: <?=$demoid?>}
