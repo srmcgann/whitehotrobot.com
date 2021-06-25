@@ -151,11 +151,13 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        this.demo = this.thisdemo[0] = data
-        this.demo.updated = {}
-        this.demo.private = !!(+this.demo.private)
-        for (const [key, value] of Object.entries(this.demo)) {
-          this.demo.updated[key]=0
+        if(data){
+          this.demo = this.thisdemo[0] = data
+          this.demo.updated = {}
+          this.demo.private = !!(+this.demo.private)
+          for (const [key, value] of Object.entries(this.demo)) {
+            this.demo.updated[key]=0
+          }
         }
         this.loaded = true
       })
