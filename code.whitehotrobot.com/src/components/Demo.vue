@@ -128,6 +128,12 @@
               :ref="'fullPageButton' + demo.id"
               :class="{'bumpRight': state.loggedin == false}"
              >full-page</button>
+            <button
+              class="rawCodeButton"
+              @click="rawCode(demo.id)"
+              :ref="'rawCodeButton' + demo.id"
+              :class="{'bumpRawRight': state.loggedin == false}"
+             >raw code</button>
              
             <iframe
               :src="state.inView[idx] && demo.play ? state.baseDemoURL + '/?demoID=' + demo.id + '&v=' + iframeIteration : ''"
@@ -351,6 +357,9 @@ export default {
         this.state.displayLoginRequired = true
         this.state.showLoginPrompt()
       }
+    },
+    rawCode(id){
+      window.open(this.state.baseURL + '/prettyCode.php?slug=' + this.state.decToAlpha(id),'_blank')
     },
     fullScreen(id){
       this.state.openFullscreen(this.$refs['iframe'+id])
@@ -650,6 +659,11 @@ export default {
           el.style.display = 'block'
           el.style.left = (rect.left + rect.width / 2) + 'px'
         }
+        el = this.$refs['rawCodeButton' + this.demo.id]
+        if(typeof el != 'undefined' && el != null){
+          el.style.display = 'block'
+          el.style.left = (rect.left + rect.width / 2) + 'px'
+        }
       }
     }
   },
@@ -781,7 +795,7 @@ export default {
   width: 80px;
   min-width: 100px;
   border-radius: 10px;
-  color: #243;
+  color: #021;
   background: #2a8;
   position: absolute;
   margin-top: -62px;
@@ -959,6 +973,9 @@ table{
 .singleDemo{
   top: 0px;
   margin-bottom: 100px;
+}
+.bumpRawRight{
+  margin-left: 158px!important;
 }
 .bumpRight{
   margin-left: 20px!important;
@@ -1221,6 +1238,21 @@ textarea:focus{
   background-repeat: no-repeat;
   background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
 }
+.rawCodeButton{
+  margin: 0;
+  padding: 2px;
+  padding-bottom: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 100px;
+  min-width: 50px;
+  border-radius: 10px;
+  color: #123;
+  background: #1cf;
+  position: absolute;
+  margin-top: -51px;
+  margin-left: 114px;
+}
 .fullPageButton{
   margin: 0;
   margin-left: 36px;
@@ -1231,7 +1263,7 @@ textarea:focus{
   width: 130px;
   min-width: 100px;
   border-radius: 10px;
-  color: #ff2a;
+  color: #fa6;
   background: #416;
   position: absolute;
   margin-top: -51px;
@@ -1248,7 +1280,7 @@ textarea:focus{
   width: 130px;
   min-width: 100px;
   border-radius: 10px;
-  color: #ff2a;
+  color: #fa6;
   background: #416;
   position: absolute;
   margin-top: -62px;
