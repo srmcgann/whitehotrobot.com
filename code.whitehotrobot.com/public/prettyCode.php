@@ -19,7 +19,6 @@
       .demoTitle{
         color: #f06;
         font-weight: 900;
-        padding-left: 10px;
       }
       a{
         text-decoration: none;
