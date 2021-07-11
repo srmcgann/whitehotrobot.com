@@ -359,7 +359,7 @@ export default {
       }
     },
     rawCode(id){
-      window.open(this.state.baseURL + '/prettyCode.php?slug=' + this.state.decToAlpha(id),'_blank')
+      window.open(this.state.baseURL + '/prettycode/' + this.state.decToAlpha(id),'_blank')
     },
     fullScreen(id){
       this.state.openFullscreen(this.$refs['iframe'+id])

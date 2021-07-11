@@ -5,13 +5,13 @@
         <div v-if="state.tracks.length" class="flex">
           <Track v-for="track in state.tracks" :key="track.id" :track="track" :state="state"/>
         </div>
-        <div v-else-if="state.loaded" style="font-size: 1.5em;">
+        <div v-else-if="state.loaded && (state.mode  == 'track' || state.mode == 'embed')" style="font-size: 1.5em;">
           <br><br><br><br><br>OOPS!
           <br><br><br>this track could not be found!
         </div>
       </div>
-      <div v-else-if="state.loaded" style="font-size: 1.5em;">
-        <br><br><br><br><br>OOPS!
+      <div v-else-if="state.loaded && (state.mode  == 'track' || state.mode == 'embed')" style="font-size: 1.5em;">
+        <br><br><br><br><br>OOPS!!
         <br><br><br>this track could not be found!
       </div>
       <div v-if="state.mode=='default'" class="trackDiv" :class="{'highTop':state.showControls}">

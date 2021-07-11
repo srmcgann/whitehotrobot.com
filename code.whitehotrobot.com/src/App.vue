@@ -564,7 +564,7 @@ export default {
               return q
             })
             v.videoPlaying = false
-            v.play = this.state.autoplay
+            v.play = false//this.state.autoplay
             v.show = true
             this.incrementViews(v.id)
             this.fetchUserData(v.userID)
