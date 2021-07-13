@@ -1,21 +1,19 @@
 <?
-  require('db.php');
+  require("db.php");
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
-  $newURL = mysqli_real_escape_string($link, $data->{'newURL'});
   $ircID = mysqli_real_escape_string($link, $data->{'ircID'});
-	file_get_contents('vidThumb.php?id=' . $ircID);
-  $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'";';
+  $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'"';
   $res = mysqli_query($link, $sql);
   $success = false;
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
       if($row['admin']){
-        $sql = 'UPDATE irc SET videoLink = "'.$newURL.'" WHERE id = '.$ircID;
+        $sql = 'DELETE FROM irc WHERE id = ' . $ircID;
       } else {
-        $sql = 'UPDATE irc SET videoLink = "'.$newURL.'" WHERE id = '.$ircID . ' AND userID = ' . $row['id'];
+        $sql = 'DELETE FROM irc WHERE id = ' . $ircID . ' AND userID = ' . $row['id'];
       }
       mysqli_query($link, $sql);
       $success = true;

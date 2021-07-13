@@ -2,7 +2,7 @@
   require_once('db.php');
   require_once('getBackups.php');
   $data = json_decode(file_get_contents('php://input'));
-  $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
+  $ircID = mysqli_real_escape_string($link, $data->{'ircID'});
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $database = mysqli_real_escape_string($link, $data->{'database'});
@@ -11,12 +11,12 @@
 	if(mysqli_num_rows($res)){
     $sql = 'USE ' . $database . ';';
     mysqli_query($link, $sql);
-    $sql='SELECT * FROM items WHERE id = ' . $demoID;
+    $sql='SELECT * FROM irc WHERE id = ' . $ircID;
     $res = mysqli_query($link, $sql);
     $row=mysqli_fetch_assoc($res);
     $ret = $row;
 
-    $sql = 'SELECT * FROM demoComments WHERE demoID = ' . $demoID;
+    $sql = 'SELECT * FROM ircComments WHERE ircID = ' . $ircID;
     $res2 = mysqli_query($link, $sql);
     $ret['comments'] = [];
     for($j=0;$j<mysqli_num_rows($res2);++$j){

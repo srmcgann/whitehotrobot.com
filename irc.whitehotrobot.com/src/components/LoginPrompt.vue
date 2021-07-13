@@ -52,7 +52,7 @@
         <br>
         <div v-if="state.displayLoginRequired" class="mustRegister">
           You must register or<br>
-          log-in to create a demo!<br>
+          log-in to create a irc!<br>
         </div>
         <span class="title">register</span><br>
         <div class="inputContainer">

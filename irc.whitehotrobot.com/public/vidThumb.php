@@ -35,12 +35,12 @@
   }
 
   if($_GET['id']){
-		$demoID = $_GET['id'];
+		$ircID = $_GET['id'];
   } else {
     $data = json_decode(file_get_contents('php://input'));
-    $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
+    $ircID = mysqli_real_escape_string($link, $data->{'ircID'});
 	}
-  $sql = "SELECT * FROM items WHERE id = " . $demoID;
+  $sql = "SELECT * FROM items WHERE id = " . $ircID;
   $res = mysqli_query($link, $sql);
 	$url = '';
   if($res){

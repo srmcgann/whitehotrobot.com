@@ -20,7 +20,7 @@
               <div v-if="state.search.hits" style="position: absolute;left: 50%;margin-left: -100px;margin-top: -80px;">
               ({{state.search.hits}} hits)
               </div>
-              <select v-if="state.loggedin && state.mode != 'singlez'" style="font-size: 16px;margin-left: 20px;vertical-align: top;margin-top: 4px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('demoPostsPerPage')">
+              <select v-if="state.loggedin && state.mode != 'singlez'" style="font-size: 16px;margin-left: 20px;vertical-align: top;margin-top: 4px;border: 1px solid #8ff4;display: inline-block;position: relative;" v-model="state.maxResultsPerPage" @input="updateUserPrefs('ircPostsPerPage')">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="4">4</option>
@@ -57,7 +57,7 @@ export default {
 			this.$nextTick(()=>{
         let newval
         switch(pref){
-          case 'demoPostsPerPage': newval = this.state.maxResultsPerPage; break
+          case 'ircPostsPerPage': newval = this.state.maxResultsPerPage; break
         }
         let sendData = {
 	  			userName: this.state.loggedinUserName,
@@ -74,7 +74,7 @@ export default {
 		  	})
         .then(res => res.json())
         .then(data => {
-					if(pref == 'demoPostsPerPage') window.location.reload()
+					if(pref == 'ircPostsPerPage') window.location.reload()
         })
 		  })
 	  },

@@ -33,44 +33,44 @@
 	  $ret = $row;
 		if($includePrivate){
 
-      $sql="SELECT id FROM items WHERE userID = " . $row['id'];
+      $sql="SELECT id FROM irc WHERE userID = " . $row['id'];
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
       $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
-	    $sql1=$sql = "SELECT * FROM items WHERE userID = " . $row['id'] . ' ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+	    $sql1=$sql = "SELECT * FROM irc WHERE userID = " . $row['id'] . ' ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	  } else {
 
-      $sql="SELECT id FROM items WHERE private = 0 AND userID = " . $row['id'];
+      $sql="SELECT id FROM irc WHERE private = 0 AND userID = " . $row['id'];
       $res = mysqli_query($link, $sql);
       $totalRecords = mysqli_num_rows($res);
       $morePages = false;
       $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
       if($start + $maxResultsPerPage < $totalRecords + 1) $morePages = true;
 
-		  $sql = "SELECT * FROM items WHERE userID = " . $row['id'] . ' AND private = 0 ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+		  $sql = "SELECT * FROM irc WHERE userID = " . $row['id'] . ' AND private = 0 ORDER BY id DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 		}
 		$res = mysqli_query($link, $sql);
-	  $demos = [];
+	  $ircs = [];
 	  for($i=0;$i<mysqli_num_rows($res);++$i){
 	  	$row = mysqli_fetch_assoc($res);
-  		$demos[]=$row;
+  		$ircs[]=$row;
   	}
-    forEach($demos as &$demo){
-      $demoID = $demo['id'];
-      $sql = 'SELECT * FROM demoComments WHERE demoID = ' . $demoID;
+    forEach($ircs as &$irc){
+      $ircID = $irc['id'];
+      $sql = 'SELECT * FROM ircComments WHERE ircID = ' . $ircID;
       $res2 = mysqli_query($link, $sql);
-      $demo['comments'] = [];
+      $irc['comments'] = [];
       for($j=0;$j<mysqli_num_rows($res2);++$j){
-        $demo['comments'][] = mysqli_fetch_assoc($res2);
+        $irc['comments'][] = mysqli_fetch_assoc($res2);
       }
     }
     
-		forEach($demos as &$demo){
-      $demo['backups'] = getBackups($demo['id']);
+		forEach($ircs as &$irc){
+      $irc['backups'] = getBackups($irc['id']);
     }
 
-    $ret['demos'] = $demos;
+    $ret['ircs'] = $ircs;
   } else {
     $ret = '';
 	}

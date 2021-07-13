@@ -14,13 +14,13 @@
     return $res;
   }
 
-  if(isset($_GET['demoid']) || isset($_GET['slug'])){
+  if(isset($_GET['ircid']) || isset($_GET['slug'])){
     if(isset($_GET['slug'])){
-      $demoid = alphaToDec(mysqli_real_escape_string($link, $_GET['slug']));
+      $ircid = alphaToDec(mysqli_real_escape_string($link, $_GET['slug']));
     } else {
-      $demoid = mysqli_real_escape_string($link, $_GET['demoid']);
+      $ircid = mysqli_real_escape_string($link, $_GET['ircid']);
     }
-    $sql = 'SELECT * FROM items WHERE id = ' . $demoid;
+    $sql = 'SELECT * FROM irc WHERE id = ' . $ircid;
     if($res = mysqli_query($link, $sql)){
       $row = mysqli_fetch_assoc($res);
       echo json_encode($row);

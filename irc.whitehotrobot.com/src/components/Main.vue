@@ -1,36 +1,36 @@
 <template>
   <div class="main">
     <div v-if="state.search.string==''">
-      <div v-if="state.mode=='user' && state.loaded" class="demoDiv" :class="{'highTop':state.showControls}">
-        <div v-if="state.user.demos.length" class="demoDivInner">
-          <Demo v-for="(demo, idx) in state.user.demos" :key="demo.id" :demo="demo" :idx='idx' :state="state"/>
+      <div v-if="state.mode=='user' && state.loaded" class="ircDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.user.ircs.length" class="ircDivInner">
+          <Irc v-for="(irc, idx) in state.user.ircs" :key="irc.id" :irc="irc" :idx='idx' :state="state"/>
         </div>
-        <div v-else class="e404 demoDivInner">
+        <div v-else class="e404 ircDivInner">
           <span style="color:#ff0;font-size: 1.5em;">{{state.viewAuthor}}</span><br>
-          has no demos at this time!<br><br>
+          has no ircs at this time!<br><br>
           <div v-if="state.mode === 'user' && state.viewAuthor.toUpperCase() === state.loggedinUserName.toUpperCase()">
-            <button @click="state.createDemo()">create a demo</button>
+            <button @click="state.createIrc()">create a irc</button>
             <br><br>- or -<br><br>
           </div>
           <button @click="state.goHome()">home page</button>
         </div>
       </div>
-      <div v-if="state.mode=='single'" class="demoDiv" :class="{'highTop':state.showControls}">
-        <div v-if="state.demos.length" class="demoDivInner">
-          <Demo v-for="(demo, idx) in state.demos" :key="demo.id" :demo="demo" :idx='idx' :state="state"/>
+      <div v-if="state.mode=='single'" class="ircDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.ircs.length" class="ircDivInner">
+          <Irc v-for="(irc, idx) in state.ircs" :key="irc.id" :irc="irc" :idx='idx' :state="state"/>
         </div>
         <div v-else-if="state.loaded" style="font-size: 1.5em;">
           <br><br><br><br><br>OOPS!
-          <br><br><br>this demo could not be found!
+          <br><br><br>this irc could not be found!
         </div>
       </div>
-      <div v-if="state.mode=='default'" class="demoDiv" :class="{'highTop':state.showControls}">
-        <div v-if="filteredDemos.length" class="demoDivInner">
-          <Demo v-for="(demo, idx) in filteredDemos" :key="demo.id" :demo="demo" :idx='idx' :state="state"/>
+      <div v-if="state.mode=='default'" class="ircDiv" :class="{'highTop':state.showControls}">
+        <div v-if="filteredIrcs.length" class="ircDivInner">
+          <Irc v-for="(irc, idx) in filteredIrcs" :key="irc.id" :irc="irc" :idx='idx' :state="state"/>
         </div>
         <div v-else-if="state.loaded" style="font-size: 1.5em;">
           <br><br><br>OOPS!
-          <br>we seem to be missing some demos!
+          <br>we seem to be missing some ircs!
           <br><br>
           :(<br><br>
           maybe try a different search?
@@ -41,11 +41,11 @@
           we don't know this user!<br><br>
           &quot;{{state.viewAuthor}}&quot;
         </div>
-        <div v-else-if="state.mode == 'single'" class="demoDivInner">
+        <div v-else-if="state.mode == 'single'" class="ircDivInner">
           could not find<br>
-          demo &quot;{{state.rawDemoID}}&quot;<br><br>
+          irc &quot;{{state.rawIrcID}}&quot;<br><br>
           <div v-if="state.loggedin">
-            <button @click="state.createDemo()">create a demo</button>
+            <button @click="state.createIrc()">create a irc</button>
             <br><br>- or -<br><br>
           </div>
           <button @click="state.goHome()">home page</button>
@@ -56,15 +56,15 @@
       </div>
     </div>
     <div v-else>
-      <div class="demoDiv" :class="{'highTop':state.showControls}">
-        <div v-if="state.search.demos.length" class="demoDivInner">
-          <Demo v-for="(demo, idx) in state.search.demos" :key="demo.id" :demo="demo" :idx="idx" :state="state"/>
+      <div class="ircDiv" :class="{'highTop':state.showControls}">
+        <div v-if="state.search.ircs.length" class="ircDivInner">
+          <Irc v-for="(irc, idx) in state.search.ircs" :key="irc.id" :irc="irc" :idx="idx" :state="state"/>
         </div>
         <div v-if="state.search.inProgress" style="font-size: 2em;" >
           <br><br><br>
           <div style="width: 300px;padding-left: 50px;margin-left: auto; margin-right: auto; text-align: left;">{{searchingText}}</div>
         </div>
-        <div v-else-if="!state.search.demos.length && state.loaded" style="font-size: 1.5em;">
+        <div v-else-if="!state.search.ircs.length && state.loaded" style="font-size: 1.5em;">
           <br>DRAT!
           <br><br>your search did not return anything!
           <br><br>
@@ -79,11 +79,11 @@
 
 <script>
 import Controls from './Controls'
-import Demo from './Demo'
+import Irc from './Irc'
 export default {
   components:{
     Controls,
-    Demo,
+    Irc,
   },
   data(){
     return {
@@ -99,14 +99,14 @@ export default {
   name: 'Main',
   props: [ 'state' ],
   computed:{
-    filteredDemos(){
+    filteredIrcs(){
       switch(this.state.mode){
         case 'default':
-          return this.state.landingPage.demos
+          return this.state.landingPage.ircs
         break
         case 'user':
-          if(this.state.user != null && typeof this.state.user.demos !== 'undefined'){
-            return this.state.user.demos.filter(v=>!v.private || this.state.loggedinUserName.toUpperCase() == this.state.user.name.toUpperCase() || this.state.isAdmin)
+          if(this.state.user != null && typeof this.state.user.ircs !== 'undefined'){
+            return this.state.user.ircs.filter(v=>!v.private || this.state.loggedinUserName.toUpperCase() == this.state.user.name.toUpperCase() || this.state.isAdmin)
           } else {
             return []
           }
@@ -121,11 +121,11 @@ export default {
     }
   },
   methods:{
-    startStopDemos(){
+    startStopIrcs(){
       let vtop=0
       let vbottom=window.innerHeight
       let rect
-      document.querySelectorAll('.demoIframe').forEach((v,idx)=>{
+      document.querySelectorAll('.ircIframe').forEach((v,idx)=>{
         rect = v.getBoundingClientRect()
         this.state.inView[idx] = !(((rect.bottom + rect.top) / 2 > vbottom)||((rect.top + rect.bottom) / 2 < 0))
       })
@@ -134,13 +134,13 @@ export default {
 
       let rect
 
-      let l=document.querySelectorAll('.demoItem')
+      let l=document.querySelectorAll('.ircItem')
       if(l.length){
         rect = l[l.length-1].getBoundingClientRect()
-        if(rect.top < window.innerHeight/2 && this.state.demos.filter(v=>!v.show).length){
+        if(rect.top < window.innerHeight/2 && this.state.ircs.filter(v=>!v.show).length){
           setTimeout(()=>{
             let s = false
-            this.state.demos.map(v=>{
+            this.state.ircs.map(v=>{
               if(!v.show && !s) {
                 s = v.show = true
                 this.state.incrementViews(v.id)
@@ -222,7 +222,7 @@ export default {
         })
       }
       if(typeof (parent = document.querySelectorAll('.textareaCluster')[0]) !== 'undefined'){
-        this.startStopDemos()
+        this.startStopIrcs()
         this.spacers = []
         let coords = []
         let el = document.querySelectorAll('.textareaCluster')[0]
@@ -311,7 +311,7 @@ export default {
           })
         })
         window.onscroll=()=>{
-          this.startStopDemos()
+          this.startStopIrcs()
         }
         window.onresize=()=>{
           let els = document.querySelectorAll('.textareaContainer')
@@ -340,7 +340,7 @@ export default {
       this.sync(this.e)
     }, 150)
     setInterval(()=>{
-      this.startStopDemos()
+      this.startStopIrcs()
     },1000)
     this.$nextTick(()=>this.applySplitters())
     document.body.addEventListener('mousemove', e=>{
@@ -420,7 +420,7 @@ textarea{
   min-height: 200px;
   overflow: hidden;
 }
-.demoGraphicsCluster{
+.ircGraphicsCluster{
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -449,15 +449,15 @@ a{
 .startVidbutton:focus{
   outline: none;
 }
-.demoHTMLContainer{
+.ircHTMLContainer{
   background: #100008b0;
   color: #fff;
 }
-.demoCSSContainer{
+.ircCSSContainer{
   background: #101000b0;
   color: #fff;
 }
-.demoJSContainer{
+.ircJSContainer{
   background: #001020b0;
   color: #fff;
 }
@@ -471,13 +471,13 @@ a{
   min-width: 200px;
   max-width: 400px;
 }
-.demoIframeContainer{
+.ircIframeContainer{
   width: calc(50% - 8px);
   min-width: 190px;
   background: #000;
   border: none;
 }
-.demoIframe{
+.ircIframe{
   border: none;
   width: calc(100% - 10px);
   height: 70%;
@@ -633,7 +633,7 @@ td{
   transform: translate(-50%, -50%);
   font-size: 32px;
 }
-.demoInput{
+.ircInput{
   font-size: 16px!important;
   text-align: left!important;
 }
@@ -768,7 +768,7 @@ td{
 	width: calc(100% - 100px)!important;
 	float:left;
 }
-.demoDiv{
+.ircDiv{
   background: transparent;
   text-align: center;
   padding-top:0px;
@@ -784,7 +784,7 @@ td{
 .footerPadding{
   min-height: calc(100vh + 200px);
 }
-.demoDivInner{
+.ircDivInner{
   text-align: center;
 }
 </style>

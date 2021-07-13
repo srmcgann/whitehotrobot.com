@@ -4,9 +4,9 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 module.exports = {
   devServer: {
-    host: 'code.whitehotrobot.com',
+    host: 'irc.whitehotrobot.com',
     allowedHosts: [
-      '192.168.1.201,code.whitehotrobot.com,127.0.0.1'
+      '192.168.1.206,192.168.1.201,irc.whitehotrobot.com'
     ],
 	  port:8000,
     publicPath: '/',

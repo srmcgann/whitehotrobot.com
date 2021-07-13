@@ -12,7 +12,7 @@
 			$row['id'],
 			$row['avatar'],
 			$row['admin'],
-			$row['demoPostsPerPage']
+			$row['ircPostsPerPage']
 	  ]);
   } else {
     echo json_encode([false,'']);

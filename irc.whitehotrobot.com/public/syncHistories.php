@@ -1,9 +1,9 @@
 <?
   require('db.php');
 
-  function demoExists($id){
+  function ircExists($id){
     global $link;
-    $_sql = 'SELECT id FROM items WHERE id = ' . $id;
+    $_sql = 'SELECT id FROM irc WHERE id = ' . $id;
     $_res = mysqli_query($link, $_sql);
     if(mysqli_num_rows($_res)){
       return true;
@@ -12,17 +12,17 @@
     }
   }
 
-  $sql = 'SELECT * FROM items';
+  $sql = 'SELECT * FROM irc';
   $res = mysqli_query($link, $sql);
   for($i=0; $i<mysqli_num_rows($res); ++$i){
     $row = mysqli_fetch_assoc($res);
-    $demoID = $row['id'];
+    $ircID = $row['id'];
     $newHistory = [];
     $updateRequired = false;
     if($row['forkHistory']){
       $a = json_decode(str_replace('"','',$row['forkHistory']));
       foreach($a as $id){
-        if($id !== -1 && !demoExists($id)){
+        if($id !== -1 && !ircExists($id)){
           array_push($newHistory, -1);
           $updateRequired = true;
         }else{
@@ -32,7 +32,7 @@
     }
     if($updateRequired){
       $newHistory = str_replace('"','',json_encode($newHistory));
-      $sql = 'UPDATE items SET forkHistory = "'.$newHistory.'" WHERE id = ' . $demoID;
+      $sql = 'UPDATE irc SET forkHistory = "'.$newHistory.'" WHERE id = ' . $ircID;
       mysqli_query($link, $sql);
     }
   }

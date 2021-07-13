@@ -40,9 +40,9 @@
 		}
 
     if($loggedinUserName && $confirmed){
-      $sql = 'SELECT * FROM items WHERE (private = 0 || userID = '.$loggedinUserData['id'].') AND ((title LIKE "%' . $tokens[0] . '%"';
+      $sql = 'SELECT * FROM irc WHERE (private = 0 || userID = '.$loggedinUserData['id'].') AND ((title LIKE "%' . $tokens[0] . '%"';
     }else{
-      $sql = 'SELECT * FROM items WHERE private = 0 AND ((title LIKE "%' . $tokens[0] . '%"';
+      $sql = 'SELECT * FROM irc WHERE private = 0 AND ((title LIKE "%' . $tokens[0] . '%"';
     }
     if(sizeof($tokens>1)){
       array_shift($tokens);
@@ -56,11 +56,11 @@
     }else{
       $tokens = explode(' ', $string);
     }
-    $sql .= ' OR (demoJS LIKE "%' . $tokens[0] . '%"';
+    $sql .= ' OR (ircJS LIKE "%' . $tokens[0] . '%"';
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' ' . $clause . ' demoJS LIKE "%'.$token.'%"';
+        $sql .= ' ' . $clause . ' ircJS LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -69,11 +69,11 @@
     }else{
       $tokens = explode(' ', $string);
     }
-    $sql .= ' OR (demoHTML LIKE "%' . $tokens[0] . '%"';
+    $sql .= ' OR (ircHTML LIKE "%' . $tokens[0] . '%"';
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' ' . $clause . ' demoHTML LIKE "%'.$token.'%"';
+        $sql .= ' ' . $clause . ' ircHTML LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -82,11 +82,11 @@
     }else{
       $tokens = explode(' ', $string);
     }
-    $sql .= ' OR (demoCSS LIKE "%' . $tokens[0] . '%"';
+    $sql .= ' OR (ircCSS LIKE "%' . $tokens[0] . '%"';
     if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
-        $sql .= ' ' . $clause . ' demoCSS LIKE "%'.$token.'%"';
+        $sql .= ' ' . $clause . ' ircCSS LIKE "%'.$token.'%"';
       }
     }
     $sql .= ')';
@@ -114,26 +114,26 @@
   $sql1 = $sql .= ' ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
 	$res = mysqli_query($link, $sql);
   
-	$demos = [];
+	$ircs = [];
 	for($i = 0; $i < mysqli_num_rows($res); ++$i){
-		$demos[] = mysqli_fetch_assoc($res);
+		$ircs[] = mysqli_fetch_assoc($res);
   }
 
-  forEach($demos as &$demo){
-		$demoID = $demo['id'];
-    $sql = 'SELECT * FROM demoComments WHERE demoID = ' . $demoID;
+  forEach($ircs as &$irc){
+		$ircID = $irc['id'];
+    $sql = 'SELECT * FROM ircComments WHERE ircID = ' . $ircID;
     $res = mysqli_query($link, $sql);
-    $demo['comments'] = [];
+    $irc['comments'] = [];
     for($j=0;$j<mysqli_num_rows($res);++$j){
-      $demo['comments'][] = mysqli_fetch_assoc($res);
+      $irc['comments'][] = mysqli_fetch_assoc($res);
     }
   }
   
-  foreach($demos as &$demo){
-    $demo['backups'] = getBackups($demo['id']);
+  foreach($ircs as &$irc){
+    $irc['backups'] = getBackups($irc['id']);
   }
  
   
-	echo json_encode([$demos, $totalPages, $page, $totalRecords, $sql1]);
+	echo json_encode([$ircs, $totalPages, $page, $totalRecords, $sql1]);
 ?>
 

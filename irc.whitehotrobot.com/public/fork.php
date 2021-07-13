@@ -3,7 +3,7 @@
 
   function previousForkID($id){
     global $link;
-    $_sql = "SELECT forkedFrom FROM items WHERE id = " . $id;
+    $_sql = "SELECT forkedFrom FROM irc WHERE id = " . $id;
     $_res = mysqli_query($link, $_sql);
     if(mysqli_num_rows($_res)){
       $_row = mysqli_fetch_assoc($_res);
@@ -12,9 +12,9 @@
     return false;
   }
 
-  function demoExists($id){
+  function ircExists($id){
     global $link;
-    $_sql = 'SELECT id FROM items WHERE id = ' . $id;
+    $_sql = 'SELECT id FROM irc WHERE id = ' . $id;
     $_res = mysqli_query($link, $_sql);
     return !!mysqli_num_rows($_res);
   }
@@ -22,7 +22,7 @@
   $data = json_decode(file_get_contents('php://input'));
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
-  $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
+  $ircID = mysqli_real_escape_string($link, $data->{'ircID'});
   $sql = 'SELECT * FROM users WHERE name LIKE "' . $userName . '" AND passhash = "'.$passhash.'";';
   $res = mysqli_query($link, $sql);
   $success = false;
@@ -31,27 +31,27 @@
     if($row['enabled']){
       $userID = $row['id'];
       $author = $row['name'];
-      $sql = 'SELECT * FROM items WHERE id = ' . $demoID;
+      $sql = 'SELECT * FROM irc WHERE id = ' . $ircID;
       $res = mysqli_query($link, $sql);
       if(mysqli_num_rows($res)){
-	$demo = mysqli_fetch_assoc($res);
-        $title=mysqli_real_escape_string($link, $demo['title']);
-        $videoLink=mysqli_real_escape_string($link, $demo['videoLink']);
-        $demoHTML=mysqli_real_escape_string($link, $demo['demoHTML']);
-        $demoCSS=mysqli_real_escape_string($link, $demo['demoCSS']);
-	$demoJS=mysqli_real_escape_string($link, $demo['demoJS']);
+	$irc = mysqli_fetch_assoc($res);
+        $title=mysqli_real_escape_string($link, $irc['title']);
+        $videoLink=mysqli_real_escape_string($link, $irc['videoLink']);
+        $ircHTML=mysqli_real_escape_string($link, $irc['ircHTML']);
+        $ircCSS=mysqli_real_escape_string($link, $irc['ircCSS']);
+	$ircJS=mysqli_real_escape_string($link, $irc['ircJS']);
 
-	$forkHistory=[$demo['id']];
-	$a=json_decode($demo['forkHistory']);
+	$forkHistory=[$irc['id']];
+	$a=json_decode($irc['forkHistory']);
 	foreach($a as $id){
-	  if(demoExists($id)){
+	  if(ircExists($id)){
             array_push($forkHistory, $id);
 	  }else{
             array_push($forkHistory, -1);
           }
         }
         $forkHistory = str_replace('"', '', json_encode($forkHistory));
-        $sql = 'INSERT INTO items (videoLink, demoJS, demoCSS, demoHTML, title, userID, author, forkHistory) VALUES("'.$videoLink.'","'.$demoJS.'","'.$demoCSS.'","'.$demoHTML.'","'.$title.'",'.$userID.',"'.$author.'","'.$forkHistory.'")';
+        $sql = 'INSERT INTO irc (videoLink, ircJS, ircCSS, ircHTML, title, userID, author, forkHistory) VALUES("'.$videoLink.'","'.$ircJS.'","'.$ircCSS.'","'.$ircHTML.'","'.$title.'",'.$userID.',"'.$author.'","'.$forkHistory.'")';
         mysqli_query($link, $sql);
         $success = true;
       }

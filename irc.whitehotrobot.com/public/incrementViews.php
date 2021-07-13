@@ -1,7 +1,7 @@
 <?
   require("db.php");
   $data = json_decode(file_get_contents('php://input'));
-  $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
+  $ircID = mysqli_real_escape_string($link, $data->{'ircID'});
 
   function ipToDec($ip){
     $parts=explode(".",$ip);
@@ -21,14 +21,14 @@
   $viewWindow = 300 * 3; /* 15min */
 
   $t_minus = time() - $viewWindow;
-  $sql = "DELETE FROM views WHERE time < " . $t_minus;
+  $sql = "DELETE FROM ircViews WHERE time < " . $t_minus;
   mysqli_query($link, $sql);
 
   $go = false;
 
   if($_SERVER['REMOTE_ADDR']){
     $decIP = ipToDec($_SERVER['REMOTE_ADDR']);
-    $sql='SELECT time FROM views WHERE decIP = ' . $decIP . ' AND demoID = ' . $demoID . ' ORDER BY time DESC';
+    $sql='SELECT time FROM ircViews WHERE decIP = ' . $decIP . ' AND ircID = ' . $ircID . ' ORDER BY time DESC';
     $sql1=$sql;
     $res = mysqli_query($link, $sql);
     if(mysqli_num_rows($res)){
@@ -39,10 +39,10 @@
     }
     if($go){
       $row = mysqli_fetch_assoc($res);
-      $sql = 'UPDATE items SET views = views + 1 WHERE id = ' . $demoID;
+      $sql = 'UPDATE irc SET views = views + 1 WHERE id = ' . $ircID;
       mysqli_query($link, $sql);
       $time = time();
-      $sql = 'INSERT INTO views (decIP, demoID, time) VALUES('.$decIP.','.$demoID.','.$time.');';
+      $sql = 'INSERT INTO ircViews (decIP, ircID, time) VALUES('.$decIP.','.$ircID.','.$time.');';
       mysqli_query($link, $sql);
     }
   }

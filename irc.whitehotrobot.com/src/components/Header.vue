@@ -3,7 +3,7 @@
     <div v-if="!state.loggedin" style="display: inline-block; position: absolute">
 		</div>
     <div v-else style="display: inline-block; position: absolute;">
-      <button :class="{'bumpDown': state.mode == 'single'}" @click="createDemo()" class="createDemoButton">create demo</button>
+      <button :class="{'bumpDown': state.mode == 'single'}" @click="createIrc()" class="createIrcButton">create irc</button>
     </div>
     <div class="curPageContainer" v-if="(state.totalPages > 0 || state.totalUserPages > 0) && state.mode != 'single' || (state.search.string && state.totalPages>1)" :class="{'bumpLeft': !state.loggedin}">
       <button
@@ -94,11 +94,11 @@ export default {
       if(typeof str === 'undefined') return
       return str.length > 16 ? str.substring(0,2) + '...' + str.substring(str.length-3) : str
     },
-    createDemo(){
+    createIrc(){
       let sendData = {
         userName: this.state.loggedinUserName, passhash: this.state.passhash
       }
-      fetch(this.state.baseURL + '/createDemo.php',{
+      fetch(this.state.baseURL + '/createIrc.php',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -388,7 +388,7 @@ a{
   font-size: .8em;
   z-index: 1000;
 }
-.createDemoButton{
+.createIrcButton{
   margin: 0;
   background: #0f4;
   width: 110px;

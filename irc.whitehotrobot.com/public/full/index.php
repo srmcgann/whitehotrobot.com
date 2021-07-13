@@ -16,9 +16,9 @@
 
   if(isset($_GET['i'])){
     $HTML=$CSS=$JS='';
-    $demoslug = mysqli_real_escape_string($link, $_GET['i']);
-    $demoid = alphaToDec($demoslug);
-    $sql = 'SELECT * FROM items WHERE id = ' . $demoid;
+    $ircslug = mysqli_real_escape_string($link, $_GET['i']);
+    $ircid = alphaToDec($ircslug);
+    $sql = 'SELECT * FROM irc WHERE id = ' . $ircid;
     if($res = mysqli_query($link, $sql)){
       $row = mysqli_fetch_assoc($res);
       $userID = $row['userID'];
@@ -26,9 +26,9 @@
       $res2 = mysqli_query($link, $sql2);
       $row2 = mysqli_fetch_assoc($res2);
       if(!$row['private'] || ($res2 && ((isset($_COOKIE['token']) && $_COOKIE['token'] == $row2['passhash']) || (isset($_COOKIE['token']) && $row2['admin'])))){
-        $HTML = $row['demoHTML'];
-        $CSS = $row['demoCSS'];
-        $JS = $row['demoJS'];
+        $HTML = $row['ircHTML'];
+        $CSS = $row['ircCSS'];
+        $JS = $row['ircJS'];
         $title = $row['title'];
         if($res2){
           $favicon = $row2['avatar'];
@@ -80,7 +80,7 @@
 		</button>
     <?=$HTML?>
     <script>
-      let sendData = {demoID: <?=$demoid?>}
+      let sendData = {ircID: <?=$ircid?>}
       let url = '<?=$baseProtocol?>://<?=$baseURL?>/incrementViews.php'
       fetch(url, {
         method: 'POST',

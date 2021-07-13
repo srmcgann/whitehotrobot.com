@@ -11,9 +11,9 @@
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
       if($row['admin']){
-        $sql = 'DELETE FROM demoComments WHERE id = ' . $commentID;
+        $sql = 'DELETE FROM ircComments WHERE id = ' . $commentID;
       } else {
-        $sql = 'DELETE FROM demoComments WHERE id = ' . $commentID . ' AND userID = ' . $row['id'];
+        $sql = 'DELETE FROM ircComments WHERE id = ' . $commentID . ' AND userID = ' . $row['id'];
       }
       mysqli_query($link, $sql);
       $success = true;

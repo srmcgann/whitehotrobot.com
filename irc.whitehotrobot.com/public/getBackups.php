@@ -3,7 +3,7 @@
     global $link;
     $backups = [];
     $targetDB = 'videodemos';//mysqli_real_escape_string($link, $data->{'targetDB'});
-    $targetTable = 'items';//mysqli_real_escape_string($link, $data->{'targetTable'});
+    $targetTable = 'irc';//mysqli_real_escape_string($link, $data->{'targetTable'});
     $sql = 'SHOW DATABASES';
     $res = mysqli_query($link, $sql);
     for($i = 0; $i < mysqli_num_rows($res); $i++){
@@ -20,9 +20,9 @@
             $ar['backup_date'] = date('M d Y, H:i', $db_timestamp) . ' PST';
             $add = true;
             foreach($backups as $backup){
-              if($backup['demoHTML'] == $ar['demoHTML'] &&
-                 $backup['demoCSS'] == $ar['demoCSS'] &&
-                 $backup['demoJS'] == $ar['demoJS'] &&
+              if($backup['ircHTML'] == $ar['ircHTML'] &&
+                 $backup['ircCSS'] == $ar['ircCSS'] &&
+                 $backup['ircJS'] == $ar['ircJS'] &&
                  $backup['title'] == $ar['title'] &&
                  $backup['videoLink'] == $ar['videoLink']) $add = false;
             }

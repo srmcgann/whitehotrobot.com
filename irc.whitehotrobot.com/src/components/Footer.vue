@@ -2,7 +2,7 @@
   <div ref="footerBar" class="footerBar" id="footerBar">
     <div class="footerMenu">
       <!--
-      <button @click="launchPage('https://code.whitehotrobot.com')" class="socialButton" title="demos / code  https://code.whitehotrobot.com">
+      <button @click="launchPage('https://code.whitehotrobot.com')" class="socialButton" title="ircs / code  https://code.whitehotrobot.com">
         <img src="https://lookie.jsbot.net/uploads/1Zt7AV.png" class="socialIcon">
       </button>
       -->

@@ -16,7 +16,7 @@
         font-size: 16px;
         overflow: hidden;
       }
-      .demoTitle{
+      .ircTitle{
         color: #f06;
         font-weight: 900;
       }
@@ -77,7 +77,7 @@
       .copyButton{
         width: 30px;
         height: 30px;
-        background-image: url(/video/clippy.c6b23471.svg);
+        background-image: url(https://code.whitehotrobot.com/video/clippy.c6b23471.svg);
         cursor: pointer;
         z-index: 500;
         background-size: 90% 90%;
@@ -187,41 +187,41 @@
           return $res;
         }
 
-        if(isset($_GET['demoid']) || isset($_GET['slug'])){
+        if(isset($_GET['ircid']) || isset($_GET['slug'])){
           if(isset($_GET['slug'])){
             $slug = $_GET['slug'];
-            $demoid = alphaToDec(mysqli_real_escape_string($link, $_GET['slug']));
+            $ircid = alphaToDec(mysqli_real_escape_string($link, $_GET['slug']));
           } else {
-            $slug = decToAlpha($_GET['demoid']);
-            $demoid = mysqli_real_escape_string($link, $_GET['demoid']);
+            $slug = decToAlpha($_GET['ircid']);
+            $ircid = mysqli_real_escape_string($link, $_GET['ircid']);
           }
-          $sql = 'SELECT * FROM items WHERE id = ' . $demoid;
+          $sql = 'SELECT * FROM irc WHERE id = ' . $ircid;
           if($res = mysqli_query($link, $sql)){
             $row = mysqli_fetch_assoc($res);
             ?>
             <div class="header">
               <div class="headerItem">
-                <?='demo title: <span class="demoTitle">'.$row['title'].'</span>'?>
-                <a href="<?='https://code.whitehotrobot.com/d/'.$slug?>" target="_blank">demo link</a>
+                <?='irc title: <span class="ircTitle">'.$row['title'].'</span>'?>
+                <a href="<?='https://code.whitehotrobot.com/d/'.$slug?>" target="_blank">irc link</a>
               </div>
             </div>
             <div class="divider">
               <button onclick="copy('html')" class="copyButton"></button>
               <span class="bumpUp">HTML</span>
             </div>
-            <pre id="html"><?=str_replace('<','&lt;',$row['demoHTML'])?></pre>
+            <pre id="html"><?=str_replace('<','&lt;',$row['ircHTML'])?></pre>
 
             <div class="divider">
               <button onclick="copy('css')" class="copyButton"></button>
               <span class="bumpUp">CSS</span>
             </div>
-            <pre id="css"><?=str_replace('<','&lt;',$row['demoCSS'])?></pre>
+            <pre id="css"><?=str_replace('<','&lt;',$row['ircCSS'])?></pre>
 
             <div class="divider">
               <button onclick="copy('js')" class="copyButton"></button>
               <span class="bumpUp">&nbsp;JavaScript</span>
             </div>
-            <pre id="js"><?=str_replace('<','&lt;',$row['demoJS'])?></pre>
+            <pre id="js"><?=str_replace('<','&lt;',$row['ircJS'])?></pre>
             <?
           } else {
             echo '404';

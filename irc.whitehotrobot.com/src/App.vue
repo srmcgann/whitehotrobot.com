@@ -30,10 +30,10 @@ export default {
   data(){
     return {
       state: {
-        baseURL: 'https://code.whitehotrobot.com',
-				baseDemoURL: 'https://demo.whitehotrobot.com',
+        baseURL: 'http://irc.whitehotrobot.com',
+				baseIrcURL: 'http://local.demo.whitehotrobot.com',
 				rootDomain: 'whitehotrobot.com',
-        demos: [],
+        ircs: [],
         loggedin: false,
         toggleLogin: null,
         globalT: 0,
@@ -47,7 +47,7 @@ export default {
         passhash: '',
         userInfo: [],
 				userData: [],
-        updateDemoItem: null,
+        updateIrcItem: null,
         regusername: '',
         loadUserData: null,
         regpassword: '',
@@ -57,7 +57,7 @@ export default {
         getAvatar: null,
         autoplay: false,
         toggleAutoplay: null,
-        demoDataReceived: false,
+        ircDataReceived: false,
         confirmpassword: '',
         preload: 2,
         loggedinUserName: '',
@@ -75,8 +75,8 @@ export default {
         viewAuthor: '',
         isAdmin: false,
         goHome: null,
-        //viewDemo: '',
-        rawDemoID: '',
+        //viewIrc: '',
+        rawIrcID: '',
 				fetchUserData: null,
         error404: false,
         extractEmbedURL: null,
@@ -93,7 +93,7 @@ export default {
         curUserPage: null,
         search: {
           string: '',
-          demos: [],
+          ircs: [],
           hits: 0,
           inProgress: false,
           timer: 0,
@@ -102,14 +102,14 @@ export default {
           allWords: true
         },
         showControlsToggleTimer: 0,
-        loadDemoFromBackup: null,
+        loadIrcFromBackup: null,
 				maxResultsPerPage: 0,
         advancePage: null,
         regressPage: null,
         firstPage: null,
         lastPage: null,
         landingPage:{
-          demos: []
+          ircs: []
         },
         closeMenus: 0
       }
@@ -183,7 +183,7 @@ export default {
         }
         item.videoIframeURL = l ? 'https://www.youtube.com/embed/' + l : ''
 			} else if(item.videoLink.substring(item.videoLink.length-3).toUpperCase() === 'MP4') {
-        let sendData = {demoID: item.id}
+        let sendData = {ircID: item.id}
         fetch(this.state.baseURL + '/vidThumb.php',{
           method: 'POST',
           headers: {
@@ -240,7 +240,7 @@ export default {
       window.location.href = window.location.origin
     },
     doSearch(searchString, page1){
-      this.state.search.demos = []
+      this.state.search.ircs = []
       this.state.search.timerHandle = null
       let sendData = {
         string: searchString.trim(),
@@ -282,7 +282,7 @@ export default {
           return v
         })
         if(this.state.search.string) this.state.search.hits = +data[3]
-        this.state.search.demos = data[0]
+        this.state.search.ircs = data[0]
         switch(this.state.mode){
           case 'user':
             this.state.totalUserPages = +data[1]
@@ -328,9 +328,9 @@ export default {
           case 'd':
             this.state.mode = 'single'
             this.state.curPage = (+vars[1])-1
-            //this.state.viewDemo = this.alphaToDec(vars[1])
-            this.state.rawDemoID = vars[1]
-            this.$nextTick(()=>this.loadDemo(this.alphaToDec(vars[1])))
+            //this.state.viewIrc = this.alphaToDec(vars[1])
+            this.state.rawIrcID = vars[1]
+            this.$nextTick(()=>this.loadIrc(this.alphaToDec(vars[1])))
             if(vars[2]){
               this.state.search.string = decodeURIComponent(vars[2])
             }
@@ -385,7 +385,7 @@ export default {
       }
     },
     incrementViews(id){
-      let sendData = {demoID: id}
+      let sendData = {ircID: id}
       fetch(this.state.baseURL + '/incrementViews.php',{
         method: 'POST',
         headers: {
@@ -395,12 +395,12 @@ export default {
       })
       .then(res=>res.json()).then(data=>{
         if(this.state.search.string){
-          if(this.state.search.demos.filter(v=>v.id==id).length) this.state.search.demos.filter(v=>v.id==id)[0].views++
+          if(this.state.search.ircs.filter(v=>v.id==id).length) this.state.search.ircs.filter(v=>v.id==id)[0].views++
         }else{
           switch(this.state.mode){
-            case 'user': this.state.user.demos.filter(v=>v.id==id)[0].views++; break
-            case 'default': if(this.state.landingPage.demos.filter(v=>v.id==id).length) this.state.landingPage.demos.filter(v=>v.id==id)[0].views++; break
-            case 'single': this.state.demos.filter(v=>v.id==id)[0].views++; break
+            case 'user': this.state.user.ircs.filter(v=>v.id==id)[0].views++; break
+            case 'default': if(this.state.landingPage.ircs.filter(v=>v.id==id).length) this.state.landingPage.ircs.filter(v=>v.id==id)[0].views++; break
+            case 'single': this.state.ircs.filter(v=>v.id==id)[0].views++; break
           }
         }
       })
@@ -431,20 +431,21 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        this.state.demoDataReceived = true
-        if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
-          this.state.user.demos.map(v=>{
+        console.log(data)
+        this.state.ircDataReceived = true
+        if(this.state.user != null && typeof this.state.user.ircs != 'undefined' && this.state.user.ircs.length){
+          this.state.user.ircs.map(v=>{
             v.updated = {}
             v.private = !!(v.private)
             v.iteration = 0
             v.allowDownload = !!(v.allowDownload)
-            for (const [key, value] of Object.entries(data[0].demos)) {
+            for (const [key, value] of Object.entries(data[0].ircs)) {
               v.updated[key]=0
             }
           })
-          data[0].demos = this.state.user.demos
+          data[0].ircs = this.state.user.ircs
         }else{
-          data[0].demos.map(v=>{
+          data[0].ircs.map(v=>{
             v.updated = {}
             for (const [key, value] of Object.entries(v)) {
               v.updated[key]=0
@@ -467,7 +468,7 @@ export default {
         this.state.totalUserPages = data[1]
         if(this.state.curUserPage+1 > this.state.totalUserPages) this.lastPage()
         this.state.user = data[0]
-        this.state.maxResultsPerPage = this.state.user.demoPostsPerPage
+        this.state.maxResultsPerPage = this.state.user.ircPostsPerPage
         this.state.userInfo[this.state.user.id] = {}
         this.state.userInfo[this.state.user.id].name = this.state.user.name
         this.state.userInfo[this.state.user.id].avatar = this.state.user.avatar
@@ -532,14 +533,14 @@ export default {
         break
       }
     },
-    loadDemo(demoID){
-      this.state.curDemo = demoID
+    loadIrc(ircID){
+      this.state.curIrc = ircID
       let sendData = {
         userName: this.state.loggedinUserName,
         passhash: this.state.passhash,
-        demoID
+        ircID
       }
-      fetch(this.state.baseURL + '/fetchDemo.php',{
+      fetch(this.state.baseURL + '/fetchIrc.php',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -547,9 +548,9 @@ export default {
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
         if(data){
-          this.state.demos=[data]
-          this.state.viewDemo = data.id
-          this.state.demos.map(v=>{
+          this.state.ircs=[data]
+          this.state.viewIrc = data.id
+          this.state.ircs.map(v=>{
             v.updated = {}
             for (const [key, value] of Object.entries(v)) {
               v.updated[key]=0
@@ -569,7 +570,7 @@ export default {
             this.incrementViews(v.id)
             this.fetchUserData(v.userID)
           })
-          this.state.inView = Array(this.state.demos.length).fill().map(v=>false)
+          this.state.inView = Array(this.state.ircs.length).fill().map(v=>false)
         }else{
           console.log('404')
           this.state.error404 = true
@@ -583,7 +584,7 @@ export default {
         this.loadUserData(this.state.user.name)
 				break
 				case 'single':
-				this.loadDemo()
+				this.loadIrc()
 				break
 				case 'default':
 				this.loadLandingPage()
@@ -595,14 +596,14 @@ export default {
         page: this.state.curPage,
         maxResultsPerPage: this.state.maxResultsPerPage
       }
-      fetch(this.state.baseURL + '/getRecentDemos.php',{
+      fetch(this.state.baseURL + '/getRecentIrcs.php',{
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        this.state.demoDataReceived = true
+        this.state.ircDataReceived = true
 				data[0].map(v=>{
           v.updated = {}
           for (const [key, value] of Object.entries(v)) {
@@ -623,7 +624,7 @@ export default {
           this.extractEmbedURL(v)
         })
         this.state.inView = Array(data[0].length).fill().map(v=>false)
-        this.state.landingPage.demos = data[0]
+        this.state.landingPage.ircs = data[0]
         this.state.totalPages = data[1]
         if(this.state.curPage+1 > this.state.totalPages) this.lastPage()
 				this.state.loaded = true
@@ -736,7 +737,7 @@ export default {
         }
       })
       this.state.autoplay = !this.state.autoplay
-      this.state.demos.map(v=>{
+      this.state.ircs.map(v=>{
         v.play = this.state.autoplay
       })
       document.cookie = 'autoplay=' + this.state.autoplay + '; expires=' + (new Date((Date.now()+3153600000000))).toUTCString() + '; path=/; domain=' + this.state.rootDomain
@@ -755,11 +756,11 @@ export default {
       l = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='allWords')
       if(l.length) this.state.search.allWords = l[0].split('=')[1]=='true'
     },
-    loadDemoFromBackup(demo, database){
+    loadIrcFromBackup(irc, database){
       let sendData = {
         userName: this.state.loggedinUserName,
         passhash: this.state.passhash,
-        demoID: demo.id,
+        ircID: irc.id,
         database
       }
       fetch(this.state.baseURL + '/loadBackup.php',{
@@ -778,20 +779,20 @@ export default {
           return q
         })
         data.allowDownload = !!(+data.allowDownload)
-        for (const [key, value] of Object.entries(demo)) {
+        for (const [key, value] of Object.entries(irc)) {
           if(key !== 'updated'){
-            demo[key] = data[key]
-            this.updateDemoItem(demo, key)
+            irc[key] = data[key]
+            this.updateIrcItem(irc, key)
           }
         }
-        demo.iteration = 0
-        this.state.extractEmbedURL(demo)
+        irc.iteration = 0
+        this.state.extractEmbedURL(irc)
         this.state.closeMenus++
       })
     },
-    updateDemoItem(demo, item){
+    updateIrcItem(irc, item){
       if(item !== 'updated'){
-        let newItemVal = demo[item]
+        let newItemVal = irc[item]
         if(item == 'private') newItemVal = !newItemVal ? 1 : 0
         if(item == 'allowDownload') newItemVal = !newItemVal ? 1 : 0
         let sendData = {
@@ -799,37 +800,37 @@ export default {
           item,
           newItemVal,
           passhash: this.state.passhash,
-          demoID: demo.id
+          ircID: irc.id
         }
-        fetch(this.state.baseURL + '/updateDemoItem.php',{
+        fetch(this.state.baseURL + '/updateIrcItem.php',{
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(sendData),
         }).then(res => res.json()).then(data=>{
-          demo.updated[item] = 1
+          irc.updated[item] = 1
           if(this.state.search.string && item == 'private'){
-            this.state.search.demos.filter(v=>v.id==demo.id)[0][item] = !!newItemVal
+            this.state.search.ircs.filter(v=>v.id==irc.id)[0][item] = !!newItemVal
           }else if(item == 'private'){
             switch(this.state.mode){
               case 'single':
-                this.state.demos.filter(v=>v.id == demo.id)[0][item] = !!newItemVal
+                this.state.ircs.filter(v=>v.id == irc.id)[0][item] = !!newItemVal
               break
               case 'default':
-                this.state.landingPage.demos.filter(v=>v.id == demo.id)[0][item] = !!newItemVal
+                this.state.landingPage.ircs.filter(v=>v.id == irc.id)[0][item] = !!newItemVal
               break
               case 'user':
-                this.state.user.demos.filter(v=>v.id == demo.id)[0][item] = !!newItemVal
+                this.state.user.ircs.filter(v=>v.id == irc.id)[0][item] = !!newItemVal
               break
             }
           }
           if(item=='videoLink'){
-            this.state.extractEmbedURL(demo)
-            demo.videoPlaying = false
+            this.state.extractEmbedURL(irc)
+            irc.videoPlaying = false
           }
           setTimeout(()=>{
-            demo.updated[item] = 0
+            irc.updated[item] = 0
           }, 1000)
         })
       }
@@ -845,6 +846,7 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
+        console.log(data)
         if(data[0]){
           this.state.loggedin = true
           this.state.loggedinUserName = this.state.username
@@ -877,16 +879,16 @@ export default {
           document.cookie = v + '; expires=' + (new Date(0)).toUTCString() + '; path=/; domain=' + this.state.rootDomain
         }
       })
-      if(this.state.search.string != '') this.state.search.demos = this.state.search.demos.filter(v=>!v.private)
+      if(this.state.search.string != '') this.state.search.ircs = this.state.search.ircs.filter(v=>!v.private)
       switch(this.state.mode){
         case 'user':
-        this.state.user.demos = this.state.user.demos.filter(v=>!v.private)
+        this.state.user.ircs = this.state.user.ircs.filter(v=>!v.private)
         break
         case 'single':
-        this.state.demos = this.state.demos.filter(v=>!v.private)
+        this.state.ircs = this.state.ircs.filter(v=>!v.private)
         break
         case 'default':
-        this.state.landingPage.demos = this.state.landingPage.demos.filter(v=>!v.private)
+        this.state.landingPage.ircs = this.state.landingPage.ircs.filter(v=>!v.private)
         break
       }
       this.state.loggedin = false
@@ -925,13 +927,13 @@ export default {
     this.state.showLoginPrompt = this.showLoginPrompt
     this.state.toggleShowForkHistory = this.toggleShowForkHistory
     this.state.toggleShowControls = this.toggleShowControls
-    this.state.loadDemoFromBackup = this.loadDemoFromBackup
+    this.state.loadIrcFromBackup = this.loadIrcFromBackup
     this.state.showUserSettings = this.showUserSettings
     this.state.extractEmbedURL= this.extractEmbedURL
     this.state.toggleAutoplay = this.toggleAutoplay
     this.state.incrementViews = this.incrementViews
     this.state.openFullscreen = this.openFullscreen
-    this.state.updateDemoItem = this.updateDemoItem
+    this.state.updateIrcItem = this.updateIrcItem
     this.state.fetchUserData = this.fetchUserData
     this.state.loadUserData = this.loadUserData
     this.state.closePrompts = this.closePrompts

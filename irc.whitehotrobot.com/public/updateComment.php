@@ -12,9 +12,9 @@
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
       if($row['admin']){
-        $sql = 'UPDATE demoComments SET text = "'.$comment.'" WHERE id = '.$commentID;
+        $sql = 'UPDATE ircComments SET text = "'.$comment.'" WHERE id = '.$commentID;
       } else {
-        $sql = 'UPDATE demoComments SET text = "'.$comment.'" WHERE id = '.$commentID . ' AND userID = ' . $row['id'];
+        $sql = 'UPDATE ircComments SET text = "'.$comment.'" WHERE id = '.$commentID . ' AND userID = ' . $row['id'];
       }
       mysqli_query($link, $sql);
       $success = true;

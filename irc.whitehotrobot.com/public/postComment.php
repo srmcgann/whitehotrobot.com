@@ -4,14 +4,14 @@
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $comment = mysqli_real_escape_string($link, $data->{'comment'});
-  $demoID = mysqli_real_escape_string($link, $data->{'demoID'});
+  $ircID = mysqli_real_escape_string($link, $data->{'ircID'});
   $sql = 'SELECT * FROM users WHERE name LIKE "'.$userName.'" AND passhash = "'.$passhash.'";';
   $res = mysqli_query($link, $sql);
   $success = false;
   if(mysqli_num_rows($res)){
     $row = mysqli_fetch_assoc($res);
     if($row['enabled']){
-      $sql1=$sql = 'INSERT INTO demoComments (text, demoID, userID) VALUES("'.$comment.'", '.$demoID.', '.$row['id'].')';
+      $sql1=$sql = 'INSERT INTO ircComments (text, ircID, userID) VALUES("'.$comment.'", '.$ircID.', '.$row['id'].')';
       mysqli_query($link, $sql);
       $success = true;
     }
@@ -19,7 +19,7 @@
 
   if($success){
 		$insertID = mysqli_insert_id($link);
-		$sql = 'SELECT date FROM demoComments WHERE id = ' . $insertID;
+		$sql = 'SELECT date FROM ircComments WHERE id = ' . $insertID;
 		$res = mysqli_query($link, $sql);
 		$row = mysqli_fetch_assoc($res);
 		echo json_encode([$success, $insertID, $row['date'], $sql1]);
