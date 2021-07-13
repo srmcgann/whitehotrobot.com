@@ -58,26 +58,26 @@
       <?=$CSS?>
 
       .homeLink{
-				z-index: 10000;
-				position: fixed;
-				background: #2466;
-				cursor: pointer;
-				font-size: 12px;
-				color: #fff8;
-				top: 5px;
-				right: 5px;
-				border-radius: 3px;
-				border: 1px solid #4688;
-			}
-			.homeLink:focus{
-				outline: none;
-			}
+        z-index: 10000;
+        position: fixed;
+        background: #2466;
+        cursor: pointer;
+        font-size: 12px;
+        color: #fff8;
+        top: 5px;
+        right: 5px;
+        border-radius: 3px;
+        border: 1px solid #4688;
+      }
+      .homeLink:focus{
+        outline: none;
+      }
     </style>
   </head>
   <body>
-		<button class="homeLink" onclick="goHome()">
-		  free hosting<br>home page
-		</button>
+    <button class="homeLink" onclick="goHome()">
+      free hosting<br>home page
+    </button>
     <?=$HTML?>
     <script>
       let sendData = {demoID: <?=$demoid?>}

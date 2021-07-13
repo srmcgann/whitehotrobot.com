@@ -10,14 +10,14 @@
       $row = mysqli_fetch_assoc($res);
       $row['id'] = (int)$row['id'];
       if($row['videoLink'] && $row['ircJS'] && $row['ircCSS'] && $row['ircHTML'] && $row['title']){
-				$sql = 'SELECT * FROM ircComments WHERE ircID = ' . $row['id'];
-				$res2 = mysqli_query($link, $sql);
-				$row['comments'] = [];
+        $sql = 'SELECT * FROM ircComments WHERE ircID = ' . $row['id'];
+        $res2 = mysqli_query($link, $sql);
+        $row['comments'] = [];
         for($j=0;$j<mysqli_num_rows($res2);++$j){
           $row['comments'][] = mysqli_fetch_assoc($res2);
-				}
+        }
         array_push($out, $row);
-			}
+      }
     }
   }
   echo json_encode($out);

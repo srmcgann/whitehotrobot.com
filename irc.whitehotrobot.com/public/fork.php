@@ -34,19 +34,19 @@
       $sql = 'SELECT * FROM irc WHERE id = ' . $ircID;
       $res = mysqli_query($link, $sql);
       if(mysqli_num_rows($res)){
-	$irc = mysqli_fetch_assoc($res);
+  $irc = mysqli_fetch_assoc($res);
         $title=mysqli_real_escape_string($link, $irc['title']);
         $videoLink=mysqli_real_escape_string($link, $irc['videoLink']);
         $ircHTML=mysqli_real_escape_string($link, $irc['ircHTML']);
         $ircCSS=mysqli_real_escape_string($link, $irc['ircCSS']);
-	$ircJS=mysqli_real_escape_string($link, $irc['ircJS']);
+  $ircJS=mysqli_real_escape_string($link, $irc['ircJS']);
 
-	$forkHistory=[$irc['id']];
-	$a=json_decode($irc['forkHistory']);
-	foreach($a as $id){
-	  if(ircExists($id)){
+  $forkHistory=[$irc['id']];
+  $a=json_decode($irc['forkHistory']);
+  foreach($a as $id){
+    if(ircExists($id)){
             array_push($forkHistory, $id);
-	  }else{
+    }else{
             array_push($forkHistory, -1);
           }
         }

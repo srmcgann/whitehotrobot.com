@@ -16,7 +16,7 @@
           $resized = imagecreatetruecolor($newWidth, $newHeight);
           imagecopyresampled($resized, $original, 0, 0, 0, 0, $newWidth, $newHeight, $width, $height);
           imagejpeg($resized, './thumbs/' . $fileName);
-					exec('chmod 775 ./thumbs/' . $fileName);
+          exec('chmod 775 ./thumbs/' . $fileName);
         }
         return  (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https:" : "http:") . "//{$_SERVER['HTTP_HOST']}" . '/thumbs/' . $fileName;
       } else {
@@ -28,28 +28,28 @@
         $a = explode('?', $a)[0];
         return 'http://img.youtube.com/vi/' . $a . '/0.jpg';
       }
-			$a = explode('?v=', $src);
-			$a = explode("&", $a[sizeof($a)-1])[0];
+      $a = explode('?v=', $src);
+      $a = explode("&", $a[sizeof($a)-1])[0];
       return 'http://img.youtube.com/vi/' . $a . '/0.jpg';
     }
   }
 
   if($_GET['id']){
-		$ircID = $_GET['id'];
+    $ircID = $_GET['id'];
   } else {
     $data = json_decode(file_get_contents('php://input'));
     $ircID = mysqli_real_escape_string($link, $data->{'ircID'});
-	}
+  }
   $sql = "SELECT * FROM items WHERE id = " . $ircID;
   $res = mysqli_query($link, $sql);
-	$url = '';
+  $url = '';
   if($res){
     $row = mysqli_fetch_assoc($res);
     $row['id'] = (int)$row['id'];
-  	$videoLink = mysqli_real_escape_string($link, $row['videoLink']);
+    $videoLink = mysqli_real_escape_string($link, $row['videoLink']);
     $url=thumbLink($videoLink);
-		$sql = 'UPDATE items SET videoThumb = "'.$url.'" WHERE id = ' . $row['id'];
+    $sql = 'UPDATE items SET videoThumb = "'.$url.'" WHERE id = ' . $row['id'];
     mysqli_query($link, $sql);
-	}
+  }
   echo json_encode($url);
 ?>

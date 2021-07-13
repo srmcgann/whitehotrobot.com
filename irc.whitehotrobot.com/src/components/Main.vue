@@ -327,12 +327,12 @@ export default {
       }
     },
     vidThumb(item){
-			let link = item.videoLink
-			if(link.substring(link.length-3).toUpperCase() === 'MP4'){
-				return item.videoIframeURL
-			} else {
+      let link = item.videoLink
+      if(link.substring(link.length-3).toUpperCase() === 'MP4'){
+        return item.videoIframeURL
+      } else {
         return '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg'
-			}
+      }
     },
   },
   mounted(){
@@ -384,18 +384,18 @@ textarea{
 }
 .sizedThumb{
   min-width: 100%;
-	max-width: 100%;
-	max-height: 100%;
-	position: relative;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .sizedThumbImg{
-	min-width: 100%;
-	max-width: 100%;
-	max-height: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 .textareaContainer{
@@ -433,18 +433,18 @@ a{
 }
 .startVidButton{
   margin-top:0;
-	position: absolute;
-	top: 50%;
+  position: absolute;
+  top: 50%;
   left: 50%;
-	font-size: 32px;
-	min-width: 0;
-	padding: 15px;
+  font-size: 32px;
+  min-width: 0;
+  padding: 15px;
   transform: translate(-50%,-50%);
-	background: #4c6;
+  background: #4c6;
   min-height: 0;
-	height: auto;
-	height: 50px;
-	line-height: .5em;
+  height: auto;
+  height: 50px;
+  line-height: .5em;
 }
 .startVidbutton:focus{
   outline: none;
@@ -496,15 +496,15 @@ a{
 .vidThumbImg{
   width: 100%;
   height: 100%;
-	display: block;
-	position: absolute;
-	top: 50%!important;
-	left: 50%;
-	transform: translate(-50%, -50%);
+  display: block;
+  position: absolute;
+  top: 50%!important;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .vidThumb{
   position: relative; 
-	display: block;
+  display: block;
   top: 50%;
   left: 50%;
   transform: translateX(-50%);
@@ -680,77 +680,77 @@ td{
   position: absolute;
 }
 .commentContainer{
-	background: #2020;
-	padding: 10px;
-	margin-top: 6px;
+  background: #2020;
+  padding: 10px;
+  margin-top: 6px;
 }
 .commentsHeader{
-	font-size: 28px;
-	text-align: left;
-	color: #0ff;
-	background: #0000;
-	vertical-align: top;
+  font-size: 28px;
+  text-align: left;
+  color: #0ff;
+  background: #0000;
+  vertical-align: top;
 }
 .commentText{
   color: #ccc;
   text-align: left;
-	min-width: 200px;
+  min-width: 200px;
   display: inline-block;
   font-size: 18px;
-	padding-left: 10px;
-	padding-right: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   background: #024;
   width: calc(100% - 470px);
   margin-left: 10px;
 }
 .commentInput:focus{
-	outline: none;
+  outline: none;
 }
 .commentInput{
-	border: none;
-	color: #ef8;
-	text-align: left;
-	vertical-align: top;
-	display: inline-block;
-	font-size: 18px;
-	background: #001c;
-	margin-left: 10px;
+  border: none;
+  color: #ef8;
+  text-align: left;
+  vertical-align: top;
+  display: inline-block;
+  font-size: 18px;
+  background: #001c;
+  margin-left: 10px;
 }
 .commentAvatar{
   position: absolute;
-	margin-left: -51px;
-	width: 500px;
-	height: 500px;
-	max-height:30px;
-	max-width:40px;
-	margin-top: -2px;
+  margin-left: -51px;
+  width: 500px;
+  height: 500px;
+  max-height:30px;
+  max-width:40px;
+  margin-top: -2px;
 }
 .commentMain{
   width: 100%;
-	margin-top: 4px;
-	padding-bottom: 6px;
-	border-bottom: 2px solid #48f3;
+  margin-top: 4px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #48f3;
   text-align: left;
 }
 .commentUserName{
-	color: #6dc;
-	padding: 0;
-	padding-left: 50px;
-	padding-right: 5px;
-	padding-top: 2px;
-	vertical-align: top;
+  color: #6dc;
+  padding: 0;
+  padding-left: 50px;
+  padding-right: 5px;
+  padding-top: 2px;
+  vertical-align: top;
 }
 .commentDeleteButton{
-	background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
-	background-repeat: no-repeat;
-	background-size: 25px 25px;
-	background-position: center center;
-	width: 34px;
-	height: 34px;
-	vertical-align: top;
-	margin-top: -5px;
-	border-radius: 5px;
-	background-color: #f880;
+  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-repeat: no-repeat;
+  background-size: 25px 25px;
+  background-position: center center;
+  width: 34px;
+  height: 34px;
+  vertical-align: top;
+  margin-top: -5px;
+  border-radius: 5px;
+  background-color: #f880;
 }
 .commentEditButton{
   background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
@@ -765,8 +765,8 @@ td{
   background-color: #f880;
 }
 .newComment{
-	width: calc(100% - 100px)!important;
-	float:left;
+  width: calc(100% - 100px)!important;
+  float:left;
 }
 .ircDiv{
   background: transparent;

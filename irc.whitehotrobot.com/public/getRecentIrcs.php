@@ -9,18 +9,18 @@
   $start = $maxResultsPerPage * $page;
 
   $sql="SELECT id FROM irc WHERE private = 0";
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
   $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
   
-	$sql1=$sql = 'SELECT * FROM irc WHERE private = 0 ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
-	$res = mysqli_query($link, $sql);
-	$ircs = [];
-	for($i = 0; $i < mysqli_num_rows($res); ++$i){
-		$ircs[] = mysqli_fetch_assoc($res);
+  $sql1=$sql = 'SELECT * FROM irc WHERE private = 0 ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
+  $res = mysqli_query($link, $sql);
+  $ircs = [];
+  for($i = 0; $i < mysqli_num_rows($res); ++$i){
+    $ircs[] = mysqli_fetch_assoc($res);
   }
   forEach($ircs as &$irc){
-		$ircID = $irc['id'];
+    $ircID = $irc['id'];
     $sql2 = $sql = 'SELECT * FROM ircComments WHERE ircID = ' . $ircID;
     $res2 = mysqli_query($link, $sql);
     $irc['comments'] = [];
@@ -31,5 +31,5 @@
   forEach($ircs as &$irc){
     $irc['backups'] = getBackups($irc['id']);
   }
-	echo json_encode([$ircs, $totalPages, $page]);
+  echo json_encode([$ircs, $totalPages, $page]);
 ?>

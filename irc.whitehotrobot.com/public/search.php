@@ -29,15 +29,15 @@
   if(sizeof($tokens)){
     
     $confirmed = false;
-		if($loggedinUserName){
-  		$sql = 'SELECT * FROM users WHERE name LIKE "' . $loggedinUserName . '" AND passhash = "' .  $passhash . '"';
-		  if($res = mysqli_query($link, $sql)){
-  		  $row = mysqli_fetch_assoc($res);
-	  	  $loggedinUserData = $row;
+    if($loggedinUserName){
+      $sql = 'SELECT * FROM users WHERE name LIKE "' . $loggedinUserName . '" AND passhash = "' .  $passhash . '"';
+      if($res = mysqli_query($link, $sql)){
+        $row = mysqli_fetch_assoc($res);
+        $loggedinUserData = $row;
         $confirmed = true;
-				if($row['admin']) $admin = true;
-	  	}
-		}
+        if($row['admin']) $admin = true;
+      }
+    }
 
     if($loggedinUserName && $confirmed){
       $sql = 'SELECT * FROM irc WHERE (private = 0 || userID = '.$loggedinUserData['id'].') AND ((title LIKE "%' . $tokens[0] . '%"';
@@ -106,21 +106,21 @@
   }
   
   $sql;
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   $totalRecords = mysqli_num_rows($res);
   $totalPages = (($totalRecords-1) / $maxResultsPerPage | 0) + 1;
 
 
   $sql1 = $sql .= ' ORDER BY created DESC LIMIT ' . $start . ', ' . $maxResultsPerPage;
-	$res = mysqli_query($link, $sql);
+  $res = mysqli_query($link, $sql);
   
-	$ircs = [];
-	for($i = 0; $i < mysqli_num_rows($res); ++$i){
-		$ircs[] = mysqli_fetch_assoc($res);
+  $ircs = [];
+  for($i = 0; $i < mysqli_num_rows($res); ++$i){
+    $ircs[] = mysqli_fetch_assoc($res);
   }
 
   forEach($ircs as &$irc){
-		$ircID = $irc['id'];
+    $ircID = $irc['id'];
     $sql = 'SELECT * FROM ircComments WHERE ircID = ' . $ircID;
     $res = mysqli_query($link, $sql);
     $irc['comments'] = [];
@@ -134,6 +134,6 @@
   }
  
   
-	echo json_encode([$ircs, $totalPages, $page, $totalRecords, $sql1]);
+  echo json_encode([$ircs, $totalPages, $page, $totalRecords, $sql1]);
 ?>
 
