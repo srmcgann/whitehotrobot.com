@@ -1,13 +1,27 @@
 <?
   require("db.php");
-  $demoID=mysqli_real_escape_string($link,$_GET['demoID']);
-  $sql="SELECT * FROM items WHERE id=$demoID";
-  $res=$link->query($sql);
-  if(mysqli_num_rows($res)){
-  $row=mysqli_fetch_assoc($res);
-  $code=$row['demoJS'];
-  $css=$row['demoCSS'];
-  $html=$row['demoHTML'];
+  if(isset($_GET['ircID']) || isset($_GET['demoID'])){
+    if(isset($_GET['ircID'])){
+      $demoID=mysqli_real_escape_string($link,$_GET['ircID']);
+      $sql="SELECT * FROM irc WHERE id=$demoID";
+      $res=$link->query($sql);
+      if(mysqli_num_rows($res)){
+        $row=mysqli_fetch_assoc($res);
+        $code=$row['ircJS'];
+        $css=$row['ircCSS'];
+        $html=$row['ircHTML'];
+      }
+    } else {
+      $demoID=mysqli_real_escape_string($link,$_GET['demoID']);
+      $sql="SELECT * FROM items WHERE id=$demoID";
+      $res=$link->query($sql);
+      if(mysqli_num_rows($res)){
+        $row=mysqli_fetch_assoc($res);
+        $code=$row['demoJS'];
+        $css=$row['demoCSS'];
+        $html=$row['demoHTML'];
+      }
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,8 +31,6 @@
       <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <style>
 
-      <?=$css?>
-      
       body,html{
         overflow:hidden;
         margin: 0;
@@ -31,8 +43,10 @@
         width: 100%;
         height: 100%;
       }
+      <?=$css?>
     </style>
       <script>
+        console.log(`<?=$css?>`)
         window.addEventListener("message", receiveMessage, false);
         function receiveMessage(event){
           var origin = event.origin || event.originalEvent.origin;
