@@ -481,14 +481,14 @@ export default {
       }
 
       if(text.substring(0, 6).toUpperCase() == '/NICK '){
-        this.sendToServer ('client_message', 'NICK ' +  text.substring(7))
+        this.sendToServer ('client_message', 'NICK ' +  text.substring(6))
         handled = true
       }
 
       if(!handled){
         if(curChan.name != 'server'){
           this.sendToServer('client_message', 'PRIVMSG ' + curChan.name + ' :' + text)
-          this.pushToBuffer(this.curChannel, '&lt;' + this.getNick() + '&gt;: ' + text )
+          this.pushToBuffer(this.curChannel, '&lt;' + this.getNick() + '&gt; ' + text )
         } else {
           this.sendToServer('client_message', text)
         }
@@ -727,11 +727,11 @@ export default {
                     }, 200)
                   }
                 }
-                if(msg.toUpperCase().indexOf('NICKNAME IS ALREADY IN USE.') !== -1 && msg.toUpperCase().indexOf('PRIVMSG') === -1){
+                if(msg.toUpperCase().indexOf('NICKNAME IS ALREADY IN USE.') !== -1){
                   console.log('changing nick (server wants something different)')
-                  //setTimeout(()=>{
-                    this.sendToServer('client_message', 'NICK ' + (this.state.nick+='_'+(10+Math.random()*99|0)))
-                  //},500)
+                  setTimeout(()=>{
+                    this.sendToServer('client_message', 'NICK ' + (this.state.nick+='_'+(10+Math.random()*90|0)))
+                  },500)
                 }
                 //if(msg.toUpperCase().indexOf('MODE ' + this.state.nick + ' :+iwx.') !== -1 && msg.toUpperCase().indexOf('PRIVMSG') === -1){
                 //  this.sendToServer('client_message', 'NICK ' + (this.state.nick+='_'))
