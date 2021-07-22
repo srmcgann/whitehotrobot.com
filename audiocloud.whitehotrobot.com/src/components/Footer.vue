@@ -9,6 +9,9 @@
         <img src="https://lookie.jsbot.net/uploads/1zROT5.png" class="socialIcon">
       </button>
       -->
+      <button @click="launchPage('https://messaging.whitehotrobot.com')" class="socialButton" title="RobotNet Messaging https://messaging.whitehotrobot.com">
+        <img src="https://lookie.jsbot.net/uploads/1gojp0.png" class="socialIcon">
+      </button>
       <button @click="launchPage('https://hosting.whitehotrobot.com')" class="socialButton" title="static page hosting https://hosting.whitehotrobot.com">
         <img src="../assets/web.png" class="socialIcon">
       </button>

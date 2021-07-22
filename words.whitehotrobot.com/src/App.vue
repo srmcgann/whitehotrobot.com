@@ -882,6 +882,16 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
+@font-face {
+    font-family: 'juliette';
+    src: url('https://cantelope.org/JULIET__.otf') format('opentype'),
+    url('https://cantelope.org/JULIET__.woff') format('woff'),url('https://cantelope.org/JULIET__.TTF') format('truetype');
+}
+@font-face {
+    font-family: 'renaissance';
+    src: url('https://cantelope.org/renaissance.otf') format('opentype'),
+    url('https://cantelope.org/renaissance.woff') format('woff'),url('https://cantelope.org/renaissance.TTF') format('truetype');
+}
 #app{
   min-width: 475px;
 }

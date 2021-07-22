@@ -12,6 +12,9 @@
         <img src="../assets/web.png" class="socialIcon">
       </button>
       -->
+      <button @click="launchPage('https://messaging.whitehotrobot.com')" class="socialButton" title="RobotNet Messaging https://messaging.whitehotrobot.com">
+        <img src="https://lookie.jsbot.net/uploads/1gojp0.png" class="socialIcon">
+      </button>
       <button @click="launchPage('https://games.whitehotrobot.com')" class="socialButton" title="community browser games https://games.whitehotrobot.com">
         <img src="../assets/games.png" class="socialIcon">
       </button>

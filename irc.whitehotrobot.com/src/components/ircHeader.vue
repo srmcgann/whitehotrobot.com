@@ -189,7 +189,7 @@ export default {
       return M[l.getMonth()] + ' ' + l.getDate() + ', ' + l.getFullYear()// + ' • ' + (l.getHours()%12) + ':' + l.getMinutes() + ' ' + (l.getHours()<12?'AM':'PM')
     },
     vidThumb(link){
-      return '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg'
+      return link ? '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg' : ''
     }
   }
 }

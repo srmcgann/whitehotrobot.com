@@ -674,7 +674,7 @@ export default {
       if(link.substring(link.length-3).toUpperCase() === 'MP4'){
         return this.irc.videoIframeURL+'?'+this.iteration
       } else {
-        return '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg'
+        return link ? '//img.youtube.com/vi/' + link.split('/')[link.split('/').length-1] + '/0.jpg' : ''
       }
     },
     filteredComments(){

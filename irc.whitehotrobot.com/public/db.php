@@ -5,7 +5,7 @@
   $db="videodemos";
   $maxResultsPerPage = 4;
 
-  $local = true;
+  $local = false;
   if($local){
     $baseURL='irc.whitehotrobot.com';
     $baseProtocol = 'http';
@@ -14,6 +14,7 @@
   }else{
     $baseURL='irc.whitehotrobot.com';
     $baseProtocol = 'https';
+    $ircSandbox='local.demo.whitehotrobot.com';
     $baseAssetsURL = 'https://assets.whitehotrobot.com';
   }
 
