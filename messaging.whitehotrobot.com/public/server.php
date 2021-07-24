@@ -63,6 +63,7 @@
         sendText('connected to: ' . json_encode([gethostbyname($vars['host']), $vars['port']]) . "\n");
 
         $lastPing = time();
+        $lastSawClient = time();
         $nextQueueIteration = 0;
         $get = '';
 
@@ -74,7 +75,8 @@
             $get .= $recv;
             usleep(2000);
           }
-          if(time() - $lastPing > 60 * 5) die();
+          if((time() - $lastPing > 60 * 5) || (time() - $lastSawClient > 60 * 5)) die();
+
           if($get) {
             if(strlen($get) > 2) relayHostResponseToClient($get);
             $lastPing = time();
@@ -91,6 +93,7 @@
             $sql = 'SELECT * FROM ircLink WHERE userID = ' . $vars['userID'] . ' ORDER BY time ASC';
             if($res = mysqli_query($link, $sql)){
               if(mysqli_num_rows($res)){
+                $lastSawClient = time();
                 $row = mysqli_fetch_assoc($res);
                 $msg = $row['message'];
                 if(ms() - $row['time'] > $vars['maxIncomingBufferAge']){
@@ -99,11 +102,12 @@
                 } else {
                   socket_write($sock, $msg . "\r\n");
                   sendText('sent: ' . $msg . "\n");
-                  if(substr(0,4,$msg) == 'QUIT') die();
-                  usleep(100000);
+                  if(substr($msg, 0, 4) == 'QUIT') die();
+                  //usleep(100000);
                 }
-                $sql = 'DELETE FROM ircLink WHERE userID = ' . $vars['userID'] . ' AND time = ' . $row['time'] . ' AND message = "' . $msg . '"';
+                $sql = 'DELETE FROM ircLink WHERE id = ' . $row['id'];
                 mysqli_query($link, $sql);
+                //usleep(50000);
               }
             }
           }

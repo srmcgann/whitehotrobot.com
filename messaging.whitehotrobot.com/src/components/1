@@ -183,7 +183,6 @@ export default {
       let tempLine = line.toUpperCase()
       let pos = []
       let t = 0
-      console.log('filterline: ' + line)
       if(tempLine.split(':')[1].indexOf(' '+this.state.nick.toUpperCase()+' ') !== -1){
         lineObject.highlighted = true
         do{
@@ -201,23 +200,19 @@ export default {
         })
       }
       if(line.indexOf(String.fromCharCode(3))!==-1){
-        console.log('color code detected!')
         let lines = line.split(String.fromCharCode(3))
         let newLine = ''
-        lines.map((v,i)=>{
-          console.log('lines v: ' + v)
+        lines.map(v=>{
           let num = +v.substring(0, 2)
-          if(!Number.isInteger(num)){
+          if(typeof num != 'number'){
             num = +v.substring(0, 1)
-            v = v.substring(1)
-          } else {
-            v = v.substring(2)
+            if(typeof num == 'number'){
+              newLine = '<div style="' + getColorFromCode(num) + '">' + v + '</div>'
+            }
           }
-          newLine += '<span class="color' + num + '">' + v + '</span>'
           if(typeof num != 'number') newLine += v
         })
         line = newLine
-        console.log('colored line: ' + line)
       }
       return line
     },
@@ -529,53 +524,5 @@ label{
 }
 .green9{
   background: #0f89!important;
-}
-.color0{
-  color: #fff;
-}
-.color1{
-  color: #000;
-}
-.color2{
-  color: #008;
-}
-.color3{
-  color: #080;
-}
-.color4{
-  color: #f00;
-}
-.color5{
-  color: #620;
-}
-.color6{
-  color: #81f;
-}
-.color7{
-  color: #f80;
-}
-.color8{
-  color: #ff0;
-}
-.color9{
-  color: #0f0;
-}
-.color10{
-  color: #088;
-}
-.color11{
-  color: #0ff;
-}
-.color12{
-  color: #00f;
-}
-.color13{
-  color: #f0f;
-}
-.color14{
-  color: #666;
-}
-.color15{
-  color: #aaa;
 }
 </style>
