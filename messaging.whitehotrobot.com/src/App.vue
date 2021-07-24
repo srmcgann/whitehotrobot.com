@@ -55,6 +55,7 @@ export default {
           newText: false,
           scrollStick: true,
           history: [],
+          userAgent: navigator.userAgent,
           topic: '',
           users: [],
           showServerMessages: false
@@ -636,6 +637,7 @@ export default {
           console.log('ping detected')
           if(msg.toUpperCase().indexOf(this.state.defaultIRCHost.toUpperCase()) === -1){
             setTimeout(()=>{
+              this.sendToServer('client_message', 'USER ' + this.state.nick + ' 0 * :' + this.state.nick)
               this.sendToServer('client_message', 'USER ' + this.state.nick + ' 0 * :' + this.state.nick)
             }, 200)
           }
