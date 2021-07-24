@@ -183,7 +183,6 @@ export default {
       let tempLine = line.toUpperCase()
       let pos = []
       let t = 0
-      console.log('filterline: ' + line)
       if(tempLine.split(':')[1].indexOf(' '+this.state.nick.toUpperCase()+' ') !== -1){
         lineObject.highlighted = true
         do{
@@ -201,11 +200,9 @@ export default {
         })
       }
       if(line.indexOf(String.fromCharCode(3))!==-1){
-        console.log('color code detected!')
         let lines = line.split(String.fromCharCode(3))
         let newLine = ''
         lines.map((v,i)=>{
-          console.log('lines v: ' + v)
           let num = +v.substring(0, 2)
           if(!Number.isInteger(num)){
             num = +v.substring(0, 1)
@@ -217,7 +214,6 @@ export default {
           if(typeof num != 'number') newLine += v
         })
         line = newLine
-        console.log('colored line: ' + line)
       }
       return line
     },
@@ -385,15 +381,12 @@ export default {
 .shortWidth{
   width: calc(100% - 150px);
 }
-.status{
-  color: #f08;
-}
 .nick{
   font-style: oblique;
   color: #0fc8;
 }
 .status{
-  color: #a00;
+  color: #f08;
   font-weight: 900;
 }
 .privmsg{
@@ -577,5 +570,8 @@ label{
 }
 .color15{
   color: #aaa;
+}
+.tab-pane{
+  padding-bottom: 2px;
 }
 </style>

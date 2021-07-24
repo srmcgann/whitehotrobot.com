@@ -468,19 +468,22 @@ export default {
       if(text.substring(0, 5).toUpperCase() == '/MSG '){
         let joinChan = text.substring(5)
         let text1 = text.split(' ').filter(v=>v).join(' ')
-        let tgt = text1.split(' ')[1]
+        let tgt = text1.split(' ')[1].replace("\n", '').replace("\r",'').trim()
+        console.log('tgt: ' + tgt)
         let sendText = text.split(' ').filter(v=>v).filter((v,i)=>i>1).join(' ')
         if(sendText){
           let newChan
-          this.sendToServer('client_message', 'PRIVMSG ' + tgt+ ' :' + sendText)
           if(tgt){
-            if(this.state.channels.filter(v=>v.name.toUpperCase() == tgt.toUpperCase()).length == 0){
+            if(this.state.channels.filter(v=>v.name.toUpperCase().replace("\n", '').replace("\r",'').trim() == tgt.toUpperCase()).length == 0){
               newChan = JSON.parse(JSON.stringify(this.state.channelTemplate))
               newChan.name = tgt
               this.state.channels.push(newChan)
+            } else {
+              newChan = this.state.channels.filter(v=>v.name.toUpperCase().replace("\n", '').replace("\r",'').trim() == tgt.toUpperCase())[0]
             }
             this.pushToBuffer(newChan, '&lt;' + this.state.nick + '&gt; ' + sendText, 'privmsg')
             setTimeout(()=>{
+              this.sendToServer('client_message', 'PRIVMSG ' + tgt+ ' :' + sendText)
               this.setActiveChannelByName(tgt, true)
             }, 500)
           }
@@ -579,7 +582,7 @@ export default {
       name = name.replace("\r", '').replace("\n", '').trim()
       this.state.channels.map(v=>{v.active = false})
       this.state.channels.map(v=>{
-        if(v.name.toUpperCase() == name.toUpperCase()){
+        if(v.name.toUpperCase().replace("\n", '').replace("\r",'').trim() == name.toUpperCase()){
           //console.log('attempting to activate channel: ' + name)
           v.active = true
           v.connected = typeof connected !== 'undefined' ? connected : v.connected
@@ -600,7 +603,7 @@ export default {
         console.log('oops')
         return
       }
-      if(!this.state.channels.filter(v=>v.name.toUpperCase() == name.toUpperCase()).length){
+      if(!this.state.channels.filter(v=>v.name.toUpperCase().replace("\n", '').replace("\r",'').trim() == name.toUpperCase()).length){
         this.createChannel(name)
       }
       let msg = 'JOIN ' + name
@@ -707,21 +710,29 @@ export default {
           this.pushToBuffer(chan, topicChanger + ' has changed the topic to: ' + serverMsg, 'status')
         break
         case 'privmsg':
-          from = msg.split(':')[1].split('!')[0].split(' ')[0]
-          to = msg.split(':')[1].split(' ')[2]
+          from = msg.split(':')[1].split('!')[0].split(' ')[0].replace("\n", '').replace("\r", '').trim()
+          to = msg.split(':')[1].split(' ')[2].replace("\n", '').replace("\r", '').trim()
           console.log('privmsg detected: from: ' + from + '  to: ' + to)
           text = msg.substring(msg.split(':')[1].lastIndexOf('PRIVMSG') + 11 + to.length)
           if(text.length) text = text.replace(`<`, '&lt;')
           if(this.state.channels.filter(v=>v.name.toUpperCase()==to.toUpperCase()).length){
             this.pushToBuffer(this.state.channels.filter(v=>v.name.toUpperCase()==to.toUpperCase())[0], '&lt;' + from + '&gt; ' + text, 'privmsg')
           }
-          if(from.toUpperCase() != this.state.defaultIRCHost.toUpperCase() && to.toUpperCase() === this.state.nick.toUpperCase()){
-            newChan = JSON.parse(JSON.stringify(this.state.channelTemplate))
-            newChan.name = from
-            this.state.channels.push(newChan)
-            this.setActiveChannelByName(newChan.name, true);
-            this.pushToBuffer(newChan, '&lt;' + from + '&gt; ' + text, 'privmsg')
-            newChan.highlighted = true
+          
+          if(from.toUpperCase() != this.state.defaultIRCHost.toUpperCase() && to.toUpperCase() === this.state.getNick().toUpperCase()){
+            if(this.state.channels.filter(v=>v.name.toUpperCase() == from.toUpperCase()).length){
+              let fromChan = this.state.channels.filter(v=>v.name.toUpperCase() == from.toUpperCase())[0]
+              this.pushToBuffer(fromChan, '&lt;' + from + '&gt; ' + text, 'privmsg')
+              this.state.channels.filter(v=>v.name.toUpperCase() == from.toUpperCase())[0].highlighted = true
+              this.setActiveChannelByName(from, true);
+            } else {
+              newChan = JSON.parse(JSON.stringify(this.state.channelTemplate))
+              newChan.name = from
+              this.state.channels.push(newChan)
+              this.setActiveChannelByName(newChan.name, true);
+              this.pushToBuffer(newChan, '&lt;' + from + '&gt; ' + text, 'privmsg')
+              newChan.highlighted = true
+            }
           }
         break
         case 'notice':
@@ -756,7 +767,7 @@ export default {
           }else{
             partChan = this.curChannelName
           }
-          let partUser = msg.split(':')[1].split('!')[0].split(' ')[0]
+          let partUser = msg.split(':')[1].split('!')[0].split(' ')[0].trim()
           if(partUser.toUpperCase() == this.getNick().toUpperCase()){ //parting user is self
             this.state.channels = this.state.channels.filter(v=>v.name.toUpperCase() !== partChan.toUpperCase())
           }
