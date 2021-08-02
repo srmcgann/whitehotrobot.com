@@ -1,0 +1,37 @@
+<?
+  header( 'Content-type: text/html; charset=utf-8' );
+  ini_set('max_execution_time', 0); // to get unlimited php script execution time
+  ob_implicit_flush();
+  function doSomething(){
+/*
+    switch(8){
+      case 0: passthru('pwd'); break;
+      case 1: passthru('date'); break;
+      case 2: passthru('pwd'); break;
+      case 3: passthru('date'); break;
+      case 4: passthru('pwd'); break;
+      case 5: passthru('date'); break;
+      case 6: passthru('pwd'); break;
+      case 7: passthru('ls ./ -R 2>&1'); break;
+      case 8: passthru('yarn build 2>&1'); break;
+    }
+*/
+    require('db.php');
+    $data = json_decode(file_get_contents('php://input'));
+    $vars = [];
+    $vars['host'] = mysqli_real_escape_string($link, $data->{'host'});
+    $vars['port'] = mysqli_real_escape_string($link, $data->{'port'});
+    $vars['nick'] = mysqli_real_escape_string($link, $data->{'nick'});
+    $vars['password'] = mysqli_real_escape_string($link, $data->{'password'});
+    //echo json_encode($vars);
+
+    while (true) {
+      echo "<><!==!!==!><>";
+      echo rand() . "\n";
+      //ob_flush();
+      flush();
+      usleep(100000);
+    }
+  }
+  doSomething();
+?>
