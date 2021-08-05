@@ -181,7 +181,7 @@ export default{
             this.state.userInfo[this.state.loggedinUserID] = {}
             this.state.userInfo[this.state.loggedinUserID].name = this.state.regusername
             this.state.userInfo[this.state.loggedinUserID].avatar = this.state.getAvatar(this.state.loggedinUserID)
-            //window.location.href = this.state.baseURL + '/u/' + this.state.regusername
+            window.location.reload()
           } else {
             this.showInvalid = true
           }

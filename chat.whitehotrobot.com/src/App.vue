@@ -42,6 +42,7 @@ export default {
   data(){
     return{
       xhr: new XMLHttpRequest(),
+      curChanTimer: 0,
       state: {
         nick: null,
         userTemplate: {
@@ -97,6 +98,7 @@ export default {
         defaultIRCNick: 'whr_' + (10+Math.random()*89|0),
         defaultIRCPort: 6667,
         defaultPassword: '',
+        queueStarted: false,
         mainText: 'the main container',
         curChannelName: '',
         insertTextIntoBar: '',
@@ -108,7 +110,7 @@ export default {
         nick: '',
         headerText: 'RobotNet',
         outboundQueue: [],
-        outboundQueueInterval: 1000,
+        outboundQueueInterval: 600,
         joinChannel: null,
         maxNickLen: 30,
         loggedin: false,
@@ -214,12 +216,12 @@ export default {
       if(this.state.modeGot) return
       this.state.modeGot = true
       let vars = window.location.href.substring(this.state.baseURL.length + 1).split('/').filter(v=>v)
+      let tnet = ''
+      let tnick = ''
+      let tport = null
+      let tchannels = []
       vars.map((v,i)=>{
         let p = v.split(',')
-        let tnet = ''
-        let tnick = ''
-        let tport = null
-        let tchannels = []
         p.map(q=>{
           q = q.trim()
           if(q.substr(0, 4).toUpperCase() == 'NET:'){
@@ -235,23 +237,23 @@ export default {
             tchannels = q.split(':')[1].split(';').map(v=>v.trim())
           }
         })
-        if(!tnet) tnet = this.state.defaultIRCHost
-        if(!tport) tport = this.state.defaultIRCPort
-        if(!tnick) tnick = this.state.defaultIRCNick
-        if(!tchannels.length){
-          tchannels = JSON.parse(JSON.stringify(this.state.defaultChannels))
-        } else {
-          tchannels = tchannels.map(v=>{
-            let newChan = JSON.parse(JSON.stringify(this.state.channelTemplate))
-            newChan.name = v
-            return newChan
-          })
-        }
-        this.state.defaultIRCHost = tnet
-        this.state.defaultIRCPort = tport
-        this.state.defaultIRCNick = tnick
-        this.state.channels = [this.state.channels[0], ...tchannels]
       })
+      if(!tnet) tnet = this.state.defaultIRCHost
+      if(!tport) tport = this.state.defaultIRCPort
+      if(!tnick) tnick = this.state.defaultIRCNick
+      if(!tchannels.length){
+        tchannels = JSON.parse(JSON.stringify(this.state.defaultChannels))
+      } else {
+        tchannels = tchannels.map(v=>{
+          let newChan = JSON.parse(JSON.stringify(this.state.channelTemplate))
+          newChan.name = v
+          return newChan
+        })
+      }
+      this.state.defaultIRCHost = tnet
+      this.state.defaultIRCPort = tport
+      this.state.defaultIRCNick = tnick
+      this.state.channels = [this.state.channels[0], ...tchannels]
       if(vars.length>0){
         switch(vars[0]){
           case 'noFooter': this.state.supressFooter = true; break;
@@ -377,7 +379,7 @@ export default {
       this.$nextTick(()=>{
         let channel = this.state.channels.filter(v=>v.active)[0]
         channel.scrollStick = true
-        document.querySelectorAll('.mainChatContainer')[0].scrollTo(0,6e6)
+        document.querySelectorAll('.textLines').forEach(el=>el.scrollTo(0,6e6))
       })
     },
     partUser(chanName, partUserName){
@@ -529,7 +531,7 @@ export default {
             setTimeout(()=>{
               this.sendToServer('client_message', 'PRIVMSG ' + tgt+ ' :' + sendText)
               this.setActiveChannelByName(tgt, true)
-            }, 500)
+            }, 0)
           }
         }
         handled = true
@@ -542,8 +544,8 @@ export default {
         handled = true
       }
 
-      if(text.substring(0, 5).toUpperCase() == '/HOP '){
-        let command = text.substring(5)
+      if(text.substring(0, 4).toUpperCase() == '/HOP'){
+        let command = text.substring(4)
         let chanName = this.state.channels[this.state.curChannelId].name
         this.partChannel(chanName)
         this.$nextTick(()=>this.joinChannel(chanName))
@@ -745,43 +747,45 @@ export default {
               this.serverConnect()
             }, 10000)
           }
-          if(msg.split(':')[1].split(' ')[1]=='376'){ // end of MOTD
-            setTimeout(()=>{
-              console.log('joining channels')
-              this.joinDefaultChannels()
-            }, 500)
-          }
-          if(msg.split(':')[1].split(' ')[1]=='433'){ // nick already in use
-            console.log('changing nick (server wants something different)')
-            this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
-            this.pushToBuffer(this.state.channels[0], 'changing nick (server wants something different)')
-            setTimeout(()=>{
-              this.state.nick+='_'+(Math.random()*10|0)
-              this.sendToServer('client_message', 'USER ' + this.state.nick + ' 0 * :' + this.state.nick)
+          if(msg.split(':').length > 1){
+            if(msg.split(':')[1].split(' ')[1]=='376'){ // end of MOTD
               setTimeout(()=>{
-                this.sendToServer('client_message', 'NICK ' + this.state.nick)
-              }, 1000)
-            }, 500)
-          }
-          if(msg.split(':')[1].split(' ')[1]=='001'){ // welcome msg - fix nick
-            this.state.nick = msg.split(':')[1].split(' ')[2]
-            this.state.defaultIRCHost = msg.split(':')[1].split(' ')[0]
-            //this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
-          }
-          if(msg.split(':')[1].split(' ')[1]=='372'){
-            //this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
-          }
-          if(msg.split(':')[1].split(' ')[1]=='353'){ // user list @ channel join
-            let chanName = msg.split(':')[1].split(' ')[4]
-            chan = this.state.channels.filter(v=>v.name.toUpperCase() == chanName.toUpperCase())[0]
-            //this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
-            if(chan){
-              chan.users = []
-              serverMsg.split(' ').map(v=>{
-                let newUser = JSON.parse(JSON.stringify(this.state.userTemplate))
-                newUser.nick = v
-                chan.users = [newUser, ...chan.users]
-              })
+                console.log('joining channels')
+                this.joinDefaultChannels()
+              }, 500)
+            }
+            if(msg.split(':')[1].split(' ')[1]=='433'){ // nick already in use
+              console.log('changing nick (server wants something different)')
+              this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
+              this.pushToBuffer(this.state.channels[0], 'changing nick (server wants something different)')
+              setTimeout(()=>{
+                this.state.nick+='_'+(Math.random()*10|0)
+                this.sendToServer('client_message', 'USER ' + this.state.nick + ' 0 * :' + this.state.nick)
+                setTimeout(()=>{
+                  this.sendToServer('client_message', 'NICK ' + this.state.nick)
+                }, 1000)
+              }, 500)
+            }
+            if(msg.split(':')[1].split(' ')[1]=='001'){ // welcome msg - fix nick
+              this.state.nick = msg.split(':')[1].split(' ')[2]
+              this.state.defaultIRCHost = msg.split(':')[1].split(' ')[0]
+              //this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
+            }
+            if(msg.split(':')[1].split(' ')[1]=='372'){
+              //this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
+            }
+            if(msg.split(':')[1].split(' ')[1]=='353'){ // user list @ channel join
+              let chanName = msg.split(':')[1].split(' ')[4]
+              chan = this.state.channels.filter(v=>v.name.toUpperCase() == chanName.toUpperCase())[0]
+              //this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
+              if(chan){
+                //chan.users = []
+                serverMsg.split(' ').map(v=>{
+                  let newUser = JSON.parse(JSON.stringify(this.state.userTemplate))
+                  newUser.nick = v.trim()
+                  chan.users = [newUser, ...chan.users]
+                })
+              }
             }
           }
         break
@@ -826,6 +830,11 @@ export default {
               this.pushToBuffer(newChan, '&lt;' + from + '&gt; ' + text, 'privmsg')
               newChan.highlighted = true
             }
+          }
+          if(text == 'VERSION') {
+            this.sendToServer('client_message', 'PRIVMSG ' + from + ':Whitehot Robot Network Client')
+            this.pushToBuffer(from, '&lt;' + to + '&gt; Whitehot Robot Network Client', 'privmsg')
+            setTimeout(()=>this.partChannel(from),1000)
           }
         break
         case 'notice':
@@ -896,7 +905,7 @@ export default {
           }
           console.log('join detected: ' + joinChan + ' ' + joinUser, ' current nick:' + this.state.nick)
           let newUser = JSON.parse(JSON.stringify(this.state.userTemplate))
-          newUser.nick = joinUser
+          newUser.nick = joinUser.trim()
           chan = this.state.channels.filter(v=>v.name.toUpperCase() == joinChan.toUpperCase())
           if(chan.length){
             chan = chan[0]
@@ -1010,15 +1019,10 @@ export default {
   },
   watch:{
     curChannelId(val){
-      console.log('state.curChannelId: ' + val)
-      if(val != this.curChannelId){
-        setTimeout(()=>{
-          this.state.channels.map(v=>{v.active = false})
-          this.state.channels[val].active = true
-          this.state.curChannelId = val
-          this.$set(this.state, 'curChannelId', val)
-        }, 200)
-      }
+      //console.log('state.curChannelId: ' + val)
+      //setTimeout(()=>{
+      //  this.state.curChannelId = val
+      //}, 200)
     },
     curChannelName(val){
       this.state.curChannelName = val
@@ -1034,10 +1038,16 @@ export default {
       return this.state.channels[this.curChannelId]
     },
     curChannelId(){
-      let idx
-      this.state.channels.map((v, i)=>{
-        if(v.active) idx = i
-      })
+      let idx = this.state.curChannelId
+      //if(this.curChanTimer < (new Date()).getTime()){
+      //  this.curChanTimer = (new Date()).getTime() + 500
+        this.state.channels.map((v, i)=>{
+          if(v.active) idx = i
+        })
+        //setTimeout(()=>{
+          this.state.curChannelId = idx
+        //}, 200)
+      //}
       return idx
     }
   },
@@ -1072,32 +1082,32 @@ export default {
     window.onbeforeunload = e => {
       this.state.exitIRC()
     }
-    setInterval(()=>{
-      this.makeChannelsReactive()
-    }, 2000)
-    setInterval(()=>{
-      if(this.state.outboundQueue.length){
-        //let sendData = this.state.outboundQueue.shift()
-        let sendData = JSON.parse(JSON.stringify(this.state.outboundQueue.filter((v,i)=>!i)))
-        this.state.outboundQueue = this.state.outboundQueue.filter((v,i)=>i)
-        console.log('outboundQueue: ' + sendData)
-        fetch(this.state.baseURL + '/ircLink.php',{
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: sendData,
-        })
-        .then(res => res.json())
-        .then(data => {
-          console.log('response from ircLink.php : ', JSON.stringify(data))
-        })
-      }
-    }, this.state.outboundQueueInterval)
-    this.makeChannelsReactive()
     //setInterval(()=>{
-    //  this.setActiveChannelById(1+Math.random()*(this.state.channels.length-1)|0)
-    //},1000)
+    //  this.makeChannelsReactive()
+    //}, 2000)
+    if(!this.state.queueStarted){
+      this.state.queueStarted = true
+      setInterval(()=>{
+        if(this.state.outboundQueue.length){
+          //let sendData = this.state.outboundQueue.shift()
+          let sendData = JSON.parse(JSON.stringify(this.state.outboundQueue.filter((v,i)=>!i)))
+          this.state.outboundQueue = this.state.outboundQueue.filter((v,i)=>i)
+          //console.log('outboundQueue: ' + sendData)
+          fetch(this.state.baseURL + '/ircLink.php',{
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: sendData,
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log('response from ircLink.php : ', JSON.stringify(data))
+          })
+        }
+      }, this.state.outboundQueueInterval)
+    }
+    this.makeChannelsReactive()
   }
 }
 </script>

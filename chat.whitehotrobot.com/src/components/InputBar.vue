@@ -102,8 +102,12 @@ export default {
       }
     },
     changeTab(direction){
-      this.state.channels.map(v=>v.active-false)
-      let newIdx = this.state.curChannelId + direction
+      let curIdx
+      this.state.channels.map((v,i)=>{
+        if(v.active) curIdx = i
+      })
+      this.state.channels.map(v=>v.active=false)
+      let newIdx = curIdx + direction
       if(newIdx < 0) newIdx = this.state.channels.length - 1
       if(newIdx > this.state.channels.length - 1) newIdx = 0
       this.state.channels[newIdx].active = true
