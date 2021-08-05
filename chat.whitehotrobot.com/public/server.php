@@ -64,7 +64,7 @@
 
         $lastPing = time();
         $lastSawClient = time();
-        $nextQueueIteration = 0;
+        $nextQueueIteration = 100;
         $get = '';
 
         usleep(2000000);
@@ -73,7 +73,7 @@
 
           while(socket_recv($sock, $recv, 1024, MSG_DONTWAIT)){
             $get .= $recv;
-            usleep(100);
+            usleep(500);
           }
           if((time() - $lastPing > 60 * 5) || (time() - $lastSawClient > 60 * 5)) die();
 
@@ -107,11 +107,11 @@
                 }
                 $sql = 'DELETE FROM ircLink WHERE id = ' . $row['id'];
                 mysqli_query($link, $sql);
-                //usleep(50000);
+                //usleep(10000);
               }
             }
           }
-          usleep(30000);
+          //usleep(30000);
         }
       socket_close($sock);
     }

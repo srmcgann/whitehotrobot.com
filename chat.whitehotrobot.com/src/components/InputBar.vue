@@ -15,6 +15,7 @@
       v-on:keyup.enter="checkLine()"
       v-on:keydown.enter="sendLine()"
       v-on:keydown.up="doHistory(-1)"
+      v-on:keydown.down="doHistory(1)"
       v-on:keydown.page-up.shift.stop.prevent="changeTab(-1)"
       v-on:keydown.page-down.shift.stop.prevent="changeTab(1)"
       v-on:keydown.tab.stop.prevent="attemptAutoComplete()"
@@ -123,7 +124,7 @@ export default {
       let userInput = this.$refs.userInput
       userInput.style.height = "auto"
       let sh = userInput.value.split('').filter(v=>v=="\n").length 
-      userInput.style.marginTop = (this.state.userAgent.toUpperCase().indexOf('FIREFOX')!= -1 ? 0 : (31 - (Math.min(500, userInput.scrollHeight)) + ((userInput.value.indexOf("\n") === -1) ? 24 : 0))) + 'px';
+      userInput.style.marginTop = (this.state.userAgent.toUpperCase().indexOf('FIREFOX123')!= -1 ? 0 : (31 - (Math.min(500, userInput.scrollHeight)) + ((userInput.value.indexOf("\n") === -1) ? 24 : 0))) + 'px';
       userInput.style.height = ((Math.min(500, userInput.scrollHeight) - ((userInput.value.indexOf("\n") === -1) ? 24 : 0))-(this.state.userAgent.toUpperCase().indexOf('FIREFOX') !== -1 ? 14: 0)) + 'px'
       userInput.style.overflowY = userInput.clientHeight > 490 ? 'scroll' : 'hidden'
       //userInput.style.marginTop = (-userInput.scrollHeight + 31 - ((userInput.value.indexOf("\n") !== -1) ? 0 : -12)) + 'px'

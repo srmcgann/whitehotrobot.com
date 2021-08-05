@@ -38,7 +38,7 @@
          >
           <template #title v-if="!channel.connected">
             <span
-              v-html="channel.name"
+              v-html="channel.name + (!idx ? '['+state.defaultIRCHost+']' : '')"
               :class="{
                 'statusHighlighted': channel.highlighted && !channel.active,
                 'statusNewText': channel.newText && !channel.active && !channel.highlighted,
@@ -62,7 +62,7 @@
           </template>
           <template #title v-else>
             <span
-              v-html="channel.name"
+              v-html="channel.name + (!idx ? '['+state.defaultIRCHost+']' : '')"
               :class="{
                 'statusHighlighted': channel.highlighted && !channel.active,
                 'statusNewText': channel.newText && !channel.active && !channel.highlighted,
@@ -100,6 +100,7 @@
                       'notice': line.mode && line.mode=='notice',
                       'status': line.mode && line.mode=='status',
                       'nick': line.mode && line.mode=='nick',
+                      'mode': line.mode && line.mode=='mode',
                       'privmsg': line.mode && line.mode=='privmsg',
                       'raw': line.mode && line.mode=='raw'
                     }"
@@ -230,10 +231,10 @@ export default {
     },
     channelChange(channelIdx){
       let channel = this.state.channels[channelIdx]
-      this.state.channels.map(v=>{
-        v.active=false
-      })
-      channel.active = true
+      //this.state.channels.map(v=>{
+      //  v.active=false
+      //})
+      //channel.active = true
       channel.newText = false
       if(channel.scrollStick) this.scrollToCurrent()
       channel.highlighted = false
@@ -297,6 +298,8 @@ export default {
     }
   },
   watch:{
+  },
+  computed:{
   },
   mounted(){
     window.onresize=()=>{
@@ -391,6 +394,9 @@ export default {
 }
 .privmsg{
   color: #8ca;
+}
+.mode{
+  color: #0ff;
 }
 .raw{
   color: #888;
