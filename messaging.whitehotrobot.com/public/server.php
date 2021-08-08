@@ -10,7 +10,7 @@
   $vars['port'] = mysqli_real_escape_string($link, $data->{'port'});
   $vars['nick'] = mysqli_real_escape_string($link, $data->{'nick'});
   $vars['password'] = mysqli_real_escape_string($link, $data->{'password'});
-  $vars['maxIncomingBufferAge'] = 30000; //ms
+  $vars['maxIncomingBufferAge'] = 10000; //ms
 
   $userName = mysqli_real_escape_string($link, $data->{'userName'});
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
@@ -64,16 +64,16 @@
 
         $lastPing = time();
         $lastSawClient = time();
-        $nextQueueIteration = 0;
+        $nextQueueIteration = 100;
         $get = '';
 
-        usleep(3000000);
+        usleep(2000000);
 
         while(true){
 
           while(socket_recv($sock, $recv, 1024, MSG_DONTWAIT)){
             $get .= $recv;
-            usleep(2000);
+            usleep(500);
           }
           if((time() - $lastPing > 60 * 5) || (time() - $lastSawClient > 60 * 5)) die();
 
@@ -89,7 +89,7 @@
           //usleep(10000);
           if(ms() - $nextQueueIteration > 0){
             //sendText("wtf...\n");
-            $nextQueueIteration = ms() + 350;
+            $nextQueueIteration = ms() + 100;
             $sql = 'SELECT * FROM ircLink WHERE userID = ' . $vars['userID'] . ' ORDER BY time ASC';
             if($res = mysqli_query($link, $sql)){
               if(mysqli_num_rows($res)){
@@ -107,11 +107,11 @@
                 }
                 $sql = 'DELETE FROM ircLink WHERE id = ' . $row['id'];
                 mysqli_query($link, $sql);
-                //usleep(50000);
+                //usleep(10000);
               }
             }
           }
-          usleep(40000);
+          //usleep(30000);
         }
       socket_close($sock);
     }

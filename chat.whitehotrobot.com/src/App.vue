@@ -43,6 +43,7 @@ export default {
     return{
       xhr: new XMLHttpRequest(),
       curChanTimer: 0,
+      initNickDone: false,
       state: {
         nick: null,
         userTemplate: {
@@ -94,7 +95,7 @@ export default {
         ],
         channelChange: false,
         footerText: 'the footer',
-        defaultIRCHost: 'chat.whitehotrobot.com',
+        defaultIRCHost: 'irc.whitehotrobot.com',
         defaultIRCNick: 'whr_' + (10+Math.random()*89|0),
         defaultIRCPort: 6667,
         defaultPassword: '',
@@ -354,7 +355,8 @@ export default {
             if(+data[3]) this.state.isAdmin = true
             this.state.maxResultsPerPage = +data[4]
             //this.startRandomText()
-            this.state.nick = this.getNick()
+            this.state.nick = this.state.defaultIRCNick = this.state.loggedinUserName
+            //this.state.nick = this.getNick()
           }else{
             this.state.loggedin = false
             this.state.loggedinUserName = ''
@@ -464,6 +466,7 @@ export default {
       let nick = this.state.defaultIRCNick
       if (nick.length > this.state.maxNickLen) nick = nick.substring(0, this.state.maxNickLen)
       this.state.nick = nick
+      this.state.defaultIRCNick = nick
       return nick
     },
     getAvatar(id){
@@ -759,11 +762,14 @@ export default {
               this.pushToBuffer(this.state.channels[0], msg.split(':')[2])
               this.pushToBuffer(this.state.channels[0], 'changing nick (server wants something different)')
               setTimeout(()=>{
-                this.state.nick+='_'+(Math.random()*10|0)
-                this.sendToServer('client_message', 'USER ' + this.state.nick + ' 0 * :' + this.state.nick)
-                setTimeout(()=>{
-                  this.sendToServer('client_message', 'NICK ' + this.state.nick)
-                }, 1000)
+                //if(!this.initNickDone){
+                  this.initNickDone = true
+                  this.state.nick+='_'+(Math.random()*10|0)
+                  this.sendToServer('client_message', 'USER ' + this.state.nick + ' 0 * :' + this.state.nick)
+                  setTimeout(()=>{
+                    this.sendToServer('client_message', 'NICK ' + this.state.nick)
+                  }, 1000)
+                //}
               }, 500)
             }
             if(msg.split(':')[1].split(' ')[1]=='001'){ // welcome msg - fix nick

@@ -2,8 +2,10 @@
   <div class="main">
     <div class="userList" ref="userList" v-if="state.curChannelId && state.loggedin" @click="focusInput()">
       <div style="text-align: center;background: #102;color:#ff2;padding:10px;">Channel Users</div>
-      <div class="userInList" v-for="user in state.channels[state.curChannelId].users">
-        <div @click="populateInputBar(state.rawNick(user.nick))" v-html="user.nick"></div>
+      <div v-if="typeof state.channels[state.curChannelId] != 'undefined'" class="vscroll">
+        <div class="userInList" v-for="user in filteredUsers">
+          <div @click="populateInputBar(state.rawNick(user.nick))" v-html="user.nick"></div>
+        </div>
       </div>
     </div>
     <div
@@ -15,15 +17,23 @@
       @click="focusInput()"
     >
       <b-tabs content-class="mt-3" no-body fill v-on:activate-tab="channelChange" v-model="state.curChannelId">
-       <div class="channelInfo" v-if="state.curChannelId">
+       <div class="channelInfo" v-if="state.curChannelId" ref="channelInfo">
          <div class="channelName" v-html="state.curChannelName"></div>
          <span class="channelTopic">
            <span style="color: #ace;font-weight: 900;">TOPIC: </span>
-           <span v-html="state.channels[state.curChannelId].topic || '[no topic set]'" v-linkified></span>
+           <div v-if="typeof state.channels[state.curChannelId] !== 'undefined'" style="display: inline-block;">
+             <span v-html="state.channels[state.curChannelId].topic || '[no topic set]'" v-linkified></span>
+           </div>
          </span>
        </div>
        <div class="channelOptions" :class="{'marginRight': state.curChannelId}" v-if="state.curChannelId">
-         <label :for="'privateCheckbox' + state.channels[state.curChannelId].name" :key="'cblabel'+state.channels[state.curChannelId].name" class="checkboxLabel" style="margin-bottom:2px;display: inline-block;margin-left: 100px;" title="show/hide server messages">
+         <label v-if="typeof state.channels[state.curChannelId] !== 'undefined'"
+           :for="'privateCheckbox' + state.channels[state.curChannelId].name"
+           :key="'cblabel'+state.channels[state.curChannelId].name"
+           class="checkboxLabel"
+           style="margin-bottom:2px;display: inline-block;margin-left: 100px;"
+           title="show/hide server messages"
+         >
            <input type="checkbox" :id="'privateCheckbox' + state.channels[state.curChannelId].name" v-model="state.channels[state.curChannelId].showServerMessages" >
            <span class="checkmark"></span>
            <span style="font-size: .93em;margin-top:0px;display: block;text-algin: right;">show server<br>messages</span>
@@ -38,7 +48,7 @@
          >
           <template #title v-if="!channel.connected">
             <span
-              v-html="channel.name"
+              v-html="channel.name + (!idx ? '['+state.defaultIRCHost+']' : '')"
               :class="{
                 'statusHighlighted': channel.highlighted && !channel.active,
                 'statusNewText': channel.newText && !channel.active && !channel.highlighted,
@@ -62,7 +72,7 @@
           </template>
           <template #title v-else>
             <span
-              v-html="channel.name"
+              v-html="channel.name + (!idx ? '['+state.defaultIRCHost+']' : '')"
               :class="{
                 'statusHighlighted': channel.highlighted && !channel.active,
                 'statusNewText': channel.newText && !channel.active && !channel.highlighted,
@@ -85,10 +95,10 @@
             </b-spinner>
           </template>
           <div v-if="ready">
-            <div v-if="idx && !channel.connected">
+            <div v-if="idx && !channel.connected" class="textLines" ref="textLines">
               <p class="p-3">...connecting</p>
             </div>
-            <div v-else class="textLine" :class="{'shortWidth': state.curChannelId}">
+            <div v-else class="textLines" ref="textLines" :class="{'shortWidth': state.curChannelId}">
               <div v-for="(line, idx) in channel.buffer" class="p3Div" :key="line + idx">
                 <p
                   v-linkified
@@ -100,6 +110,7 @@
                       'notice': line.mode && line.mode=='notice',
                       'status': line.mode && line.mode=='status',
                       'nick': line.mode && line.mode=='nick',
+                      'mode': line.mode && line.mode=='mode',
                       'privmsg': line.mode && line.mode=='privmsg',
                       'raw': line.mode && line.mode=='raw'
                     }"
@@ -221,7 +232,9 @@ export default {
       this.$nextTick(()=>{
         let channel = this.state.channels.filter(v=>v.active)[0]
         channel.scrollStick = true
-        this.$refs.mainChatContainer.scrollTo(0,6e6)
+        document.querySelectorAll('.textLines').forEach(el=>{
+          el.scrollTo(0,6e6)
+        })
       })
     },
     focusInput(){
@@ -230,10 +243,13 @@ export default {
     },
     channelChange(channelIdx){
       let channel = this.state.channels[channelIdx]
-      this.state.channels.map(v=>{
-        v.active=false
-      })
-      channel.active = true
+      //this.$nextTick(()=>{
+        this.state.channels.map(v=>{
+          v.active=false
+        })
+        channel.active = true
+      //})
+      //this.state.curChannelId = channelIdx
       channel.newText = false
       if(channel.scrollStick) this.scrollToCurrent()
       channel.highlighted = false
@@ -265,6 +281,18 @@ export default {
         usableHeight -= topPos
         this.$refs.mainChatContainer.style.top = topPos + 'px'
         this.$refs.mainChatContainer.style.maxHeight = usableHeight + 'px'
+        let textLinesTop
+        if(document.querySelectorAll('.textLines').length){
+          if(this.state.curChannelId && this.$refs.channelInfo) textLinesTop = this.$refs.channelInfo.getBoundingClientRect().top + this.$refs.channelInfo.clientHeight
+          document.querySelectorAll('.textLines').forEach((el, idx)=>{
+            if(idx){
+              el.style.top = (textLinesTop - 5) + 'px'
+              el.style.height = (inputBar.getBoundingClientRect().top - textLinesTop) + 'px'
+            } else {
+              el.style.height = (inputBar.getBoundingClientRect().top - el.getBoundingClientRect().top) + 'px'
+            }
+          })
+        }
         this.$refs.mainChatContainer.style.height = usableHeight + 'px'
       } else {
         setTimeout(()=>{
@@ -297,6 +325,24 @@ export default {
     }
   },
   watch:{
+  },
+  computed:{
+    filteredUsers(){
+      let users = this.state.channels[this.state.curChannelId].users
+      //users = [...new Set(users.map(v=>{v.nick = v.nick.trim()}))]
+      users = users.filter((v,i)=>{
+        return !users.filter((q,j)=>{
+          let nickA = q.nick
+          let nickB = v.nick
+          this.state.userModes.map(n=>{
+            nickA = nickA.replace(n.prefix, '')
+            nickB = nickB.replace(n.prefix, '')
+          })
+          return i>j && nickA  == nickB
+        }).length
+      })
+      return users
+    }
   },
   mounted(){
     window.onresize=()=>{
@@ -372,14 +418,22 @@ export default {
 .channelTitle.inactive{
   color:#8ff;
 }
-.textLine{
+.textLines{
   white-space: pre-wrap;
   word-break: break-word;
   max-width: 100%;
   width: 100%;
+  padding-top: 10px;
+  position: fixed;
+  z-index: 1000;
+  overflow-y: auto;
 }
 .shortWidth{
   width: calc(100% - 150px);
+}
+.vscroll{
+ overflow-y: scroll;
+ height: calc(100% - 50px);
 }
 .nick{
   font-style: oblique;
@@ -391,6 +445,9 @@ export default {
 }
 .privmsg{
   color: #8ca;
+}
+.mode{
+  color: #0ff;
 }
 .raw{
   color: #888;
@@ -408,6 +465,7 @@ export default {
   color: #0f8c;
   width: calc(100% - 131px);
   min-height: 40px;
+  position: fixed;
 }
 .channelTopic{
   display: block;
@@ -420,12 +478,11 @@ export default {
 }
 .channelOptions{
   right: 0;
-  top: 0;
   margin: 5px;
-  position: absolute;
+  position: fixed;
 }
 .marginRight{
-  right: 150px;
+  right: 0px;
 }
 label{
   font-size: 14px;
