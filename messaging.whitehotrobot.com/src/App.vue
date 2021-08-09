@@ -355,7 +355,7 @@ export default {
             if(+data[3]) this.state.isAdmin = true
             this.state.maxResultsPerPage = +data[4]
             //this.startRandomText()
-            this.state.nick = this.state.defaultIRCNick = this.state.loggedinUserName
+            this.state.nick = this.state.defaultIRCNick = this.state.loggedinUserName.replace(' ', '_')
             //this.state.nick = this.getNick()
           }else{
             this.state.loggedin = false
