@@ -481,9 +481,9 @@ export default {
       let tz=0
       if(!this.t){
         this.consoleBGImg = new Image()
-        this.consoleBGImg.src = 'https://lookie.jsbot.net/uploads/gmMHe.png'
+        this.consoleBGImg.src = 'https://jsbot.cantelope.org/uploads/gmMHe.png'
         this.bracketsImg = new Image()
-        this.bracketsImg.src = 'https://lookie.jsbot.net/uploads/1Tofda.png'
+        this.bracketsImg.src = 'https://jsbot.cantelope.org/uploads/1Tofda.png'
       }
 
       var R=(Rl,Pt,Yw,o)=>{

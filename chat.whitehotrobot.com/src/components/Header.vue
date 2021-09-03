@@ -48,7 +48,7 @@ export default {
 .logo{
   width: 28px;
   height: 28px;
-  background-image: url(https://lookie.jsbot.net/uploads/1GY3GM.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/1GY3GM.png);
   background-position: center center;
   background-size: 28px 28px;
   margin: 2px;
@@ -69,7 +69,7 @@ export default {
   position:absolute;
   width: 28px;
   height: 28px;
-  background-image: url(https://lookie.jsbot.net/uploads/ZSU0m.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/ZSU0m.png);
   background-color: #0024;
   background-repeat: no-repeat;
   background-position: center center;
@@ -113,7 +113,7 @@ export default {
   top: 0px;
   margin-right: 1px;
   float: right;
-  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/WEOZD.png);
   background-repeat: no-repeat;
   background-size: 30px 30px;
   background-position: center center;

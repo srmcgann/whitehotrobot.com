@@ -164,7 +164,7 @@ export default {
         extractEmbedURL: null,
         openFullscreen: null,
         invalidLoginAttempt: false,
-        defaultAvatar: 'https://lookie.jsbot.net/uploads/1pnBdc.png',
+        defaultAvatar: 'https://jsbot.cantelope.org/uploads/1pnBdc.png',
         showControlsToggleTimer: 0,
         closeMenus: 0
       }

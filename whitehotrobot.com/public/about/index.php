@@ -6,9 +6,9 @@
     <meta property="og:type" content="website"/>
     <meta property="og:title" content="about whitehot robot"/>
     <meta property="og:description" content="about whitehot robot"/>
-    <meta property="og:image" content="https://lookie.jsbot.net/uploads/1GY3GM.png"/>
-    <meta property="og:image:secure_url" content="https://lookie.jsbot.net/uploads/1GY3GM.png"/>
-    <link rel="icon" href="https://lookie.jsbot.net/uploads/tBgps.png">
+    <meta property="og:image" content="https://jsbot.cantelope.org/uploads/1GY3GM.png"/>
+    <meta property="og:image:secure_url" content="https://jsbot.cantelope.org/uploads/1GY3GM.png"/>
+    <link rel="icon" href="https://jsbot.cantelope.org/uploads/tBgps.png">
 
     <style>
       
@@ -88,7 +88,7 @@
         text-align: left;
       }
       .logo{
-        background-image: url(https://lookie.jsbot.net/uploads/1GY3GM.png);
+        background-image: url(https://jsbot.cantelope.org/uploads/1GY3GM.png);
         background-size: 70px 70px;
         background-position: center center;
         background-repeat: no-repeat;
@@ -148,7 +148,7 @@
         bgimg.addEventListener('load',()=>{
           go=true
         })
-        bgimg.src = 'https://lookie.jsbot.net/uploads/5wvV7.jpg'
+        bgimg.src = 'https://jsbot.cantelope.org/uploads/5wvV7.jpg'
       }
       
       oX=oY=0,oZ=180,pX=0,pY=0,pZ=0,O=8

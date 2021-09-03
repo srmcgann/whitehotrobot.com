@@ -3,11 +3,11 @@
     <div class="footerMenu">
       <!--
       <button @click="launchPage('https://code.whitehotrobot.com')" class="socialButton" title="ircs / code  https://code.whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/1Zt7AV.png" class="socialIcon">
+        <img src="https://jsbot.cantelope.org/uploads/1Zt7AV.png" class="socialIcon">
       </button>
       -->
       <button @click="launchPage('https://audiocloud.whitehotrobot.com')" class="socialButton" title="audiocloud https://audiocloud.whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/1zROT5.png" class="socialIcon">
+        <img src="https://jsbot.cantelope.org/uploads/1zROT5.png" class="socialIcon">
       </button>
       <button @click="launchPage('https://hosting.whitehotrobot.com')" class="socialButton" title="static page hosting https://hosting.whitehotrobot.com">
         <img src="../assets/web.png" class="socialIcon">
@@ -16,10 +16,10 @@
         <img src="../assets/games.png" class="socialIcon">
       </button>
       <button @click="launchPage('https://words.whitehotrobot.com')" class="socialButton" title="blog / literature https://words.whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/1oHzZO.png" class="socialIcon">
+        <img src="https://jsbot.cantelope.org/uploads/1oHzZO.png" class="socialIcon">
       </button>
       <button @click="launchPage('https://whitehotrobot.com')" class="socialButton" title="music videos / playlists https://whitehotrobot.com">
-        <img src="https://lookie.jsbot.net/uploads/cdR9g.png" class="socialIcon">
+        <img src="https://jsbot.cantelope.org/uploads/cdR9g.png" class="socialIcon">
       </button>
       <!--
       <button @click="launchFacebook()" class="socialButton" title="Open our Facebook Page">

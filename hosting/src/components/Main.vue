@@ -6,7 +6,7 @@
       <div style="position: relative;top: 50%;font-size: 42px;transform: translate(0,-50%);">
         Please wait<br>this takes just a moment...
         <br>
-        <img src="https://lookie.jsbot.net/uploads/14F97E.png" style="width: 80px;">
+        <img src="https://jsbot.cantelope.org/uploads/14F97E.png" style="width: 80px;">
         <br>
         <div v-if="!state.user.pages.length" style="font-size: .6em;">if this is your first page, there is a<br>lot of stuff going on behind the scenes!</div>
       </div>
@@ -30,7 +30,7 @@
               class="avatar"
               style="cursor: pointer"
               @click="state.showUserSettings()"
-              :src="state.user !== null && state.user.avatar || 'https://lookie.jsbot.net/uploads/1pnBdc.png'">
+              :src="state.user !== null && state.user.avatar || 'https://jsbot.cantelope.org/uploads/1pnBdc.png'">
           </div>
         </div>
         <div v-else>
@@ -43,7 +43,7 @@
           <br><span style="font-size: 1.5em; color: #ff0;">{{state.user !== null ? state.user.name : ''}}</span>'s pages....<br>
           <br>
           <div style="position: absolute; left: calc(50% + 250px); margin-top: 10px;transform: translate(-50%,-50%)">
-            <img class="avatar" :src="state.user !== null && state.user.avatar || 'https://lookie.jsbot.net/uploads/1pnBdc.png'">
+            <img class="avatar" :src="state.user !== null && state.user.avatar || 'https://jsbot.cantelope.org/uploads/1pnBdc.png'">
           </div>
         </div>
         <div v-if="state.user !== null && state.user.pages.length || state.pages.length">
@@ -632,7 +632,7 @@ button:focus{
   font-size: 24px;
   line-height: .8em;
   min-width: 50px!important;
-  background: #4f8 url(https://lookie.jsbot.net/uploads/hLu7v.png) no-repeat;
+  background: #4f8 url(https://jsbot.cantelope.org/uploads/hLu7v.png) no-repeat;
   height: 55px;
   background-size: 40px 40px;
   background-position: 5px center;
@@ -681,7 +681,7 @@ a{
   width: 45px;
   min-width: 0;
   height: 45px;
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
   background-position: center center;
   background-size: 40px 40px;
   background-repeat: no-repeat;
@@ -798,7 +798,7 @@ textarea:focus{
 .horizontalSpacer{
   background-size: 100% 100%;
   background-position: fill;
-  background-image: url(https://lookie.jsbot.net/uploads/1ahi67.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/1ahi67.png);
   background-repeat: no-repeat;
   cursor: w-resize;
   width: 14px;
@@ -806,7 +806,7 @@ textarea:focus{
 }
 .verticalSpacer{
   background-size: 100% 100%;
-  background-image: url(https://lookie.jsbot.net/uploads/1ld1vc.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/1ld1vc.png);
   background-position: center center;
   background-repeat: no-repeat;
   cursor: s-resize;

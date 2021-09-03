@@ -25,7 +25,7 @@
   $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
   $author = $userName;
   $title = str_replace('\\', '', mysqli_real_escape_string($link, $userName)) . "'s page";
-  $favicon = 'https://lookie.jsbot.net/uploads/1GY3GM.png';
+  $favicon = 'https://jsbot.cantelope.org/uploads/1GY3GM.png';
 
 $HTML=
 '<div class="main">

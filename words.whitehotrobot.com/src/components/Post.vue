@@ -200,7 +200,7 @@
                 v-if="comment.userID == state.loggedinUserID || state.isAdmin"
                 @click='toggleEditMode(comment)'
                 class="commentEditButton"
-                style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://lookie.jsbot.net/uploads/2cyWBg.png);"
+                style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://jsbot.cantelope.org/uploads/2cyWBg.png);"
               ></button>
             </div>
             <div style="clear:both;"></div>
@@ -710,7 +710,7 @@ input[type=text]{
   vertical-align: top;
 }
 .commentDeleteButton{
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -733,10 +733,10 @@ input[type=text]{
   background-position: center center;
   background-size: 45px 45px;
   background-repeat: no-repeat;
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
 }
 .commentEditButton{
-  background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/ct1hv.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -778,7 +778,7 @@ table{
 }
 .highlighted{
   background-color: #0fa;
-  background-image: url(https://lookie.jsbot.net/uploads/14MAyj.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/14MAyj.png);
 }
 .singlePost{
   top: 60px;

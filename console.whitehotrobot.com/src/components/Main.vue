@@ -592,7 +592,7 @@ td{
 .horizontalSpacer{
   background-size: 100% 100%;
   background-position: fill;
-  background-image: url(https://lookie.jsbot.net/uploads/1ahi67.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/1ahi67.png);
   background-repeat: no-repeat;
   cursor: w-resize;
   width: 14px;
@@ -600,7 +600,7 @@ td{
 }
 .verticalSpacer{
   background-size: 100% 100%;
-  background-image: url(https://lookie.jsbot.net/uploads/1ld1vc.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/1ld1vc.png);
   background-position: center center;
   background-repeat: no-repeat;
   cursor: s-resize;
@@ -741,7 +741,7 @@ td{
   vertical-align: top;
 }
 .commentDeleteButton{
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -753,7 +753,7 @@ td{
   background-color: #f880;
 }
 .commentEditButton{
-  background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/ct1hv.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;

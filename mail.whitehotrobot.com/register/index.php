@@ -9,8 +9,8 @@
     <meta property="og:ype" content="website"/>
     <meta property="og:title" content="whitehot robot email - communication for the masses"/>
     <meta property="og:descro[topm" content="whitehot robot email - communication for the masses"/>
-    <meta property="og:image" content="https://lookie.jsbot.net/uploads/1HVS37.png"/>
-    <link rel="icon" href="https://lookie.jsbot.net/uploads/tBgps.png">
+    <meta property="og:image" content="https://jsbot.cantelope.org/uploads/1HVS37.png"/>
+    <link rel="icon" href="https://jsbot.cantelope.org/uploads/tBgps.png">
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
       body,html{
@@ -124,7 +124,7 @@
         border-collapse: collapse;
       }
       .logo{
-        background-image: url(https://lookie.jsbot.net/uploads/1bfnku.png);
+        background-image: url(https://jsbot.cantelope.org/uploads/1bfnku.png);
         background-size: 400px 90px;
         background-position: center center;
         background-repeat: no-repeat;

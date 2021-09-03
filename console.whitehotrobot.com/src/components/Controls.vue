@@ -131,7 +131,7 @@ export default {
   height: 200px;
   max-width: 1240px;
   min-width: 675px;
-  background: url(https://lookie.jsbot.net/uploads/Bi6Kz.png) no-repeat;
+  background: url(https://jsbot.cantelope.org/uploads/Bi6Kz.png) no-repeat;
   background-size: 100% 100%;
   background-position: center center;
   left: 50%;
@@ -174,7 +174,7 @@ export default {
 .hideImg{
   width: calc(50px * 1.5);
   height: calc(19px * 1.5);
-  background: url(https://lookie.jsbot.net/uploads/v9UDT.png) no-repeat;
+  background: url(https://jsbot.cantelope.org/uploads/v9UDT.png) no-repeat;
   background-size: 100% 100%;
   background-position: center center;
   position: absolute;
@@ -188,7 +188,7 @@ export default {
 .showImg{
   width: calc(50px * 1.5);
   height: calc(19px * 1.5);
-  background: url(https://lookie.jsbot.net/uploads/1tgOjR.png) no-repeat;
+  background: url(https://jsbot.cantelope.org/uploads/1tgOjR.png) no-repeat;
   background-size: 100% 100%;
   background-position: center center;
   position: absolute;
