@@ -287,7 +287,7 @@ body,html{
   margin: 0;
   overflow-x: hidden;
   font-family: Play;
-  background: #000 url(https://lookie.jsbot.net/uploads/7MBow.jpg) no-repeat;
+  background: #000 url(https://jsbot.cantelope.org/uploads/7MBow.jpg) no-repeat;
   background-position: center center;
   background-attachment: fixed;
   background-size: 100vw 100vh;
@@ -327,7 +327,7 @@ button:focus{
   background-repeat: no-repeat;
   background-size: 40px 40px;
   background-position: center center;
-  background-image: url(https://lookie.jsbot.net/uploads/ZSU0m.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/ZSU0m.png);
   background-color: #246;
 }
 </style>

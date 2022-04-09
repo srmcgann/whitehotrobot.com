@@ -255,7 +255,7 @@ label{
   margin-top: 10px;
   width: 45px;
   height: 45px;
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
   background-position: center center;
   background-size: 40px 40px;
   background-repeat: no-repeat;

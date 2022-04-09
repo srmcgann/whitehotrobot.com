@@ -161,7 +161,7 @@ export default {
   padding: 2px;
   transform: translateY(-50%);
   text-decoration: none;
-  background: #1350 url(https://lookie.jsbot.net/uploads/1GY3GM.png) no-repeat;
+  background: #1350 url(https://jsbot.cantelope.org/uploads/1GY3GM.png) no-repeat;
   background-position: 10px 50%;
   background-size: 50px 50px;
   height: 50px;
@@ -347,7 +347,7 @@ a{
   vertical-align: top;
 }
 .commentDeleteButton{
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -359,7 +359,7 @@ a{
   background-color: #f880;
 }
 .commentEditButton{
-  background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/ct1hv.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -432,14 +432,14 @@ a{
   top: 10px;
   margin-right: 5px;
   float: right;
-  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/WEOZD.png);
   background-repeat: no-repeat;
   background-size: 40px 40px;
   background-position: center center;
   cursor: pointer;
 }
 .jumpButton{
-  background-image:url(https://lookie.jsbot.net/uploads/1RptlQ.png);
+  background-image:url(https://jsbot.cantelope.org/uploads/1RptlQ.png);
   background-size: cover;
   position: absolute;
   margin-top: 5px;

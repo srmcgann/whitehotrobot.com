@@ -59,7 +59,7 @@ export default {
         openFullscreen: null,
         getAvatar: null,
         mode: '',
-        defaultAvatar: 'https://lookie.jsbot.net/uploads/1pnBdc.png',
+        defaultAvatar: 'https://jsbot.cantelope.org/uploads/1pnBdc.png',
       }
     }
   },

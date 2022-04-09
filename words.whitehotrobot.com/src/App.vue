@@ -100,7 +100,7 @@ export default {
           posts: []
         },
         mode: '',
-        defaultAvatar: 'https://lookie.jsbot.net/uploads/1pnBdc.png',
+        defaultAvatar: 'https://jsbot.cantelope.org/uploads/1pnBdc.png',
       }
     }
   },
@@ -856,20 +856,20 @@ export default {
     this.checkLogin()
 
     this.preloadImages = [
-      'https://lookie.jsbot.net/uploads/2ftyk1.png',
-      'https://lookie.jsbot.net/uploads/BGNlv.png',
-      'https://lookie.jsbot.net/uploads/FU3vq.png',
-      'https://lookie.jsbot.net/uploads/zAYeB.png',
-      'https://lookie.jsbot.net/uploads/XeGsK.png',
-      'https://lookie.jsbot.net/uploads/XeGsK.png',
-      'https://lookie.jsbot.net/uploads/ct1hv.png',
-      'https://lookie.jsbot.net/uploads/2kPCX5.png',
-      'https://lookie.jsbot.net/uploads/14MAyj.png',
-      'https://lookie.jsbot.net/uploads/20SIWe.png',
-      'https://lookie.jsbot.net/uploads/6aevA.png',
-      'https://lookie.jsbot.net/uploads/1RptlQ.png',
-      'https://lookie.jsbot.net/uploads/v9UDT.png',
-      'https://lookie.jsbot.net/uploads/1tgOjR.png'
+      'https://jsbot.cantelope.org/uploads/2ftyk1.png',
+      'https://jsbot.cantelope.org/uploads/BGNlv.png',
+      'https://jsbot.cantelope.org/uploads/FU3vq.png',
+      'https://jsbot.cantelope.org/uploads/zAYeB.png',
+      'https://jsbot.cantelope.org/uploads/XeGsK.png',
+      'https://jsbot.cantelope.org/uploads/XeGsK.png',
+      'https://jsbot.cantelope.org/uploads/ct1hv.png',
+      'https://jsbot.cantelope.org/uploads/2kPCX5.png',
+      'https://jsbot.cantelope.org/uploads/14MAyj.png',
+      'https://jsbot.cantelope.org/uploads/20SIWe.png',
+      'https://jsbot.cantelope.org/uploads/6aevA.png',
+      'https://jsbot.cantelope.org/uploads/1RptlQ.png',
+      'https://jsbot.cantelope.org/uploads/v9UDT.png',
+      'https://jsbot.cantelope.org/uploads/1tgOjR.png'
     ]
     this.preloadImages.map(v=>{
       let img = new Image()
@@ -882,6 +882,16 @@ export default {
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Play&display=swap');
+@font-face {
+    font-family: 'juliette';
+    src: url('https://cantelope.org/JULIET__.otf') format('opentype'),
+    url('https://cantelope.org/JULIET__.woff') format('woff'),url('https://cantelope.org/JULIET__.TTF') format('truetype');
+}
+@font-face {
+    font-family: 'renaissance';
+    src: url('https://cantelope.org/renaissance.otf') format('opentype'),
+    url('https://cantelope.org/renaissance.woff') format('woff'),url('https://cantelope.org/renaissance.TTF') format('truetype');
+}
 #app{
   min-width: 475px;
 }

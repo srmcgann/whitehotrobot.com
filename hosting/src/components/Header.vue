@@ -90,7 +90,7 @@ export default {
   padding: 2px;
   transform: translateY(-50%);
   text-decoration: none;
-  background: #1350 url(https://lookie.jsbot.net/uploads/1GY3GM.png) no-repeat;
+  background: #1350 url(https://jsbot.cantelope.org/uploads/1GY3GM.png) no-repeat;
   background-position: 10px 50%;
   background-size: 50px 50px;
   height: 50px;
@@ -159,7 +159,7 @@ export default {
   margin-right: 20px;
   z-index: 1000;
   float: right;
-  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/WEOZD.png);
   background-repeat: no-repeat;
   background-size: 40px 40px;
   background-position: center center;

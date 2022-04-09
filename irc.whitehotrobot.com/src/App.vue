@@ -30,8 +30,8 @@ export default {
   data(){
     return {
       state: {
-        baseURL: 'http://irc.whitehotrobot.com',
-        baseIrcURL: 'http://local.demo.whitehotrobot.com',
+        baseURL: 'https://irc.whitehotrobot.com',
+        baseIrcURL: 'https://demo.whitehotrobot.com',
         rootDomain: 'whitehotrobot.com',
         ircs: [],
         loggedin: false,
@@ -82,7 +82,7 @@ export default {
         extractEmbedURL: null,
         openFullscreen: null,
         invalidLoginAttempt: false,
-        defaultAvatar: 'https://lookie.jsbot.net/uploads/1pnBdc.png',
+        defaultAvatar: 'https://jsbot.cantelope.org/uploads/1pnBdc.png',
         inView:[],
         maxCommentsBeforeExpansion: 3,
         curPage: 0,
@@ -431,7 +431,6 @@ export default {
         },
         body: JSON.stringify(sendData),
       }).then(res=>res.json()).then(data=>{
-        console.log(data)
         this.state.ircDataReceived = true
         if(this.state.user != null && typeof this.state.user.ircs != 'undefined' && this.state.user.ircs.length){
           this.state.user.ircs.map(v=>{
@@ -846,7 +845,6 @@ export default {
       })
       .then(res => res.json())
       .then(data => {
-        console.log(data)
         if(data[0]){
           this.state.loggedin = true
           this.state.loggedinUserName = this.state.username

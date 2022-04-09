@@ -76,7 +76,7 @@ export default {
   z-index: 1000;
   margin-left: 0;
   right: 0px;
-  background-image: url(https://lookie.jsbot.net/uploads/WEOZD.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/WEOZD.png);
   background-repeat: no-repeat;
   background-size: 40px 40px;
   background-position: center center;

@@ -209,7 +209,7 @@
                 v-if="comment.userID == state.loggedinUserID || state.isAdmin"
                 @click='toggleEditMode(comment)'
                 class="commentEditButton"
-                style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://lookie.jsbot.net/uploads/2cyWBg.png);"
+                style="min-width: 0;margin:0;margin-top:-1px;height: 25px;left: 0;display: inline-block;background-image:url(https://jsbot.cantelope.org/uploads/2cyWBg.png);"
               ></button>
             </div>
             <div style="clear:both;"></div>
@@ -840,7 +840,7 @@ export default {
   text-align: center;
 }
 .playbutton{
-  background-image: url(https://lookie.jsbot.net/uploads/2ftyk1.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/2ftyk1.png);
   background-repeat: no-repeat;
   background-size: 80% 80%;
   background-position: 22px;
@@ -853,7 +853,7 @@ export default {
   height: 100px;
 }
 .pausebutton{
-  background-image: url(https://lookie.jsbot.net/uploads/BGNlv.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/BGNlv.png);
   background-repeat: no-repeat;
   background-size: 80% 80%;
   background-position: 10px;
@@ -917,11 +917,11 @@ export default {
   text-align: left;
 }
 .disabledPlayButton{
-  background-image: url(https://lookie.jsbot.net/uploads/FU3vq.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/FU3vq.png);
   background-color: #222;
 }
 .disabledPauseButton{
-  background-image: url(https://lookie.jsbot.net/uploads/zAYeB.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/zAYeB.png);
   background-color: #222;
 }
 .canvas{
@@ -961,7 +961,7 @@ input[type=text]{
   background-position: center center;
   background-size: 45px 45px;
   background-repeat: no-repeat;
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
 }
 .commentContainer{
   background: #2020;
@@ -1033,7 +1033,7 @@ input[type=text]{
   vertical-align: top;
 }
 .commentDeleteButton{
-  background-image: url(https://lookie.jsbot.net/uploads/XeGsK.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/XeGsK.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -1045,7 +1045,7 @@ input[type=text]{
   background-color: #f880;
 }
 .commentEditButton{
-  background-image: url(https://lookie.jsbot.net/uploads/ct1hv.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/ct1hv.png);
   background-repeat: no-repeat;
   background-size: 25px 25px;
   background-position: center center;
@@ -1089,25 +1089,25 @@ table{
   background-color: #028;
   margin-left: -27px;
   margin-top: 0px;
-  background-image: url(https://lookie.jsbot.net/uploads/2kPCX5.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/2kPCX5.png);
 }
 .highlighted{
   background-color: #0fa;
-  background-image: url(https://lookie.jsbot.net/uploads/14MAyj.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/14MAyj.png);
 }
 .resetButton{
   background-color: #0000;
   margin-left: -106px;
   margin-top: 72px;
   border-radius: 0;
-  background-image: url(https://lookie.jsbot.net/uploads/6aevA.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/6aevA.png);
 }
 .jumpToNextButton{
   background-color: #0000;
   margin-left: -22px;
   margin-top: 72px;
   border-radius: 0;
-  background-image: url(https://lookie.jsbot.net/uploads/20SIWe.png);
+  background-image: url(https://jsbot.cantelope.org/uploads/20SIWe.png);
 }
 .singleTrack{
   position: absolute;

@@ -138,15 +138,15 @@ export default {
       let bgimg
       switch(val){
         case 'cyberpunk':
-          bgimg = 'https://lookie.jsbot.net/uploads/2clPtA.jpg';
+          bgimg = 'https://jsbot.cantelope.org/uploads/2clPtA.jpg';
           document.getElementsByTagName('body')[0].style.color = '#0f8'
           break
         case 'rainbows':
-          bgimg = 'https://lookie.jsbot.net/uploads/1ECv2A.jpg';
+          bgimg = 'https://jsbot.cantelope.org/uploads/1ECv2A.jpg';
           document.getElementsByTagName('body')[0].style.color = '#ff0'
           break
         default:
-          bgimg = 'https://lookie.jsbot.net/uploads/1ECv2A.jpg';
+          bgimg = 'https://jsbot.cantelope.org/uploads/1ECv2A.jpg';
           break
       }
       document.getElementsByTagName('body')[0].style.backgroundImage = 'url(' + bgimg + ')'
@@ -180,7 +180,7 @@ body{
   overflow: hidden;
   height:100vh;
   margin: 0;
-  background: #000 url(https://lookie.jsbot.net/uploads/1ECv2A.jpg) no-repeat;
+  background: #000 url(https://jsbot.cantelope.org/uploads/1ECv2A.jpg) no-repeat;
   background-position: center;
   background-size: cover;
   font-family: 'Varela Round';

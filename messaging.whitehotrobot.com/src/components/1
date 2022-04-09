@@ -1,0 +1,528 @@
+<template>
+  <div class="main">
+    <div class="userList" ref="userList" v-if="state.curChannelId && state.loggedin" @click="focusInput()">
+      <div style="text-align: center;background: #102;color:#ff2;padding:10px;">Channel Users</div>
+      <div class="userInList" v-for="user in state.channels[state.curChannelId].users">
+        <div @click="populateInputBar(state.rawNick(user.nick))" v-html="user.nick"></div>
+      </div>
+    </div>
+    <div
+      v-if="state.loggedin"
+      ref="mainChatContainer" 
+      class="mainChatContainer"
+      style="max-height: 500px;overflow: scroll;overflow-x: hidden;"
+      :class="{'bumpRight': state.curChannelId}"
+      @click="focusInput()"
+    >
+      <b-tabs content-class="mt-3" no-body fill v-on:activate-tab="channelChange" v-model="state.curChannelId">
+       <div class="channelInfo" v-if="state.curChannelId">
+         <div class="channelName" v-html="state.curChannelName"></div>
+         <span class="channelTopic">
+           <span style="color: #ace;font-weight: 900;">TOPIC: </span>
+           <span v-html="state.channels[state.curChannelId].topic || '[no topic set]'" v-linkified></span>
+         </span>
+       </div>
+       <div class="channelOptions" :class="{'marginRight': state.curChannelId}" v-if="state.curChannelId">
+         <label :for="'privateCheckbox' + state.channels[state.curChannelId].name" :key="'cblabel'+state.channels[state.curChannelId].name" class="checkboxLabel" style="margin-bottom:2px;display: inline-block;margin-left: 100px;" title="show/hide server messages">
+           <input type="checkbox" :id="'privateCheckbox' + state.channels[state.curChannelId].name" v-model="state.channels[state.curChannelId].showServerMessages" >
+           <span class="checkmark"></span>
+           <span style="font-size: .93em;margin-top:0px;display: block;text-algin: right;">show server<br>messages</span>
+         </label>
+       </div>
+       <div style="clear: both;"></div>
+       <b-tab
+         v-for="(channel, idx) in state.channels"
+         :key="'channel'+idx"
+         no-body
+         @click="focusInput()"
+         >
+          <template #title v-if="!channel.connected">
+            <span
+              v-html="channel.name"
+              :class="{
+                'statusHighlighted': channel.highlighted && !channel.active,
+                'statusNewText': channel.newText && !channel.active && !channel.highlighted,
+                'channelTitle.active': channel.active,
+                'channelTitle.inactive': !channel.active,
+              }"
+              class="channelTitle"
+            >
+            </span>
+            <b-spinner
+              type="border"
+              class="spinner-border text-success"
+              small
+              :class="{
+                'statusHighlighted': channel.highlighted && !channel.active,
+                'statusNewText': channel.newText && !channel.active && !channel.highlighted,
+                'channelTitle.active': channel.active,
+                'channelTitle.inactive': !channel.active,
+              }"
+            ></b-spinner>
+          </template>
+          <template #title v-else>
+            <span
+              v-html="channel.name"
+              :class="{
+                'statusHighlighted': channel.highlighted && !channel.active,
+                'statusNewText': channel.newText && !channel.active && !channel.highlighted,
+                'channelTitle.active': channel.active,
+                'channelTitle.inactive': !channel.active,
+              }"
+              class="channelTitle"
+            >
+            </span>
+            <b-spinner
+              type="none"
+              small
+              :class="{
+                'statusHighlighted': channel.highlighted && !channel.active,
+                'statusNewText': channel.newText && channel.active && !channel.highlighted,
+                'channelTitle.active': channel.active,
+                'channelTitle.inactive': !channel.active,
+              }"
+            >
+            </b-spinner>
+          </template>
+          <div v-if="ready">
+            <div v-if="idx && !channel.connected">
+              <p class="p-3">...connecting</p>
+            </div>
+            <div v-else class="textLine" :class="{'shortWidth': state.curChannelId}">
+              <div v-for="(line, idx) in channel.buffer" class="p3Div" :key="line + idx">
+                <p
+                  v-linkified
+                  v-if="line.mode != 'raw' || channel.showServerMessages"
+                  class="p-3"
+                  :class="
+                    {
+                      'highlighted': !line.mode && line.highlighted,
+                      'notice': line.mode && line.mode=='notice',
+                      'status': line.mode && line.mode=='status',
+                      'nick': line.mode && line.mode=='nick',
+                      'privmsg': line.mode && line.mode=='privmsg',
+                      'raw': line.mode && line.mode=='raw'
+                    }"
+                  :key="idx"
+                  v-html="filterLine(line)"
+                ></p>
+              </div>
+            </div>
+          </div>
+        </b-tab>
+      </b-tabs>
+    </div>
+    <div v-else>
+      <button v-if="state.checkedLogin && !state.loggedin" class="loginButton" @click="state.showLoginPrompt()">log in / register</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+export default {
+  name: 'Main',
+  props: [ 'state' ],
+  data(){
+    return {
+      ready: false,
+      btabs: [],
+      setInitialWindowHeight: null
+    }
+  },
+  methods:{
+    populateInputBar(val){
+      this.state.insertTextIntoBar = val
+    },
+    linkClass(idx) {
+      if (this.tabIndex === idx) {
+        return ['blob']
+      } else {
+        return ['blob']
+      }
+    },
+    getColorFromCode(val){
+      switch(val){
+        case 0: return '#fff'
+        break
+        case 1: return '#000'
+        break
+        case 2: return '#008'
+        break
+        case 3: return '#080'
+        break
+        case 4: return '#f00'
+        break
+        case 5: return '#620'
+        break
+        case 6: return '#81f'
+        break
+        case 7: return '#f80'
+        break
+        case 8: return '#ff0'
+        break
+        case 9: return '#0f0'
+        break
+        case 10: return '#088'
+        break
+        case 11: return '#0ff'
+        break
+        case 12: return '#00f'
+        break
+        case 13: return '#f0f'
+        break
+        case 14: return '#666'
+        break
+        case 15: return '#aaa'
+        break
+      }
+    },
+    filterLine(lineObject){
+      let line = lineObject.text
+      let tempLine = line.toUpperCase()
+      let pos = []
+      let t = 0
+      if(tempLine.split(':')[1].indexOf(' '+this.state.nick.toUpperCase()+' ') !== -1){
+        lineObject.highlighted = true
+        do{
+          pos = [...pos, t += tempLine.indexOf(' ' + this.state.nick.toUpperCase() + ' ')]
+          tempLine = tempLine.substring(tempLine.indexOf(this.state.nick.toUpperCase()) + this.state.nick.length)
+        }while(tempLine.indexOf(' ' + this.state.nick.toUpperCase() + ' ') !== -1)
+        t = 0
+        pos.map((v,i)=>{
+          let pos_ = t+v+1
+          if(pos_ < line.length - 1){
+            line = [line.slice(0, pos_+this.state.nick.length), '</span>&nbsp;', line.slice(pos_+this.state.nick.length)].join('')
+            line = [line.slice(0, pos_), '&nbsp;<span class="nickHighlight">', line.slice(pos_)].join('')
+          }
+          t += 65
+        })
+      }
+      if(line.indexOf(String.fromCharCode(3))!==-1){
+        let lines = line.split(String.fromCharCode(3))
+        let newLine = ''
+        lines.map(v=>{
+          let num = +v.substring(0, 2)
+          if(typeof num != 'number'){
+            num = +v.substring(0, 1)
+            if(typeof num == 'number'){
+              newLine = '<div style="' + getColorFromCode(num) + '">' + v + '</div>'
+            }
+          }
+          if(typeof num != 'number') newLine += v
+        })
+        line = newLine
+      }
+      return line
+    },
+    scrollToCurrent(){
+      this.$nextTick(()=>{
+        let channel = this.state.channels.filter(v=>v.active)[0]
+        channel.scrollStick = true
+        this.$refs.mainChatContainer.scrollTo(0,6e6)
+      })
+    },
+    focusInput(){
+      this.state.channelChange = false
+      this.$nextTick(()=>this.state.channelChange = true)
+    },
+    channelChange(channelIdx){
+      let channel = this.state.channels[channelIdx]
+      this.state.channels.map(v=>{
+        v.active=false
+      })
+      channel.active = true
+      channel.newText = false
+      if(channel.scrollStick) this.scrollToCurrent()
+      channel.highlighted = false
+      channel.newText = false
+      this.focusInput()
+      this.setChatWindowHeight()
+    },
+    setChatWindowHeight(){
+      let usableHeight = window.innerHeight
+      let navTabs = document.querySelectorAll('.nav-tabs')[0]
+      if(navTabs){
+        this.btabs = document.querySelectorAll('.nav-link')
+        this.ready = true
+        let topPos = navTabs.clientHeight
+        let header = document.querySelectorAll('.header')[0]
+        topPos += header.clientHeight
+        navTabs.style.top = 0 + 'px'
+        if(!this.state.supressFooter){
+          usableHeight -= document.querySelectorAll('.footerBar')[0].clientHeight
+        } else {
+          navTabs.style.marginTop = header.clientHeight + 'px'
+        }
+        let inputBar = document.querySelectorAll('.inputBar')[0]
+        if(inputBar) usableHeight -= inputBar.clientHeight
+        if(this.state.curChannelId){ //server window is not active
+          this.$refs.userList.style.maxHeight = (usableHeight + header.clientHeight) +'px'
+          this.$refs.userList.style.height = (usableHeight + header.clientHeight) + 'px'
+        }
+        usableHeight -= topPos
+        this.$refs.mainChatContainer.style.top = topPos + 'px'
+        this.$refs.mainChatContainer.style.maxHeight = usableHeight + 'px'
+        this.$refs.mainChatContainer.style.height = usableHeight + 'px'
+      } else {
+        setTimeout(()=>{
+          this.setChatWindowHeight()
+        }, 1000)
+      }
+    },
+    removeHighlights(){
+      if(this.btabs.length && this.state.channels.filter(v=>v.highlighted).length){
+        this.btabs.forEach(el=>{
+          for(let i=10;i--;) el.classList.remove('green' + i)
+        })
+      }
+    },
+    doUpdate(){
+      if(this.btabs.length){
+        let btabs = this.btabs
+        let t = (new Date()).getTime()/1000
+        this.removeHighlights()
+        btabs.forEach((el, i)=>{
+          this.state.channels.map((v, j)=>{
+            if(i==j){
+              if(v.connected && !v.active && v.highlighted && i == j){
+                el.classList.add('green' + ((5.5+Math.sin(t*6)*4.5)|0))
+              }
+            }
+          })
+        })
+      }
+    }
+  },
+  watch:{
+  },
+  mounted(){
+    window.onresize=()=>{
+      this.setChatWindowHeight()
+    }
+    setInterval(()=>{
+      this.doUpdate()
+    }, 80)
+    setInterval(()=>{
+      this.setChatWindowHeight()
+    }, 1000)
+  }
+}
+</script>
+
+<style scoped>
+.main{
+  width: 100%;
+  position: absolute;
+  top: 0;
+  height: 100vh;
+  background: linear-gradient(#000,#234);
+}
+.loginButton{
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 0 50px 10px #82fc;
+  background: #4fce;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 24px;
+  padding: 15px;
+  padding-left: 20px;
+  padding-right: 20px;
+  transform: translate(-50%, -50%); 
+}
+.nav-link{
+  background: #2fa!important;
+}
+.statusHighlighted{
+  color: #0f6!important;
+}
+.statusNewText{
+  color: #26f!important;
+}
+.channelTitle{
+  margin-right: 10px;
+}
+.userInList{
+  background: #002;
+  color: #ff6a;
+  cursor: pointer;
+  word-break: break-all;
+}
+.userInList:nth-child(odd) {
+  background: #022;
+}
+.p-3{
+  color: #efeb;
+  padding: 0px!important;
+  padding-left: 3px!important;
+  padding-right: 3px!important;
+  margin: 0!important;
+  /*border-bottom: 1px solid #acf2!important;*/
+}
+.p3Div:nth-child(even){
+  background: #2553;
+}
+.channelTitle.active{
+  color: #023;
+}
+.channelTitle.inactive{
+  color:#8ff;
+}
+.textLine{
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+  width: 100%;
+}
+.shortWidth{
+  width: calc(100% - 150px);
+}
+.status{
+  color: #f08;
+}
+.nick{
+  font-style: oblique;
+  color: #0fc8;
+}
+.status{
+  color: #a00;
+  font-weight: 900;
+}
+.privmsg{
+  color: #8ca;
+}
+.raw{
+  color: #888;
+}
+.channelName{
+  background: linear-gradient(90deg, #308, #0000);
+  display: inline-block;
+  padding: 4px;
+  padding-bottom: 6px;
+  float: left;
+}
+.channelInfo{
+  padding: 3px;
+  font-size: 24px;
+  color: #0f8c;
+  width: calc(100% - 131px);
+  min-height: 40px;
+}
+.channelTopic{
+  display: block;
+  float: left;
+  padding: 4px; 
+  color: #ff2c;
+  font-size: 16px;
+  width: calc(100% - 250px);
+  padding-left: 15px;
+}
+.channelOptions{
+  right: 0;
+  top: 0;
+  margin: 5px;
+  position: absolute;
+}
+.marginRight{
+  right: 150px;
+}
+label{
+  font-size: 14px;
+  color: #ace;
+  line-height: 13px;
+}
+.userList{
+  background: linear-gradient(#000, #011);
+  padding-top: 30px;
+  height: calc(100% - 100px);
+  border-right: 2px solid #4568;
+  width: 150px;
+}
+</style>
+<style>
+.bumpRight{
+  width: calc(100% - 150px);
+  margin-left: 150px;
+}
+.mainChatContainer{
+  overflow: scroll;
+  width: 100%;
+  overflow-x: hidden;
+  position: absolute;
+  top: 0;
+}
+.highlighted{
+  background: #050!important;
+}
+.nickHighlight{
+  color: #000;
+  background: #0fbc;
+  font-size: 1.1em!important;
+  font-weight: 900;
+  box-shadow: 0 0 8px 8px #0fbc;
+  border-radius: 10px;
+  height: 2px;
+  position: relative;
+  padding-top: 0;
+  line-height: .13em;
+  top: 1px;
+  display: inline-block;
+}
+.nav-link{
+  border: 1px solid #234!important;
+  height: calc(100% + 0px);
+  color: #8ac;
+  padding: 8px;
+  font-size: 16px;
+}
+.nav-tabs{
+  border-bottom: 1px solid #0fc8!important;
+  margin-top: 30px;
+  position: fixed!important;
+}
+.nav-link:hover{
+  background: #28f4!important;
+  color: #8cfa;
+}
+.nav-link.active{
+  background: #6af8!important;
+  color: #afc!important;
+  font-size: 20px;
+  padding: 5px!important;
+  padding-top: 7px!important;
+  font-weight: 400!important;
+}
+.mt-3{
+  margin-top: 0!important;
+}
+.green1{
+  background: #0f81!important;
+}
+.green2{
+  background: #0f82!important;
+}
+.green3{
+  background: #0f83!important;
+}
+.green4{
+  background: #0f84!important;
+}
+.green5{
+  background: #0f85!important;
+}
+.green6{
+  background: #0f86!important;
+}
+.green7{
+  background: #0f87!important;
+}
+.green8{
+  background: #0f88!important;
+}
+.green9{
+  background: #0f89!important;
+}
+</style>
