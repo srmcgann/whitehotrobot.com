@@ -1,27 +1,27 @@
 <template>
   <div ref="footerBar" class="footerBar" id="footerBar">
     <div class="footerMenu">
-      <button @click="launchPage('https://code.whitehotrobot.com')" class="socialButton" title="demos / code  https://code.whitehotrobot.com">
+      <button @click="launchPage('https://code.dweet.net')" class="socialButton" title="demos / code  https://code.dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/1Zt7AV.png" class="socialIcon">
       </button>
       <!--
-      <button @click="launchPage('https://audiocloud.whitehotrobot.com')" class="socialButton" title="audiocloud https://audiocloud.whitehotrobot.com">
+      <button @click="launchPage('https://audiocloud.dweet.net')" class="socialButton" title="audiocloud https://audiocloud.dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/1zROT5.png" class="socialIcon">
       </button>
       -->
-      <button @click="launchPage('https://messaging.whitehotrobot.com')" class="socialButton" title="RobotNet Messaging https://messaging.whitehotrobot.com">
+      <button @click="launchPage('https://messaging.dweet.net')" class="socialButton" title="RobotNet Messaging https://messaging.dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/1gojp0.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://hosting.whitehotrobot.com')" class="socialButton" title="static page hosting https://hosting.whitehotrobot.com">
+      <button @click="launchPage('https://hosting.dweet.net')" class="socialButton" title="static page hosting https://hosting.dweet.net">
         <img src="../assets/web.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://games.whitehotrobot.com')" class="socialButton" title="community browser games https://games.whitehotrobot.com">
+      <button @click="launchPage('https://games.dweet.net')" class="socialButton" title="community browser games https://games.dweet.net">
         <img src="../assets/games.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://words.whitehotrobot.com')" class="socialButton" title="blog / literature https://words.whitehotrobot.com">
+      <button @click="launchPage('https://words.dweet.net')" class="socialButton" title="blog / literature https://words.dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/1oHzZO.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://whitehotrobot.com')" class="socialButton" title="music videos / playlists https://whitehotrobot.com">
+      <button @click="launchPage('https://dweet.net')" class="socialButton" title="music videos / playlists https://dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/cdR9g.png" class="socialIcon">
       </button>
       <!--
@@ -33,7 +33,7 @@
         <img src="../assets/email.png" class="socialIcon">
       </button>
       <!--
-      <button @click="launchPage('https://whitehotrobot.com/admin')" class="socialButton" title="Admin Section">
+      <button @click="launchPage('https://dweet.net/admin')" class="socialButton" title="Admin Section">
         <img src="../assets/admin.png" class="socialIcon">
       </button>
       -->

@@ -113,7 +113,7 @@ export default {
   methods:{
     launchInfoPage(){
       let a = document.createElement('a')
-      a.setAttribute('href', 'https://whitehotrobot.com/about')
+      a.setAttribute('href', 'https://whitehotrobot.dweet.net/about')
       a.setAttribute('target', '_blank')
       a.style.display = 'none'
       document.body.appendChild(a)
@@ -161,12 +161,13 @@ export default {
       if(!files.length) return
       this.showUploadProgress = true
       this.filesUploading = Array(files.length).fill().map(v=>{return {}})
-      files.forEach((v, i)=>{
+      console.log(files)
+      Array.from(files).forEach((v, i)=>{
         v.completed = false
         this.filesUploading[i].perc = 0
         this.filesUploading[i].trackName = v.name
       })
-      files.forEach((v, i)=>{
+      Array.from(files).forEach((v, i)=>{
         if(
           (v.type == 'audio/mpeg' ||
           v.type == 'audio/ogg' ||
@@ -190,7 +191,7 @@ export default {
           request.addEventListener('load', e=>{
             v.completed = true
             let finished = true
-            files.forEach(q=>{
+            Array.from(files).forEach(q=>{
               if(!q.completed) finished = false
             })
             if(finished) {
