@@ -1,13 +1,12 @@
 <?
   require('db.php');
-  $data = json_decode(file_get_contents('php://input'));
-  $string = mysqli_real_escape_string($link, $data->{'string'});
-  $loggedinUserName = mysqli_real_escape_string($link, $data->{'loggedinUserName'});
-  $passhash = mysqli_real_escape_string($link, $data->{'passhash'});
-  $page = mysqli_real_escape_string($link, $data->{'page'});
-  $exact = mysqli_real_escape_string($link, $data->{'exact'});
-  $allWords = mysqli_real_escape_string($link, $data->{'allWords'});
-  $overrideMaxResults = mysqli_real_escape_string($link, $data->{'maxResultsPerPage'});
+  $string = mysqli_real_escape_string($link, $_GET['search']);
+  $loggedinUserName = '';
+  $passhash = '';
+  $page = mysqli_real_escape_string($link, $_GET['page']);
+  $exact = mysqli_real_escape_string($link, $_GET['exact']);
+  $allWords = mysqli_real_escape_string($link, $_GET['allWords']);
+  $overrideMaxResults = mysqli_real_escape_string($link, $_GET['maxResultsPerPage']);
   if($overrideMaxResults) $maxResultsPerPage = $overrideMaxResults;
 
   if($exact){

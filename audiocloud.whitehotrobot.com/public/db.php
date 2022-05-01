@@ -3,17 +3,17 @@
   $db_pass="";
   $db_host="localhost";
   $db="videodemos";
-  $demoSandbox='demo.whitehotrobot.com';
+  $demoSandbox='demo.dweet.net';
   $maxResultsPerPage = 6;
   
   
   $local = false;
   if($local){
-    $baseURL='local.audiocloud.whitehotrobot.com';
+    $baseURL='local.audiocloud.dweet.net';
     $baseAssetsURL = 'http://local.assets.whitehotrobot.com';
   }else{
-    $baseURL='audiocloud.whitehotrobot.com';
-    $baseAssetsURL = 'https://assets.whitehotrobot.com';
+    $baseURL='audiocloud.dweet.net';
+    $baseAssetsURL = 'https://assets.dweet.net';
   }
   
   $baseFullURL= ($local ? 'http://' : 'https://') . $baseURL;
