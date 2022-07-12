@@ -202,7 +202,7 @@
             <div class="header">
               <div class="headerItem">
                 <?='demo title: <span class="demoTitle">'.$row['title'].'</span>'?>
-                <a href="<?='https://code.whitehotrobot.com/d/'.$slug?>" target="_blank">demo link</a>
+                <a href="<?='https://code.dweet.net/d/'.$slug?>" target="_blank">demo link</a>
               </div>
             </div>
             <div class="divider">

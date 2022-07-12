@@ -75,9 +75,6 @@
     </style>
   </head>
   <body>
-    <button class="homeLink" onclick="goHome()">
-      free hosting<br>home page
-    </button>
     <?=$HTML?>
     <script>
       let sendData = {demoID: <?=$demoid?>}

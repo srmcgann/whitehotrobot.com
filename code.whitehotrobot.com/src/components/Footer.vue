@@ -6,22 +6,22 @@
         <img src="https://jsbot.cantelope.org/uploads/1Zt7AV.png" class="socialIcon">
       </button>
       -->
-      <button @click="launchPage('https://audiocloud.whitehotrobot.com')" class="socialButton" title="audiocloud https://audiocloud.whitehotrobot.com">
+      <button @click="launchPage('https://audiocloud.dweet.net')" class="socialButton" title="audiocloud https://audiocloud.dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/1zROT5.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://messaging.whitehotrobot.com')" class="socialButton" title="RobotNet Messaging https://messaging.whitehotrobot.com">
+      <button @click="launchPage('https://messaging.dweet.net')" class="socialButton" title="RobotNet Messaging https://messaging.dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/1gojp0.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://hosting.whitehotrobot.com')" class="socialButton" title="static page hosting https://hosting.whitehotrobot.com">
+      <button @click="launchPage('https://hosting.dweet.net')" class="socialButton" title="static page hosting https://hosting.dweet.net">
         <img src="../assets/web.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://games.whitehotrobot.com')" class="socialButton" title="community browser games https://games.whitehotrobot.com">
+      <button @click="launchPage('https://games.dweet.net')" class="socialButton" title="community browser games https://games.dweet.net">
         <img src="../assets/games.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://words.whitehotrobot.com')" class="socialButton" title="blog / literature https://words.whitehotrobot.com">
+      <button @click="launchPage('https://words.dweet.net')" class="socialButton" title="blog / literature https://words.dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/1oHzZO.png" class="socialIcon">
       </button>
-      <button @click="launchPage('https://whitehotrobot.com')" class="socialButton" title="music videos / playlists https://whitehotrobot.com">
+      <button @click="launchPage('https://dweet.net')" class="socialButton" title="music videos / playlists https://dweet.net">
         <img src="https://jsbot.cantelope.org/uploads/cdR9g.png" class="socialIcon">
       </button>
       <!--
@@ -56,7 +56,7 @@ export default {
       window.open(loc, '_blank')
     },
     launchAdmin () {
-      window.open('https://whitehotrobot.com/admin/', '_blank')
+      window.open('https://code.dweet.net/admin/', '_blank')
     }
   }
 }

@@ -137,7 +137,7 @@
              
             <iframe
               :src="state.inView[idx] && demo.play ? state.baseDemoURL + '/?demoID=' + demo.id + '&v=' + iframeIteration : ''"
-              sandbox="allow-same-origin allow-scripts"
+              sandbox="allow-pointer-lock allow-same-origin allow-scripts"
               allow="autoplay *"
               class="demoIframe"
               allowfullscreen
@@ -1225,6 +1225,7 @@ textarea:focus{
 }
 .JStextarea{
   color: #acf;
+  height: calc(100% - 27px)!important;
 }
 .deleteDemoButton{
   position: absolute;

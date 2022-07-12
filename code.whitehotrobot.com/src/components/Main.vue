@@ -373,7 +373,7 @@ export default {
 }
 textarea{
   width: calc(100% - 3px);
-  height: calc(100% - 23px);
+  height: calc(100% - 28px);
   font-family: courier;
   background: #0000;
   font-size: 16px;

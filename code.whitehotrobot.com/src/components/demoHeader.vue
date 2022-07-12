@@ -140,6 +140,7 @@ export default {
     }
   },
   mounted(){
+   // console.log(this.thisdemo)
     if(this.forkhistoryview){
       let sendData = {
         demoID: this.demoid

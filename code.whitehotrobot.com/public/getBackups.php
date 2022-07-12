@@ -18,6 +18,7 @@
           $db_timestamp = explode('_', $db)[sizeof(explode('_', $db))-1];
           if($db_timestamp){
             $ar['backup_date'] = date('M d Y, H:i', $db_timestamp) . ' PST';
+            $ar['sql'] = $sql;
             $add = true;
             foreach($backups as $backup){
               if($backup['demoHTML'] == $ar['demoHTML'] &&
@@ -25,7 +26,8 @@
                  $backup['demoJS'] == $ar['demoJS'] &&
                  $backup['title'] == $ar['title'] &&
                  $backup['videoLink'] == $ar['videoLink']) $add = false;
-            }
+                 $backup['sql'] = $ar['sql'];
+              }
             if($add){
               $backups[]=$ar;
             }

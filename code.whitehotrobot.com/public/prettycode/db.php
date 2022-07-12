@@ -1,21 +1,20 @@
 <?
   $db_user="user";
-  $db_pass="chrome57253";
+  $db_pass=explode("\n", file_get_contents('/home/cantelope/plorgpw'))[0];
   $db_host="localhost";
   $db="videodemos";
   $maxResultsPerPage = 4;
 
-  $local = false;
   if($local){
-    $baseURL='local.code.whitehotrobot.com';
+    $baseURL='local.code.dweet.net';
     $baseProtocol = 'http';
-    $demoSandbox='local.demo.whitehotrobot.com';
-    $baseAssetsURL = 'http://local.assets.whitehotrobot.com';
+    $demoSandbox='local.demo.dweet.net';
+    $baseAssetsURL = 'http://local.assets.dweet.net';
   }else{
-    $baseURL='code.whitehotrobot.com';
+    $baseURL='code.dweet.net';
     $baseProtocol = 'https';
-    $demoSandbox='demo.whitehotrobot.com';
-    $baseAssetsURL = 'https://assets.whitehotrobot.com';
+    $demoSandbox='demo.dweet.net';
+    $baseAssetsURL = 'https://assets.dweet.net';
   }
 
   $baseFullURL= ($local ? 'http://' : 'https://') . $baseURL;

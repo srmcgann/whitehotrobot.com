@@ -30,9 +30,9 @@ export default {
   data(){
     return {
       state: {
-        baseURL: 'https://code.whitehotrobot.com',
-        baseDemoURL: 'https://demo.whitehotrobot.com',
-        rootDomain: 'whitehotrobot.com',
+        baseURL: 'https://code.dweet.net',
+        baseDemoURL: 'https://demo.dweet.net',
+        rootDomain: 'dweet.net',
         demos: [],
         loggedin: false,
         toggleLogin: null,
