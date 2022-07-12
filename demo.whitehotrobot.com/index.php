@@ -46,7 +46,6 @@
       <?=$css?>
     </style>
       <script>
-        console.log(`<?=$css?>`)
         window.addEventListener("message", receiveMessage, false);
         function receiveMessage(event){
           var origin = event.origin || event.originalEvent.origin;
