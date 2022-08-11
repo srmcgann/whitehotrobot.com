@@ -8,7 +8,7 @@
         $fileName = md5($videoLink) . '.jpg';
         mkdir('thumbs');
         if(!file_exists('./thumbs/' . $fileName)){
-          exec ('ffmpeg -i "' . $videoLink .'" -ss 00:00:05.000 -vframes 1 ' . './thumbs/' . $fileName);
+          exec ('ffmpeg -i "' . $videoLink .'" -ss 00:00:01.000 -vframes 1 ' . './thumbs/' . $fileName);
           $original = imagecreatefromjpeg('./thumbs/' . $fileName);
           list($width, $height) = getimagesize('./thumbs/' . $fileName);
           $newWidth = max(800, round($width * .5));

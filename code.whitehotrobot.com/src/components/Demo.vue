@@ -149,7 +149,7 @@
         <div class="textareaCluster" :class="{'no-wrap': !wraptextareas}" :key="'textareaCluster'+demo.id">
           <div class='demoHTMLContainer textareaContainer' :key="'HTMLContainer'+demo.id">
             <div class="textAreaTitle no-select">
-              HTML
+              HTML 
               <div v-if="!(state.isAdmin || state.loggedin && demo.userID === state.loggedinUserID)" class="loginTitleButtonContainer">
                 <button class="loginTitleButton" @click="state.showLoginPrompt()">login as author to edit</button>
               </div>
@@ -445,8 +445,8 @@ export default {
       comment.editing = !comment.editing
       if(comment.editing){
         this.$nextTick(()=>{
-          this.$refs['comment' + comment.id].focus()
-          this.$refs['comment' + comment.id].select()
+          this.$refs['comment' + comment.id][0].focus()
+          this.$refs['comment' + comment.id][0].select()
         })
       }
     },
@@ -474,8 +474,8 @@ export default {
       }
     },
     editComment(comment){
-      let id = comment.id
-      let text = this.$refs['comment' + id].value
+      let id = +comment.id
+      let text = comment.text//comment.text//this.$refs['comment' + id][0].value
       let sendData = {
         userName: this.state.loggedinUserName,
         comment: text,

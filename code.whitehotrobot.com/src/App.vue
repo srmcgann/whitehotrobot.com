@@ -271,6 +271,7 @@ export default {
           v.allowDownload = !!(+v.allowDownload)
           this.state.incrementViews(v.id)
           this.state.loadUserData(v.author)
+          v.userID = +v.userID
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
@@ -433,8 +434,9 @@ export default {
       }).then(res=>res.json()).then(data=>{
         this.state.demoDataReceived = true
         if(this.state.user != null && typeof this.state.user.demos != 'undefined' && this.state.user.demos.length){
-          this.state.user.demos.map(v=>{
+          data[0].demos = this.state.user.demos.map(v=>{
             v.updated = {}
+            v.userID = +v.userID
             v.private = !!(v.private)
             v.iteration = 0
             v.allowDownload = !!(v.allowDownload)
@@ -442,7 +444,6 @@ export default {
               v.updated[key]=0
             }
           })
-          data[0].demos = this.state.user.demos
         }else{
           data[0].demos.map(v=>{
             v.updated = {}
@@ -451,6 +452,7 @@ export default {
             }
             if(this.state.mode != 'default') this.incrementViews(v.id)
             v.editHTML = false
+            v.userID = +v.userID
             v.iteration = 0
             v.private = !!(+v.private)
             v.allowDownload = !!(+v.allowDownload)
@@ -557,6 +559,7 @@ export default {
             v.iteration = 0
             v.private = !!(+v.private)
             this.extractEmbedURL(v)
+            v.userID = +v.userID
             v.comments = v.comments.map(q=>{
               q.updated = false
               q.editing = false
@@ -614,6 +617,7 @@ export default {
           this.loadUserData(v.author)
           v.videoPlaying = false
           v.iteration = 0
+          v.userID = +v.userID
           v.comments = v.comments.map(q=>{
             q.updated = false
             q.editing = false
@@ -848,7 +852,7 @@ export default {
         if(data[0]){
           this.state.loggedin = true
           this.state.loggedinUserName = this.state.username
-          this.state.loggedinUserID = data[2]
+          this.state.loggedinUserID = +data[2]
           this.state.fetchUserData(this.state.loggedinUserID)
           this.state.isAdmin = +data[4]
           this.state.passhash = data[1]
@@ -903,7 +907,7 @@ export default {
           this.state.passhash = l2[0].split('=')[1]
           let l3 = (document.cookie).split(';').filter(v=>v.split('=')[0].trim()==='loggedinuserID')
           if(l3.length){
-            this.state.loggedinUserID = l3[0].split('=')[1]
+            this.state.loggedinUserID = +l3[0].split('=')[1]
             this.checkEnabled()
           }
         }

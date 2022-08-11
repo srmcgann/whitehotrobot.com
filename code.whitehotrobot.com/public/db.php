@@ -4,7 +4,7 @@
   $db_host="localhost";
   $db="videodemos";
   $maxResultsPerPage = 4;
-
+  $local = false;
   if($local){
     $baseURL='local.code.dweet.net';
     $baseProtocol = 'http';
