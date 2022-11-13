@@ -44,7 +44,7 @@
     }else{
       $sql = 'SELECT * FROM irc WHERE private = 0 AND ((title LIKE "%' . $tokens[0] . '%"';
     }
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' title LIKE "%'.$token.'%"';
@@ -57,7 +57,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (ircJS LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' ircJS LIKE "%'.$token.'%"';
@@ -70,7 +70,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (ircHTML LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' ircHTML LIKE "%'.$token.'%"';
@@ -83,7 +83,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (ircCSS LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' ircCSS LIKE "%'.$token.'%"';
@@ -96,7 +96,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (author LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' author LIKE "%'.$token.'%"';

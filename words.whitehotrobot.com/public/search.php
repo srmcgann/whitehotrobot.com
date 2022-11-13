@@ -44,7 +44,7 @@
     }else{
       $sql = 'SELECT * FROM words WHERE private = 0 AND (description LIKE "%' . $tokens[0] . '%"';
     }
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' description LIKE "%'.$token.'%"';
@@ -57,7 +57,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (title LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' title LIKE "%'.$token.'%"';
@@ -70,7 +70,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (tags LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' tags LIKE "%'.$token.'%"';
@@ -83,7 +83,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (text LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' text LIKE "%'.$token.'%"';
@@ -96,7 +96,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (author LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens>1)){
+    if(sizeof($tokens)>1){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' author LIKE "%'.$token.'%"';
