@@ -40,9 +40,9 @@
     }
 
     if($loggedinUserName && $confirmed){
-      $sql = 'SELECT * FROM games WHERE (private = 0 || userID = '.$loggedinUserData['id'].') AND (description LIKE "%' . $tokens[0] . '%"';
+      $sql = 'SELECT * FROM games WHERE (private = 0 || userID = '.$loggedinUserData['id'].') AND ((description LIKE "%' . $tokens[0] . '%"';
     }else{
-      $sql = 'SELECT * FROM games WHERE private = 0 AND (description LIKE "%' . $tokens[0] . '%"';
+      $sql = 'SELECT * FROM games WHERE private = 0 AND ((description LIKE "%' . $tokens[0] . '%"';
     }
     if(sizeof($tokens)>1){
       array_shift($tokens);
@@ -89,7 +89,7 @@
         $sql .= ' ' . $clause . ' author LIKE "%'.$token.'%"';
       }
     }
-    $sql .= ')';
+    $sql .= '))';
   }
   
   $sql1 = $sql;
