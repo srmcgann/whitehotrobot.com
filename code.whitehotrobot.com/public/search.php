@@ -44,7 +44,7 @@
     }else{
       $sql = 'SELECT * FROM items WHERE private = 0 AND ((title LIKE "%' . $tokens[0] . '%"';
     }
-    if(sizeof($tokens)>1){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' title LIKE "%'.$token.'%"';
@@ -57,7 +57,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (demoJS LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens)>1){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' demoJS LIKE "%'.$token.'%"';
@@ -70,7 +70,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (demoHTML LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens)>1)){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' demoHTML LIKE "%'.$token.'%"';
@@ -83,7 +83,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (demoCSS LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens)>1){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' demoCSS LIKE "%'.$token.'%"';
@@ -96,7 +96,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (author LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens)>1){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' author LIKE "%'.$token.'%"';

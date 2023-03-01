@@ -48,7 +48,10 @@
           <a :href="'/u/' + demo.author">
             <div class="avatarContainer">
               <div style="color: #fff8;font-size: 14px;line-height: .8em;"><i>author</i><br><br></div>
-              <img class="avatar" :src="state.getAvatar(demo.userID)"><br>
+              <div
+                class="avatar"
+                :style="'float: left;max-width: 100px;background-image:url('+state.getAvatar(demo.userID)+');width:100px;height:100px;background-repeat: no-repeat; background-position: center center; background-size: cover;'"
+              ></div><br>
               {{demo.author}}
             </div>
           </a>
