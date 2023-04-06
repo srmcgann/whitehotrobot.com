@@ -43,7 +43,7 @@
     }else{
       $sql = 'SELECT * FROM audiocloudTracks WHERE private = 0 AND ((description LIKE "%' . $tokens[0] . '%"';
     }
-    if(sizeof($tokens)>1){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' description LIKE "%'.$token.'%"';
@@ -56,7 +56,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (trackName LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens)>1){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' trackName LIKE "%'.$token.'%"';
@@ -69,7 +69,7 @@
       $tokens = explode(' ', $string);
     }
     $sql .= ' OR (author LIKE "%' . $tokens[0] . '%"';
-    if(sizeof($tokens)>1){
+    if(sizeof($tokens>1)){
       array_shift($tokens);
       forEach($tokens as $token){
         $sql .= ' ' . $clause . ' author LIKE "%'.$token.'%"';

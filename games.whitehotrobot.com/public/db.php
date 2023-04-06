@@ -1,6 +1,6 @@
 <?
   $db_user="user";
-  $db_pass="";
+  $db_pass=explode("\n", file_get_contents('/home/cantelope/plorgpw'))[0];
   $db_host="localhost";
   $db="videodemos";
   $maxResultsPerPage = 10;
@@ -8,11 +8,11 @@
   
   $local = true;
   if($local){
-    $baseURL='local.games.whitehotrobot.com';
-    $baseAssetsURL = 'http://local.assets.whitehotrobot.com';
+    $baseURL='local.games.dweet.net';
+    $baseAssetsURL = 'http://local.assets.dweet.net';
   }else{
-    $baseURL='games.whitehotrobot.com';
-    $baseAssetsURL = 'https://assets.whitehotrobot.com';
+    $baseURL='games.dweet.net';
+    $baseAssetsURL = 'https://assets.dweet.net';
   }
   
   $baseFullURL= ($local ? 'http://' : 'https://') . $baseURL;

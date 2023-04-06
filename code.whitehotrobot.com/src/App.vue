@@ -32,7 +32,7 @@ export default {
       state: {
         baseURL: 'https://code.dweet.net',
         baseDemoURL: 'https://demo.dweet.net',
-        rootDomain: 'dweet.net',
+        rootDomain: 'code.dweet.net',
         demos: [],
         loggedin: false,
         toggleLogin: null,
@@ -954,6 +954,8 @@ export default {
     this.state.logout = this.logout
     this.state.login = this.login
     this.checkLogin()
+
+
   }
 }
 </script>

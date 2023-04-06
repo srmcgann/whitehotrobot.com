@@ -22,12 +22,12 @@ export default {
   data(){
     return {
       state:{
-        baseURL: 'https://words.whitehotrobot.com',
-        baseDemoURL: 'https://code.whitehotrobot.com',
-        baseVideoURL: 'https://whitehotrobot.com',
-        baseDomain: 'words.whitehotrobot.com',
-        baseUserDomain: 'whitehotrobot.com',
-        rootDomain: 'whitehotrobot.com',
+        baseURL: 'https://words.dweet.net',
+        baseDemoURL: 'https://code.dweet.net',
+        baseVideoURL: 'https://dweet.net',
+        baseDomain: 'words.dweet.net',
+        baseUserDomain: 'dweet.net',
+        rootDomain: 'words.dweet.net',
         maxCommentsBeforeExpansion: 3,
         curPage: 0,
         curPlayId: 0,

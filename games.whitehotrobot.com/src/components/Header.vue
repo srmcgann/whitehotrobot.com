@@ -83,7 +83,7 @@ export default {
   methods:{
     launchInfoPage(){
       let a = document.createElement('a')
-      a.setAttribute('href', 'https://whitehotrobot.com/about')
+      a.setAttribute('href', 'https://dweet.net/about')
       a.setAttribute('target', '_blank')
       a.style.display = 'none'
       document.body.appendChild(a)

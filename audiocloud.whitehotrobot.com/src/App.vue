@@ -27,7 +27,7 @@ export default {
         baseVideoURL: 'https://dweet.net',
         baseDomain: 'audiocloud.dweet.net',
         baseUserDomain: 'dweet.net',
-        rootDomain: 'dweet.net',
+        rootDomain: 'audiocloud.dweet.net',
         maxCommentsBeforeExpansion: 3,
         curPage: 0,
         curPlayId: 0,
