@@ -1,19 +1,21 @@
-lsi: false
+theme: jekyll-theme-minimal
+title: whitehotrobot.com
+description: tools
 
-safe: true
 
-source: /code.whitehotrobot.com/public/about
 
-incremental: false
 
-highlighter: rouge
 
-gist:
 
-  noscript: false
 
-kramdown:
 
-  math_engine: mathjax
 
-  syntax_highlighter: rouge
+
+
+
+
+
+
+
+
+
